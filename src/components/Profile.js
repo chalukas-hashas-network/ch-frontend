@@ -1,30 +1,35 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Profile() {
   const [admin, setAdmin] = useState(false);
 
-  const navigator = (e) => {
-    console.log(e);
-  };
-
   return (
     <>
-      <div class="card" onClick={(e) => navigator("settings")}>
-        <div>
-          <img />
-        </div>
-        <h4>Username</h4>
+      <div className="card">
+        <Link style={{ textDecoration: "none", color: "black" }} to="/settings">
+          <div>
+            <img />
+          </div>
+          <h4>Username</h4>
+        </Link>
       </div>
-      <div class="card" onClick={(e) => navigator("goal page")}>
-        goal page
-      </div>
-      <div class="card" onClick={(e) => navigator("community page")}>
-        community page
-      </div>
+      <Link style={{ textDecoration: "none", color: "black" }} to="/goalPage">
+        <div className="card">goal page</div>
+      </Link>
+      <Link
+        style={{ textDecoration: "none", color: "black" }}
+        to="/communityPage"
+      >
+        <div className="card">community page</div>
+      </Link>
       {admin && (
-        <div class="card" onClick={(e) => navigator("admin dash page")}>
-          admin dash page
-        </div>
+        <Link
+          style={{ textDecoration: "none", color: "black" }}
+          to="/adminDash"
+        >
+          <div className="card">admin dash page</div>
+        </Link>
       )}
     </>
   );
