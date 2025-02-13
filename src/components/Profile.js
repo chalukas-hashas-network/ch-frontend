@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Profile() {
-  const [admin, setAdmin] = useState(false);
+  const [admin, setAdmin] = useState(true);
 
   return (
     <>
@@ -14,19 +14,19 @@ function Profile() {
           <h4>Username</h4>
         </Link>
       </div>
-      <Link style={{ textDecoration: "none", color: "black" }} to="/goalPage">
+      <Link style={{ textDecoration: "none", color: "black" }} to="/goal">
         <div className="card">goal page</div>
       </Link>
       <Link
         style={{ textDecoration: "none", color: "black" }}
-        to="/communityPage"
+        to="/community"
       >
         <div className="card">community page</div>
       </Link>
       {admin && (
         <Link
           style={{ textDecoration: "none", color: "black" }}
-          to="/adminDash"
+          to="/dashboard"
         >
           <div className="card">admin dash page</div>
         </Link>
