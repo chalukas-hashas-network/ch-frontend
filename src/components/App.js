@@ -6,19 +6,15 @@
 //  cd into parent backend run $python3 manage.py runserver
 
 import Home from "./Home";
-import Routing from "./Routing";
-import {getUser} from "../util.js/UserAPI"
-
+import Routing from "../utils/Routing";
+import { useUser } from "../utils/Context";
 
 function App() {
-  const handleClick = ()=>{
-      console.log(getUser())
-  }
-  const auth = true;
+  const { isAuth } = useUser();
+
   return (
     <div className="App">
-      <div onClick={(e)=> handleClick()}>hello</div>
-      {auth && <Home />}
+      {isAuth && <Home />}
       <Routing />
     </div>
   );
