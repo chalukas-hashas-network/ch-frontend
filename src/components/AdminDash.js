@@ -1,12 +1,3 @@
-// import Paper from "@mui/material/Paper";
-// import Table from "@mui/material/Table";
-// import TableBody from "@mui/material/TableBody";
-// import TableCell from "@mui/material/TableCell";
-// import TableContainer from "@mui/material/TableContainer";
-// import TableHead from "@mui/material/TableHead";
-// import TablePagination from "@mui/material/TablePagination";
-// import TableRow from "@mui/material/TableRow";
-
 import {
   Paper,
   Table,
@@ -16,14 +7,13 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-} from "../utils/muiExports";
-
+} from "../utils/dataExports/muiExports";
+import states from "../utils/dataExports/StatesExports";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useUser } from "../utils/Context";
 import {
-  getCommunity,
-  getAllCommunities,
+  queryCommunities,
   createCommunity,
   updateCommunity,
 } from "../utils/API/CommunityAPI";
@@ -31,8 +21,6 @@ import { createUser, updateUser } from "../utils/API/UserAPI";
 
 // for super, in community have a delete community button and add admin
 // ! all edits and deletes should have a confirmation popup
-// on super display, have add community button
-// when in selected community, make onClick of member a popup with member info and edit option
 // TODO: add validations and error handling to the forms
 
 /* 
@@ -46,7 +34,17 @@ Admin:
 
 filter and search ability
 sort by (a-z) name, location, goalComplete
+
+When admin goes to dash, if its admin then the admins community members will show, 
+if its a superuser then all communities will show.
+
+Superuser status: when he clicks on a community, the state status changes to admin and renders that community
+when he goes back the status changes back to super. Add community is only visible for superusers
+
+Admin status: when he clicks on a member, a popup of the members data is shown with edit and delete buttons
+All admins have add (create) new member and add community admin
 */
+
 const adminColumns = [
   { id: "first_name", label: "First Name", minWidth: 170 },
   { id: "last_name", label: "Last Name", minWidth: 170 },
@@ -81,26 +79,25 @@ function createSuperData(name, location, members) {
   return { name, location, members };
 }
 
-// let rows = [];
-
 function AdminDash() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [adminStatus, setAdminStatus] = useState("admin");
+  const [adminStatus, setAdminStatus] = useState("");
   const [currentCommunity, setCurrentCommunity] = useState([]);
   const [allCommunities, setAllCommunities] = useState([]);
   const [rows, setRows] = useState([]);
   const [popup, setPopup] = useState(false);
   const [popupStatus, setPopupStatus] = useState("");
-  // const [makeAdmin, setMakeAdmin] = useState(false);
   const [communityData, setCommunityData] = useState({
     name: "",
     location: "",
   });
   const [userData, setUserData] = useState({
+    username: "",
     first_name: "",
     last_name: "",
     email: "",
+    community_id: "",
     is_community_admin: false,
   });
 
@@ -119,12 +116,32 @@ function AdminDash() {
   useEffect(
     function setDataBasedOffStatus() {
       let updatedRows = [];
-      if (adminStatus === "super") {
-        if (allCommunities.length === 0) {
-          // If allCommunities is empty, fetch the communities
-          getAllCommunities().then((communities) => {
-            setAllCommunities(communities);
-            communities.map((community) => {
+      const fetchData = async () => {
+        if (adminStatus === "super") {
+          if (allCommunities.length === 0) {
+            // If allCommunities is empty, fetch the communities
+            try {
+              const communities = await queryCommunities("", "", [
+                "with_members",
+              ]);
+              setAllCommunities(communities);
+              communities.map((community) => {
+                updatedRows.push(
+                  createSuperData(
+                    community?.name,
+                    community?.location,
+                    community?.members?.length
+                  )
+                );
+              });
+              setRows(updatedRows);
+              // })
+            } catch (e) {
+              console.log(e);
+            }
+          } else {
+            // If allCommunities is already populated, use it directly
+            allCommunities.map((community) => {
               updatedRows.push(
                 createSuperData(
                   community?.name,
@@ -134,40 +151,32 @@ function AdminDash() {
               );
             });
             setRows(updatedRows);
-          });
-        } else {
-          // If allCommunities is already populated, use it directly
-          allCommunities.map((community) => {
-            updatedRows.push(
-              createSuperData(
-                community?.name,
-                community?.location,
-                community?.members?.length
-              )
-            );
-          });
-          setRows(updatedRows);
-        }
-      } else if (adminStatus === "admin") {
-        // Fetch a specific community if the adminStatus is admin
-        const communityName = isSuperAdmin
-          ? currentCommunity?.name
-          : user?.community?.name;
-        getCommunity("name", communityName, [
-          "with_members",
-          "with_admins",
-        ]).then((community) => {
-          community[0]?.members.map((member) => {
-            updatedRows.push(createData(member?.first_name, member?.last_name));
-          });
+          }
+        } else if (adminStatus === "admin") {
+          // Fetch a specific community if the adminStatus is admin
+          const communityName = isSuperAdmin
+            ? currentCommunity?.name
+            : user?.community?.name;
+          const community = await queryCommunities("name", communityName, [
+            "with_members",
+            "with_admins",
+          ]);
+          if (community.length >= 0) {
+            community[0]?.members.map((member) => {
+              updatedRows.push(
+                createData(member?.first_name, member?.last_name)
+              );
+            });
+          }
           setRows(updatedRows); // Update the state with the new rows
-        });
-      }
+        }
+      };
+      fetchData();
     },
     [adminStatus]
   );
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (newPage) => {
     setPage(newPage);
   };
 
@@ -183,40 +192,35 @@ function AdminDash() {
     }
   };
 
-  const handleCloseCommunity = () => {
-    setAdminStatus("super");
-    setCurrentCommunity([]);
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const handleAddCommunity = () => {
-    // TODO: pop up of add-community form
-    setPopup(true);
-    setPopupStatus("addCommunity");
-    //   update rows
-    //   update DB
-    // setRows(...rows, createSuperData("community data"));
-  };
-  const handleAddCommunityAdmin = () => {
-    // TODO: pop up of add-community admin form
-    setPopup(true);
-    setPopupStatus("addCommunityAdmin");
-  };
-
-  const handleSubmit = (e) => {
     switch (popupStatus) {
       case "addCommunity":
-        // createCommunity(communityData.name, communityData.location)
-        // or createCommunity(communityData)
-        //? send full communityData and have backend take single body param?
-        break;
-      case "addCommunityAdmin":
-        // do i update admin or community?
+        if (communityData.name === "" || communityData.location === "") {
+          alert("Please fill out all fields");
+          return;
+        }
+        try {
+          await createCommunity(communityData);
+          setRows([
+            ...rows,
+            createSuperData(communityData.name, communityData.location, 0),
+          ]);
+          setPopup(false);
+          setPopupStatus("");
+        } catch (error) {
+          console.error("Error creating community:", error);
+          alert("Error creating community. Please try again.");
+        }
         break;
       case "editCommunity":
         // updateCommunity("name", "location")
         break;
-      case "addMember":
-        debugger
+      case "addCommunityAdmin":
+        // do i update admin or community?
+        break;
+      case "createMember":
         // createUser(userData)
         //? should admin create all fields or at least have option?
         // * user data:
@@ -254,23 +258,28 @@ function AdminDash() {
               color: "blue",
               marginLeft: "20px",
             }}
-            onClick={() => handleCloseCommunity()}
+            onClick={() => setAdminStatus("super") & setCurrentCommunity([])}
           >
-            {/* onClick should set everything back to super display with all communities */}
             {"< Back"}
           </Link>
           <Link
             style={{ marginLeft: "20px" }}
-            onClick={() => handleAddCommunityAdmin()}
+            onClick={() => setPopup(true) & setPopupStatus("addCommunityAdmin")}
           >
             Add Community Admin
+          </Link>
+          <Link
+            style={{ marginLeft: "20px" }}
+            onClick={() => setPopup(true) & setPopupStatus("editCommunity")}
+          >
+            Edit Community
           </Link>
         </>
       )}
       {isSuperAdmin && adminStatus === "super" && (
         <Link
           style={{ marginLeft: "20px" }}
-          onClick={() => handleAddCommunity()}
+          onClick={() => setPopup(true) & setPopupStatus("addCommunity")}
         >
           Add Community
         </Link>
@@ -282,10 +291,9 @@ function AdminDash() {
             color: "blue",
             marginLeft: "20px",
           }}
-          onClick={() => setPopup(true) & setPopupStatus("addMember")}
+          onClick={() => setPopup(true) & setPopupStatus("createMember")}
         >
-          {/* onClick should set everything back to super display with all communities */}
-          {"add user"}
+          {"Create New User"}
         </Link>
       )}
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -358,7 +366,6 @@ function AdminDash() {
             </button>
             <form onSubmit={handleSubmit}>
               {popupStatus === "addCommunity" && (
-                // <form onSubmit={handleSubmit}>
                 <div>
                   <label>
                     name:
@@ -376,9 +383,7 @@ function AdminDash() {
                   </label>
                   <label>
                     location:
-                    <input
-                      type="text"
-                      placeholder="Community Location"
+                    <select
                       value={communityData.location}
                       onChange={(e) =>
                         setCommunityData({
@@ -386,11 +391,16 @@ function AdminDash() {
                           location: e.target.value,
                         })
                       }
-                    />
+                    >
+                      <option value="">Select state</option>
+                      {states.map((state, index) => (
+                        <option key={index} value={state}>
+                          {state}
+                        </option>
+                      ))}
+                    </select>
                   </label>
                 </div>
-                // <input type="submit" value="Submit" />
-                // </form>
               )}
               {popupStatus === "addCommunityAdmin" && (
                 <h2>
@@ -401,7 +411,7 @@ function AdminDash() {
                 <h2>Edit community name or location</h2>
               )}
               {popupStatus === "editMember" && <h2>Edit Member</h2>}
-              {popupStatus === "addMember" && (
+              {popupStatus === "createMember" && (
                 // <form onSubmit={handleSubmit}>
                 <div>
                   <label>
@@ -433,15 +443,16 @@ function AdminDash() {
                       type="checkbox"
                       checked={userData.is_community_admin}
                       value={userData.is_community_admin}
-                      onChange={(e) =>
-                        setUserData({ ...userData, is_community_admin: e.target.value })
+                      onChange={() =>
+                        setUserData({
+                          ...userData,
+                          is_community_admin: !userData.is_community_admin,
+                        })
                       }
                     />
                   </label>
                   <br />
                 </div>
-                // <input type="submit" value="Submit" />
-                // </form>
               )}
               <input type="submit" value="Submit" />
             </form>
