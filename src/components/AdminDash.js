@@ -1,23 +1,39 @@
+// import Paper from "@mui/material/Paper";
+// import Table from "@mui/material/Table";
+// import TableBody from "@mui/material/TableBody";
+// import TableCell from "@mui/material/TableCell";
+// import TableContainer from "@mui/material/TableContainer";
+// import TableHead from "@mui/material/TableHead";
+// import TablePagination from "@mui/material/TablePagination";
+// import TableRow from "@mui/material/TableRow";
+
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+} from "../utils/muiExports";
+
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useUser } from "../utils/Context";
-import { getCommunity, getAllCommunities } from "../utils/API/CommunityAPI";
-
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
+import {
+  getCommunity,
+  getAllCommunities,
+  createCommunity,
+  updateCommunity,
+} from "../utils/API/CommunityAPI";
+import { createUser, updateUser } from "../utils/API/UserAPI";
 
 // for super, in community have a delete community button and add admin
 // ! all edits and deletes should have a confirmation popup
 // on super display, have add community button
 // when in selected community, make onClick of member a popup with member info and edit option
-// make pop reusable? use it for user as well? dk if itll work because user just has settings, no need for popup
-// single popup option with different sub options to  display? (add community, add admin, see/edit member)
+// TODO: add validations and error handling to the forms
 
 /* 
 super admin:
@@ -76,9 +92,17 @@ function AdminDash() {
   const [rows, setRows] = useState([]);
   const [popup, setPopup] = useState(false);
   const [popupStatus, setPopupStatus] = useState("");
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
-  const [makeAdmin, setMakeAdmin] = useState(false);
+  // const [makeAdmin, setMakeAdmin] = useState(false);
+  const [communityData, setCommunityData] = useState({
+    name: "",
+    location: "",
+  });
+  const [userData, setUserData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    is_community_admin: false,
+  });
 
   const { isSuperAdmin, user } = useUser();
 
@@ -176,6 +200,45 @@ function AdminDash() {
     // TODO: pop up of add-community admin form
     setPopup(true);
     setPopupStatus("addCommunityAdmin");
+  };
+
+  const handleSubmit = (e) => {
+    switch (popupStatus) {
+      case "addCommunity":
+        // createCommunity(communityData.name, communityData.location)
+        // or createCommunity(communityData)
+        //? send full communityData and have backend take single body param?
+        break;
+      case "addCommunityAdmin":
+        // do i update admin or community?
+        break;
+      case "editCommunity":
+        // updateCommunity("name", "location")
+        break;
+      case "addMember":
+        debugger
+        // createUser(userData)
+        //? should admin create all fields or at least have option?
+        // * user data:
+        // username: "",
+        // email: "",
+        // phone_number: "",
+        // first_name: "",
+        // last_name: "",
+        // location: "", //[select state]
+        // password: "",
+        // password_confirmation: "",
+        // community_id: int || null || "", //[select community. value is id]
+        // is_community_admin: "true" || "false"
+        break;
+      case "editMember":
+        // updateUser(userData)
+        //? do i need to send all fields or only fields sent get updated?
+        break;
+      default:
+        console.log("Invalid popupStatus");
+        break;
+    }
   };
 
   return (
@@ -293,91 +356,95 @@ function AdminDash() {
             >
               Close
             </button>
-            {popupStatus === "addCommunity" && (
-              <form>
-                <label>
-                  name:
-                  <input
-                    type="text"
-                    placeholder="Community Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </label>
-                <label>
-                  location:
-                  <input
-                    type="text"
-                    placeholder="Community Location"
-                    value={""}
-                    // onChange={(e) => setLastNameState(e.target.value)}
-                  />
-                </label>
-                <input type="submit" value="Submit" />
-              </form>
-            )}
-            {popupStatus === "createCommunityAdmin" && (
-              <form>
-                <label>
-                  name:
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    // value={lastNameState}
-                    // onChange={(e) => setLastNameState(e.target.value)}
-                  />
-                </label>
-                <label>
-                  location:
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    // value={lastNameState}
-                    // onChange={(e) => setLastNameState(e.target.value)}
-                  />
-                </label>
-              </form>
-            )}
-            {popupStatus === "addCommunityAdmin" && (
-              <h2>Add Community Admin</h2>
-            )}
-            {popupStatus === "editCommunity" && (
-              <h2>Edit community name or location</h2>
-            )}
-            {popupStatus === "editMember" && <h2>Edit Member</h2>}
-            {popupStatus === "addMember" && (
-              <form>
-                <label>
-                  name:
-                  <input
-                    type="text"
-                    placeholder="Community Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </label>
-                <label>
-                  location:
-                  <input
-                    type="text"
-                    placeholder="Community Location"
-                    value={""}
-                    // onChange={(e) => setLastNameState(e.target.value)}
-                  />
-                </label>
-                <label>
-                  Make Admin:
-                  <input
-                    name="makeAdmin"
-                    type="checkbox"
-                    checked={makeAdmin}
-                    onChange={(e) => setMakeAdmin(!makeAdmin)}
-                  />
-                </label>
-                <br />
-                <input type="submit" value="Submit" />
-              </form>
-            )}
+            <form onSubmit={handleSubmit}>
+              {popupStatus === "addCommunity" && (
+                // <form onSubmit={handleSubmit}>
+                <div>
+                  <label>
+                    name:
+                    <input
+                      type="text"
+                      placeholder="Community Name"
+                      value={communityData.name}
+                      onChange={(e) =>
+                        setCommunityData({
+                          ...communityData,
+                          name: e.target.value,
+                        })
+                      }
+                    />
+                  </label>
+                  <label>
+                    location:
+                    <input
+                      type="text"
+                      placeholder="Community Location"
+                      value={communityData.location}
+                      onChange={(e) =>
+                        setCommunityData({
+                          ...communityData,
+                          location: e.target.value,
+                        })
+                      }
+                    />
+                  </label>
+                </div>
+                // <input type="submit" value="Submit" />
+                // </form>
+              )}
+              {popupStatus === "addCommunityAdmin" && (
+                <h2>
+                  Add Community Admin drop or search for user and community
+                </h2>
+              )}
+              {popupStatus === "editCommunity" && (
+                <h2>Edit community name or location</h2>
+              )}
+              {popupStatus === "editMember" && <h2>Edit Member</h2>}
+              {popupStatus === "addMember" && (
+                // <form onSubmit={handleSubmit}>
+                <div>
+                  <label>
+                    name:
+                    <input
+                      type="text"
+                      placeholder="Community Name"
+                      value={userData.first_name}
+                      onChange={(e) =>
+                        setUserData({ ...userData, first_name: e.target.value })
+                      }
+                    />
+                  </label>
+                  <label>
+                    last name:
+                    <input
+                      type="text"
+                      placeholder="Community Name"
+                      value={userData.last_name}
+                      onChange={(e) =>
+                        setUserData({ ...userData, last_name: e.target.value })
+                      }
+                    />
+                  </label>
+                  <label>
+                    Make Admin:
+                    <input
+                      name="makeAdmin"
+                      type="checkbox"
+                      checked={userData.is_community_admin}
+                      value={userData.is_community_admin}
+                      onChange={(e) =>
+                        setUserData({ ...userData, is_community_admin: e.target.value })
+                      }
+                    />
+                  </label>
+                  <br />
+                </div>
+                // <input type="submit" value="Submit" />
+                // </form>
+              )}
+              <input type="submit" value="Submit" />
+            </form>
           </div>
         </div>
       )}
