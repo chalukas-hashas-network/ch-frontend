@@ -23,12 +23,11 @@ export const getCommunities = async () => {
     // setLoading(false);  // Set loading to false once the fetch is complete
   }
 };
-export const getCommunity = async (
+
+export const queryCommunities = async (
   filterField,
   filterValue,
   includeFields=[],
-  communityName,
-  queryType
 ) => {
   const token = localStorage.getItem(ACCESS_TOKEN);
 
@@ -55,14 +54,12 @@ export const getCommunity = async (
   }
   try {
     const response = await fetch(
-      // API_URL + "/admin-query/communities/?" + queryType + "=" + communityName,
       url,
       {
         method: "GET",
         headers: headers,
       }
     );
-    // Check if the response is OK
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
@@ -76,35 +73,35 @@ export const getCommunity = async (
   }
 };
 
-export const getAllCommunities = async () => {
-  try {
-    const response = await fetch(API_URL + "/communities/", {
-      method: "GET",
-      headers: headers,
-    });
-    if (!response.ok) {
-      // throw new Error(`Error: ${response.statusText}`);
-    }
+// export const getAllCommunities = async () => {
+//   try {
+//     const response = await fetch(API_URL + "/communities/", {
+//       method: "GET",
+//       headers: headers,
+//     });
+//     if (!response.ok) {
+//       // throw new Error(`Error: ${response.statusText}`);
+//     }
 
-    return await response.json();
+//     return await response.json();
 
-    // setUser(data);  // Set the fetched user data
-  } catch (err) {
-    console.log(err);
-    // setError(err.message);  // Set the error message
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
-  }
-};
+//     // setUser(data);  // Set the fetched user data
+//   } catch (err) {
+//     console.log(err);
+//     // setError(err.message);  // Set the error message
+//   } finally {
+//     // setLoading(false);  // Set loading to false once the fetch is complete
+//   }
+// };
 
-export const createCommunity = async (name, location) => {
+export const createCommunity = async (body) => {
   try {
     const response = await fetch(API_URL + "/communities/create/", {
       method: "POST",
       headers: headers,
       body: JSON.stringify({
-        name: name,
-        location: location,
+        name: body?.name,
+        location: body?.location,
       }),
     });
     if (!response.ok) {
