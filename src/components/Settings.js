@@ -39,53 +39,65 @@ function Settings() {
       </Link>
       <div>
         <h1>Settings</h1>
-        <lable>Username</lable>
-        <input
-          type="text"
-          placeholder="Username"
-          value={usernameState}
-          onChange={(e) => setUsernameState(e.target.value)}
-        />
+        <label>
+          Username:
+          <input
+            type="text"
+            placeholder="Username"
+            value={usernameState}
+            onChange={(e) => setUsernameState(e.target.value)}
+          />
+        </label>
         <br />
-        <lable>Email</lable>
-        <input
-          type="text"
-          placeholder="Email"
-          value={emailState}
-          onChange={(e) => setEmailState(e.target.value)}
-        />
+        <label>
+          Email:
+          <input
+            type="text"
+            placeholder="Email"
+            value={emailState}
+            onChange={(e) => setEmailState(e.target.value)}
+          />
+        </label>
         <br />
-        <lable>First Name</lable>
-        <input
-          type="text"
-          placeholder="First Name"
-          value={firstNameState}
-          onChange={(e) => setFirstNameState(e.target.value)}
-        />
+        <label>
+          First Name:
+          <input
+            type="text"
+            placeholder="First Name"
+            value={firstNameState}
+            onChange={(e) => setFirstNameState(e.target.value)}
+          />
+        </label>
         <br />
-        <lable>Last Name</lable>
-        <input
-          type="text"
-          placeholder="Last Name"
-          value={lastNameState}
-          onChange={(e) => setLastNameState(e.target.value)}
-        />
+        <label>
+          Last Name:
+          <input
+            type="text"
+            placeholder="Last Name"
+            value={lastNameState}
+            onChange={(e) => setLastNameState(e.target.value)}
+          />
+        </label>
         <br />
-        <lable>Phone Number</lable>
-        <input
-          type="text"
-          placeholder="Phone Number"
-          value={phoneNumberState}
-          onChange={(e) => setPhoneNumberState(e.target.value)}
-        />
+        <label>
+          Phone Number:
+          <input
+            type="text"
+            placeholder="Phone Number"
+            value={phoneNumberState}
+            onChange={(e) => setPhoneNumberState(e.target.value)}
+          />
+        </label>
         <br />
-        <lable>Location</lable>
-        <input
-          type="text"
-          placeholder="Location"
-          value={locationState}
-          onChange={(e) => setLocationState(e.target.value)}
-        />
+        <label>
+          Location:
+          <input
+            type="text"
+            placeholder="Location"
+            value={locationState}
+            onChange={(e) => setLocationState(e.target.value)}
+          />
+        </label>
         <br />
         {/* <input
           type="text"
