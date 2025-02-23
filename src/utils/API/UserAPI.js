@@ -30,7 +30,7 @@ export const getUser = async () => {
   }
 };
 
-export const createUsers = async (body) => {
+export const createUser = async (body) => {
   console.log("hit create user request");
   try {
     const response = await fetch(API_URL + "/user/register/", {
