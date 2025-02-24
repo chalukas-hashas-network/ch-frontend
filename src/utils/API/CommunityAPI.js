@@ -119,16 +119,16 @@ export const createCommunity = async (body) => {
   }
 };
 
-export const updateCommunity = async (name, location, id) => {
+export const updateCommunity = async (body) => {
   try {
     const response = await fetch(
-      API_URL + "/communities/update/community_id/",
+      API_URL + "/communities/update/" + body.id + "/",
       {
         method: "PATCH",
         headers: headers,
         body: JSON.stringify({
-          name: name,
-          location: location,
+          name: body.name,
+          location: body.location,
         }),
       }
     );
