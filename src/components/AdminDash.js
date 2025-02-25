@@ -22,6 +22,7 @@ import { createUser, updateUser } from "../utils/API/UserAPI";
 // for super, in community have a delete community button and add admin
 // ! all edits and deletes should have a confirmation popup
 // TODO: add validations and error handling to the forms
+// TODO: for edit community, need way to have community's location show as default in dropdown
 
 /* 
 super admin:
@@ -67,16 +68,17 @@ const adminColumns = [
 const superColumns = [
   { id: "name", label: "Name", minWidth: 170 },
   { id: "location", label: "Location", minWidth: 170 },
-  { id: "members", label: "Members", align: "right", minWidth: 170 },
+  // { id: "members", label: "Members", align: "right", minWidth: 170 }
+  // issue with portraying members length when upading community
 ];
 
-function createData(first_name, last_name, population = "", size = "") {
+function createData(first_name, last_name, population = "", size = "", id) {
   // function createData(first_name, email, population, size) {
   const goalComplete = population / size;
-  return { first_name, last_name, population, goalComplete };
+  return { first_name, last_name, population, goalComplete, id };
 }
-function createSuperData(name, location, members) {
-  return { name, location, members };
+function createSuperData(id, name, location, members) {
+  return { id, name, location, members };
 }
 
 function AdminDash() {
@@ -91,6 +93,8 @@ function AdminDash() {
   const [communityData, setCommunityData] = useState({
     name: "",
     location: "",
+    members: [],
+    id: "",
   });
   const [userData, setUserData] = useState({
     username: "",
@@ -128,9 +132,10 @@ function AdminDash() {
               communities.map((community) => {
                 updatedRows.push(
                   createSuperData(
+                    community?.id,
                     community?.name,
                     community?.location,
-                    community?.members?.length
+                    community?.members
                   )
                 );
               });
@@ -144,9 +149,10 @@ function AdminDash() {
             allCommunities.map((community) => {
               updatedRows.push(
                 createSuperData(
+                  community?.id,
                   community?.name,
                   community?.location,
-                  community?.members?.length
+                  community?.members
                 )
               );
             });
@@ -164,7 +170,7 @@ function AdminDash() {
           if (community.length >= 0) {
             community[0]?.members.map((member) => {
               updatedRows.push(
-                createData(member?.first_name, member?.last_name)
+                createData(member?.first_name, member?.last_name, member?.id)
               );
             });
           }
@@ -185,10 +191,15 @@ function AdminDash() {
     setPage(0);
   };
 
-  const handleOpenCommunity = (row) => {
+  const handleOpenRow = (row) => {
     if (adminStatus === "super") {
       setCurrentCommunity(row);
       setAdminStatus("admin");
+    } else {
+      console.log("admin clicked community: ", row);
+      // getUserData
+      setPopup(true);
+      setPopupStatus("viewMember");
     }
   };
 
@@ -205,7 +216,12 @@ function AdminDash() {
           await createCommunity(communityData);
           setRows([
             ...rows,
-            createSuperData(communityData.name, communityData.location, 0),
+            createSuperData(
+              communityData.id,
+              communityData.name,
+              communityData.location,
+              []
+            ),
           ]);
           setPopup(false);
           setPopupStatus("");
@@ -215,7 +231,30 @@ function AdminDash() {
         }
         break;
       case "editCommunity":
-        // updateCommunity("name", "location")
+        if (communityData.name === "" || communityData.location === "") {
+          alert("Please fill out all fields");
+          return;
+        }
+        try {
+          await updateCommunity(communityData);
+          setAllCommunities(
+            allCommunities.map((community) => {
+              if (community.id === communityData.id) {
+                return createSuperData(
+                  communityData.id,
+                  communityData.name,
+                  communityData.location,
+                  communityData?.members
+                );
+              }
+              return { ...community };
+            })
+          );
+          setPopup(false);
+        } catch (error) {
+          console.error("Error updating community:", error);
+          alert("Error updating community. Please try again.");
+        }
         break;
       case "addCommunityAdmin":
         // do i update admin or community?
@@ -237,7 +276,7 @@ function AdminDash() {
         break;
       case "editMember":
         // updateUser(userData)
-        //? do i need to send all fields or only fields sent get updated?
+        // only need updated fields
         break;
       default:
         console.log("Invalid popupStatus");
@@ -270,10 +309,21 @@ function AdminDash() {
           </Link>
           <Link
             style={{ marginLeft: "20px" }}
-            onClick={() => setPopup(true) & setPopupStatus("editCommunity")}
+            onClick={() => {
+              setCommunityData({
+                name: currentCommunity?.name,
+                location: currentCommunity?.location,
+                members: currentCommunity?.members,
+                id: currentCommunity?.id,
+              });
+              setPopup(true);
+              setPopupStatus("editCommunity");
+            }}
           >
             Edit Community
           </Link>
+          <h4>Community name: {currentCommunity?.name}</h4>
+          <h4>Community location: {currentCommunity?.location}</h4>
         </>
       )}
       {isSuperAdmin && adminStatus === "super" && (
@@ -284,7 +334,7 @@ function AdminDash() {
           Add Community
         </Link>
       )}
-      {isSuperAdmin && (
+      {/* {isSuperAdmin && (
         <Link
           style={{
             textDecoration: "none",
@@ -295,7 +345,7 @@ function AdminDash() {
         >
           {"Create New User"}
         </Link>
-      )}
+      )} */}
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
@@ -323,7 +373,7 @@ function AdminDash() {
                       tabIndex={-1}
                       key={row.code}
                       onClick={() => {
-                        handleOpenCommunity(row);
+                        handleOpenRow(row);
                       }}
                     >
                       {columns.map((column) => {
@@ -360,13 +410,19 @@ function AdminDash() {
               onClick={() => {
                 setPopup(false);
                 setPopupStatus("");
+                setCommunityData({
+                  name: "",
+                  location: "",
+                  members: [],
+                  id: "",
+                });
               }}
             >
               Close
             </button>
-            <form onSubmit={handleSubmit}>
-              {popupStatus === "addCommunity" && (
-                <div>
+            {popupStatus === "addCommunity" && (
+              <div>
+                <form onSubmit={handleSubmit}>
                   <label>
                     name:
                     <input
@@ -400,20 +456,59 @@ function AdminDash() {
                       ))}
                     </select>
                   </label>
-                </div>
-              )}
-              {popupStatus === "addCommunityAdmin" && (
-                <h2>
-                  Add Community Admin drop or search for user and community
-                </h2>
-              )}
-              {popupStatus === "editCommunity" && (
-                <h2>Edit community name or location</h2>
-              )}
-              {popupStatus === "editMember" && <h2>Edit Member</h2>}
-              {popupStatus === "createMember" && (
-                // <form onSubmit={handleSubmit}>
-                <div>
+                  <input type="submit" value="Submit" />
+                </form>
+              </div>
+            )}
+            {popupStatus === "editCommunity" && (
+              <div>
+                <form onSubmit={handleSubmit}>
+                  <label>
+                    name:
+                    <input
+                      type="text"
+                      placeholder="Community Name"
+                      value={communityData.name}
+                      onChange={(e) =>
+                        setCommunityData({
+                          ...communityData,
+                          name: e.target.value,
+                        })
+                      }
+                    />
+                  </label>
+                  <label>
+                    location:
+                    <select
+                      value={communityData.location}
+                      onChange={(e) =>
+                        setCommunityData({
+                          ...communityData,
+                          location: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="">Select state</option>
+                      {states.map((state, index) => (
+                        <option key={index} value={state}>
+                          {state}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <input type="submit" value="Submit" />
+                </form>
+              </div>
+            )}
+            {popupStatus === "addCommunityAdmin" && (
+              <h2>
+                Add Community Admin drop or search for user and community
+              </h2>
+            )}
+            {popupStatus === "editMember" && <h2>Edit Member</h2>}
+            {popupStatus === "createMember" && (
+              <div>
+                <form onSubmit={handleSubmit}>
                   <label>
                     name:
                     <input
@@ -452,10 +547,21 @@ function AdminDash() {
                     />
                   </label>
                   <br />
-                </div>
-              )}
-              <input type="submit" value="Submit" />
-            </form>
+                  <input type="submit" value="Submit" />
+                </form>
+              </div>
+            )}
+            {popupStatus === "viewMember" && (
+              <div>
+                {/* need to get the correct fetch routes */}
+                <h3>User Details</h3>
+                <p>
+                  Name: {userData.first_name} {userData.last_name}
+                </p>
+                <p>Email: {userData.email}</p>
+                <p>Admin: {userData.is_community_admin ? "Yes" : "No"}</p>
+              </div>
+            )}
           </div>
         </div>
       )}
