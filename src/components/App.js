@@ -8,14 +8,20 @@
 import Home from "./Home";
 import Routing from "../utils/Routing";
 import { useUser } from "../utils/Context";
+import Loading from "./Loading";
+import { useEffect } from "react";
 
 function App() {
-  const { isAuth } = useUser();
+  const { isAuth, isLoading, triggerLoading} = useUser();
+
+  useEffect(() => {
+    triggerLoading();
+  },[])
 
   return (
     <div className="App">
-      {isAuth && <Home />}
-      <Routing />
+      {isAuth && isLoading === false && <Home />}
+      {isLoading ? <Loading /> : <Routing />}
     </div>
   );
 }
