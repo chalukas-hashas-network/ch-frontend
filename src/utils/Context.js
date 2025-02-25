@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { getUser, userLoginToken } from "./API/UserAPI";
+import { getUser, createUser } from "./API/UserAPI";
 import { getAccessToken } from "./API/AuthAPI";
 import { checkAuth } from "./Authorization";
 
@@ -9,6 +9,7 @@ export const UserProvider = ({ children }) => {
   const [isAuth, setIsAuth] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState({
     id: null,
     username: null,
@@ -41,6 +42,7 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    triggerLoading()
     checkAuth().then(() => fetchUser());
   }, []);
 
@@ -52,14 +54,54 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const signup = async (userData) => {
+    //? what can be wrong with fields?
+    // needed for if i want to error handle from backend or keep it in frontend
+    const newUser = await createUser(userData);
+    if (newUser != null) {
+      fetchUser();
+    }
+  };
+
+  const triggerLoading = () => {
+    setIsLoading(true);
+  
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000); 
+  };
+
   const logout = () => {
-    setUser(null);
     setIsAuth(false);
+    setIsAdmin(false);
+    setIsSuperAdmin(false);
+    setUser({
+      id: null,
+      username: null,
+      first_name: null,
+      last_name: null,
+      email: null,
+      phone_number: null,
+      location: null,
+      is_community_admin: false,
+      is_superuser: false,
+    });
   };
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, login, logout, isAuth, isAdmin, isSuperAdmin }}
+      value={{
+        user,
+        setUser,
+        login,
+        logout,
+        isAuth,
+        isAdmin,
+        isSuperAdmin,
+        signup,
+        isLoading,
+        triggerLoading
+      }}
     >
       {children}
     </UserContext.Provider>
