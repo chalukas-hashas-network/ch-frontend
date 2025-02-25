@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useUser } from "../utils/Context";
 
 function Profile() {
-  const [admin, setAdmin] = useState(true);
+  const { isAdmin } = useUser();
 
   return (
     <>
@@ -15,20 +16,17 @@ function Profile() {
         </Link>
       </div>
       <Link style={{ textDecoration: "none", color: "black" }} to="/goal">
-        <div className="card">goal page</div>
+        <div className="card">Goal page</div>
       </Link>
-      <Link
-        style={{ textDecoration: "none", color: "black" }}
-        to="/community"
-      >
-        <div className="card">community page</div>
+      <Link style={{ textDecoration: "none", color: "black" }} to="/community">
+        <div className="card">Community page</div>
       </Link>
-      {admin && (
+      {isAdmin && (
         <Link
           style={{ textDecoration: "none", color: "black" }}
           to="/dashboard"
         >
-          <div className="card">admin dash page</div>
+          <div className="card">Admin Dashboard</div>
         </Link>
       )}
     </>
