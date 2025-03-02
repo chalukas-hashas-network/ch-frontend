@@ -3,18 +3,23 @@ import { Link } from "react-router-dom";
 import { useUser } from "../utils/Context";
 
 function Profile() {
-  const { isAdmin } = useUser();
+  const { isAdmin, isAuth } = useUser();
 
   return (
     <>
-      <div className="card">
-        <Link style={{ textDecoration: "none", color: "black" }} to="/settings">
-          <div>
-            <img />
-          </div>
-          <h4>Username</h4>
-        </Link>
-      </div>
+      {isAuth && (
+        <div className="card">
+          <Link
+            style={{ textDecoration: "none", color: "black" }}
+            to="/settings"
+          >
+            <div>
+              <img />
+            </div>
+            <h4>Username</h4>
+          </Link>
+        </div>
+      )}
       <Link style={{ textDecoration: "none", color: "black" }} to="/goal">
         <div className="card">Goal page</div>
       </Link>
