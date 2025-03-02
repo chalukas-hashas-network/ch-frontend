@@ -15,19 +15,12 @@ export default function Routing() {
     <>
       {!isLoading && (
         <Routes>
-          <Route path="/login/*" element={<Login />} />
-          <Route exact path="/login/invite/:CommunityID" element={<Login />} />
           <Route exact path="/community" element={<Community />} />
-          <Route exact path="/goal" element={<Goal />} />
-          {isAuth ? (
+          <Route exact path="/profile" element={<Profile />} />
+          {isAuth && (
             <>
-              <Route exact path="/profile" element={<Profile />} />
+              <Route exact path="/goal" element={<Goal />} />
               <Route exact path="/settings" element={<Settings />} />
-            </>
-          ) : (
-            <>
-              <Route path="/profile" element={<Login />} />
-              <Route path="/settings" element={<Login />} />
             </>
           )}
           {isAdmin && <Route exact path="/dashboard" element={<AdminDash />} />}
