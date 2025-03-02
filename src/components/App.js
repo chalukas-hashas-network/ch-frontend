@@ -12,15 +12,15 @@ import Loading from "./Loading";
 import { useEffect } from "react";
 
 function App() {
-  const { isAuth, isLoading, triggerLoading} = useUser();
+  const { isLoading, triggerLoading } = useUser();
 
   useEffect(() => {
     triggerLoading();
-  },[])
+  }, []);
 
   return (
     <div className="App">
-      {isAuth && isLoading === false && <Home />}
+      {!isLoading && <Home />}
       {isLoading ? <Loading /> : <Routing />}
     </div>
   );
