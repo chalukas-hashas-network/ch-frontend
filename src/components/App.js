@@ -9,7 +9,7 @@ import Routing from "../utils/Routing";
 import { useUser } from "../utils/Context";
 import Loading from "./Loading";
 import { useEffect, useState } from "react";
-import Login from "../pages/Login";
+import Login from "./Login";
 import Nav from "./Nav";
 import { Link } from "react-router-dom";
 
