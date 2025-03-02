@@ -1,35 +1,56 @@
-// TODO: add edit logic, update API route and logic
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { updateUser } from "../utils/API/UserAPI";
 import { useUser } from "../utils/Context";
+import states from "../utils/dataExports/StatesExports";
 
 function Settings() {
   const { user } = useUser();
-  const {
-    first_name,
-    last_name,
-    username,
-    email,
-    password,
-    phone_number,
-    location,
-  } = user;
+  const { first_name, last_name, username, email, phone_number, location } =
+    user;
 
-  const [usernameState, setUsernameState] = useState(username);
-  const [emailState, setEmailState] = useState(email);
-  const [firstNameState, setFirstNameState] = useState(first_name);
-  const [lastNameState, setLastNameState] = useState(last_name);
-  const [phoneNumberState, setPhoneNumberState] = useState(phone_number);
-  const [locationState, setLocationState] = useState(location);
-  // const [passwordState, setPasswordState] = useState(password);
+  const [userData, setUserData] = useState({
+    username: username,
+    email: email,
+    first_name: first_name,
+    last_name: last_name,
+    phone_number: phone_number,
+    location: location,
+  });
 
-  const handleUpdate = () => {
-    updateUser({
-      username: usernameState,
-      email: emailState,
-      // password: passwordState
+  const handleDataChange = (e) => {
+    setUserData({
+      ...userData,
+      [e.target.name]: e.target.value,
     });
+  };
+  
+  function capitalizeWord(str) {
+    return str
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) 
+      .join(' ');
+  }
+
+  const submitUpdatedProfile = async (e) => {
+    e.preventDefault();
+    const updatedFields = {};
+    for (let key in userData) {
+      if (userData[key] !== user[key]) {
+        if (userData[key] === "") {
+          alert(`${key} cannot be empty`);
+          return;
+        }
+        updatedFields[key] = userData[key];
+      }
+    }
+    try {
+      await updateUser(updatedFields);
+      alert("Profile updated successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update profile. Please try again later.");
+    }
   };
 
   return (
@@ -37,25 +58,15 @@ function Settings() {
       <Link style={{ textDecoration: "none", color: "black" }} to="/profile">
         {"< Back"}
       </Link>
-      <div>
-        <h1>Settings</h1>
+      <form onSubmit={submitUpdatedProfile}>
         <label>
           Username:
           <input
             type="text"
+            name="username"
             placeholder="Username"
-            value={usernameState}
-            onChange={(e) => setUsernameState(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Email:
-          <input
-            type="text"
-            placeholder="Email"
-            value={emailState}
-            onChange={(e) => setEmailState(e.target.value)}
+            value={userData.username}
+            onChange={handleDataChange}
           />
         </label>
         <br />
@@ -63,9 +74,10 @@ function Settings() {
           First Name:
           <input
             type="text"
+            name="first_name"
             placeholder="First Name"
-            value={firstNameState}
-            onChange={(e) => setFirstNameState(e.target.value)}
+            value={userData.first_name}
+            onChange={handleDataChange}
           />
         </label>
         <br />
@@ -73,9 +85,21 @@ function Settings() {
           Last Name:
           <input
             type="text"
+            name="last_name"
             placeholder="Last Name"
-            value={lastNameState}
-            onChange={(e) => setLastNameState(e.target.value)}
+            value={userData.last_name}
+            onChange={handleDataChange}
+          />
+        </label>
+        <br />
+        <label>
+          Email:
+          <input
+            type="text"
+            name="email"
+            placeholder="Email"
+            value={userData.email}
+            onChange={handleDataChange}
           />
         </label>
         <br />
@@ -83,30 +107,31 @@ function Settings() {
           Phone Number:
           <input
             type="text"
+            name="phone_number"
             placeholder="Phone Number"
-            value={phoneNumberState}
-            onChange={(e) => setPhoneNumberState(e.target.value)}
+            value={userData.phone_number}
+            onChange={handleDataChange}
           />
         </label>
         <br />
         <label>
-          Location:
-          <input
-            type="text"
-            placeholder="Location"
-            value={locationState}
-            onChange={(e) => setLocationState(e.target.value)}
-          />
+          State:
+          <select
+            value={capitalizeWord(userData.location)}
+            name="location"
+            onChange={handleDataChange}
+          >
+            <option value="">Select state</option>
+            {states.map((state, index) => (
+              <option key={index} value={state}>
+                {state}
+              </option>
+            ))}
+          </select>
         </label>
         <br />
-        {/* <input
-          type="text"
-          placeholder="Password"
-          value={passwordState}
-          onChange={(e) => setPasswordState(e.target.value)}
-        /> */}
-      </div>
-      <button onClick={(e) => handleUpdate()}>edit</button>
+        <input type="submit" value="Update Profile" />
+      </form>
     </>
   );
 }
