@@ -20,7 +20,7 @@ import {
 import {
   createUser,
   updateUser,
-  findUser,
+  findUserById,
   queryUsers,
 } from "../utils/API/UserAPI";
 
@@ -211,7 +211,7 @@ function AdminDash() {
     } else {
       console.log("admin clicked community: ", row);
       try {
-        const userData = await findUser(row?.id);
+        const userData = await findUserById(row?.id);
         console.log("userData: ", userData);
         setUserData({
           username: userData?.username,
