@@ -9,7 +9,8 @@ function Nav() {
   const handleLogout = () =>{
     logout()
     localStorage.clear()
-    navigate("/login")
+    navigate("/profile")
+    // navigate("/login")
   }
 
   return (
