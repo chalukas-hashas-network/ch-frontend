@@ -6,7 +6,7 @@ import { useUser } from "../utils/Context";
 import { Button } from "../utils/dataExports/muiExports";
 import states from "../utils/dataExports/StatesExports";
 
-function Login(props) {
+function Login({openLogin}) {
   const location = useLocation();
   const { login, triggerLoading } = useUser();
   const navigate = useNavigate();
@@ -60,6 +60,7 @@ function Login(props) {
       try {
         await login(userData.username, userData.password);
         triggerLoading();
+        openLogin(false);
         navigate("/profile");
       } catch (err) {
         alert("Invalid credentials");
@@ -99,7 +100,7 @@ function Login(props) {
   return (
     <div className="popup-overlay">
       <div className="popup-card">
-        <h5 onClick={() => props.openLogin(false)}>X</h5>
+        <h5 onClick={() => openLogin(false)}>X</h5>
         <article className="input" style={{ marginTop: "10px" }}>
           {userStatus === "Login" && (
             <form
