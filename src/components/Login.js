@@ -6,8 +6,7 @@ import { useUser } from "../utils/Context";
 import { Button } from "../utils/dataExports/muiExports";
 import states from "../utils/dataExports/StatesExports";
 
-
-function Login() {
+function Login(props) {
   const location = useLocation();
   const { login, triggerLoading } = useUser();
   const navigate = useNavigate();
@@ -26,7 +25,8 @@ function Login() {
   });
 
   useEffect(() => {
-    if (location.pathname.startsWith("/login/invite/")) {
+    if (location.pathname.includes("/invite")) {
+      // if (location.pathname.startsWith("/login/invite/")) {
       setUserStatus("Signup");
     }
   }, [location.pathname]);
@@ -97,11 +97,9 @@ function Login() {
   };
 
   return (
-    <>
-      <div>
-        <nav style={{ marginTop: "3%" }}>
-          <strong>Codify</strong>
-        </nav>
+    <div className="popup-overlay">
+      <div className="popup-card">
+        <h5 onClick={() => props.openLogin(false)}>X</h5>
         <article className="input" style={{ marginTop: "10px" }}>
           {userStatus === "Login" && (
             <form
@@ -233,7 +231,7 @@ function Login() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
