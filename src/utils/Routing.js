@@ -1,12 +1,11 @@
 import { Routes, Route } from "react-router-dom";
-import Login from "../components/Login.js";
-import Profile from "../components/Profile.js";
-import Settings from "../components/Settings.js";
-import AdminDash from "../components/AdminDash.js";
-import Community from "../components/Community.js";
-import Goal from "../components/Goal.js";
+import Profile from "../pages/Profile.js";
+import Settings from "../pages/Settings.js";
+import AdminDash from "../pages/AdminDash.js";
+import Community from "../pages/Community.js";
+import Goal from "../pages/Goal.js";
 import { useUser } from "./Context.js";
-import NotFound from "../components/NotFound.js";
+import NotFound from "../pages/NotFound.js";
 
 export default function Routing() {
   const { isAdmin, isAuth, isLoading } = useUser();
