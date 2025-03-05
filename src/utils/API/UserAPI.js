@@ -15,10 +15,13 @@ export const getUser = async () => {
   }
 
   try {
-    const response = await fetch(API_URL + "/me/?include_community=true", {
-      method: "GET",
-      headers: headers,
-    });
+    const response = await fetch(
+      API_URL + "/me/?include_community=true&include_goal=true",
+      {
+        method: "GET",
+        headers: headers,
+      }
+    );
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
@@ -56,20 +59,31 @@ export const findUserById = async (userId) => {
   }
 };
 
-export const queryUsers = async (filterField, filterValue) => {
+export const queryUsers = async (filters = {}) => {
   const token = localStorage.getItem(ACCESS_TOKEN);
 
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
+
+  let url = `${API_URL}/admin/users`;
+  
+  // Dynamically add query parameters if there are any filters
+  const queryParams = [];
+  for (const [key, value] of Object.entries(filters)) {
+    queryParams.push(`by_${key}=${value}`);
+  }
+  
+  // If there are query parameters, join them with '&' and append to URL
+  if (queryParams.length > 0) {
+    url += `?${queryParams.join("&")}`;
+  }
+  
   try {
-    const response = await fetch(
-      API_URL + `/admin-query/users/?by_${filterField}=${filterValue}`,
-      {
-        method: "GET",
-        headers: headers,
-      }
-    );
+    const response = await fetch(url, {
+      method: "GET",
+      headers: headers,
+    });
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
