@@ -17,10 +17,7 @@ import {
   createCommunity,
   updateCommunity,
 } from "../utils/API/CommunityAPI";
-import {
-  findUserById,
-  queryUsers,
-} from "../utils/API/UserAPI";
+import { findUserById, queryUsers } from "../utils/API/UserAPI";
 
 // for super, in community have a delete community button and add admin
 // ! all edits and deletes should have a confirmation popup
@@ -126,8 +123,8 @@ function AdminDash() {
           if (allCommunities.length === 0) {
             // If allCommunities is empty, fetch the communities
             try {
-              const communities = await queryCommunities("", "", [
-                "with_members",
+              const communities = await queryCommunities({}, [
+                "include_members",
               ]);
               setAllCommunities(communities);
               communities.map((community) => {
@@ -164,7 +161,7 @@ function AdminDash() {
           const communityName = isSuperAdmin
             ? currentCommunity?.name
             : user?.community?.name;
-          const members = await queryUsers("community_name", communityName);
+          const members = await queryUsers({ community_name: communityName });
           if (members?.length > 0) {
             members.map((member) => {
               console.log("member: ", member);
