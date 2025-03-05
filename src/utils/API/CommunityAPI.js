@@ -25,18 +25,18 @@ export const getCommunities = async () => {
 };
 
 export const queryCommunities = async (
-  filterField,
-  filterValue,
-  includeFields=[],
+  filterField = {},
+  includeFields = []
 ) => {
   const token = localStorage.getItem(ACCESS_TOKEN);
+  debugger
 
-  let url = API_URL + "/admin-query/communities/?";
+  let url = API_URL + "/admin/communities/?";
   const queryParams = [];
 
   // Add the filter parameter to the query string if it's provided
-  if (filterField && filterValue) {
-    queryParams.push(`by_${filterField}=${filterValue}`);
+  for (const [key, value] of Object.entries(filterField)) {
+    queryParams.push(`by_${key}=${value}`);
   }
 
   // Add each include parameter to the query string
@@ -53,13 +53,10 @@ export const queryCommunities = async (
     headers["Authorization"] = `Bearer ${token}`;
   }
   try {
-    const response = await fetch(
-      url,
-      {
-        method: "GET",
-        headers: headers,
-      }
-    );
+    const response = await fetch(url, {
+      method: "GET",
+      headers: headers,
+    });
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
