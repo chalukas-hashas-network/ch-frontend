@@ -159,9 +159,9 @@ function AdminDash() {
         } else if (adminStatus === "admin") {
           // Fetch a specific community if the adminStatus is admin
           const communityName = isSuperAdmin
-            ? currentCommunity?.name
-            : user?.community?.name;
-          const members = await queryUsers({ community_name: communityName });
+            ? currentCommunity?.id
+            : user?.community?.id;
+          const members = await queryUsers({ community_id: communityName });
           if (members?.length > 0) {
             members.map((member) => {
               console.log("member: ", member);
