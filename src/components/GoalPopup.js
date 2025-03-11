@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createTractateGoal, updateTractateProgress } from "../utils/API/GoalAPI";
 
 function GoalPopup({
   setOpenGoal,
@@ -32,11 +33,11 @@ function GoalPopup({
     }
   }, [goal]);
 
-  // const handleTractateChange = (e) => {
-  //   setSelectedTractate(e.target.value);
-  // };
+  const handleTractateCreateChange = (e) => {
+    setSelectedTractate(e.target.value);
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     switch (goalEditOption) {
       case "create-goal":
@@ -45,8 +46,8 @@ function GoalPopup({
           return;
         }
         try {
-          // const response = await updateTractateGoal();
-          // console.log(response);
+          const response = await createTractateGoal(goal.id, selectedTractate);
+          console.log(response);
           // setUser(response);
           // setSelectedTractate("");
           // setOpenGoal(false);
@@ -58,7 +59,9 @@ function GoalPopup({
         setOpenGoal(false);
         break;
       case "update-goal":
-        // updateGoal(user.id, selectedTractate);
+        const pageAsFloat = parseFloat(selectedPage);
+        // updateTractateProgress({goal_tractate_id: goal.id, tractate_pages_completed: selectedPage, tractate_id: selectedTractate});
+        console.log(pageAsFloat);
         break;
       default:
         console.error("Invalid goal edit option:", goalEditOption);
@@ -79,7 +82,7 @@ function GoalPopup({
         </h6>
         {goalEditOption === "create-goal" && (
           <form onSubmit={(e) => handleSubmit(e)}>
-            <select value={selectedTractate} onChange={handleTractateChange}>
+            <select value={selectedTractate} onChange={handleTractateCreateChange}>
               <option value={""}>Select a tractate</option>
               {tractates.map((tractate) => {
                 return (
@@ -94,7 +97,6 @@ function GoalPopup({
         )}
         {goalEditOption === "update-goal" && (
           <form onSubmit={(e) => handleSubmit(e)}>
-            {/* //! need to update this where pages have A and B sides */}
             {goal?.goal_tractates?.length > 1 ? (
               // If there are multiple tractates, show a dropdown for selecting tractate and page
               <>
@@ -119,15 +121,16 @@ function GoalPopup({
                       Select Page:
                       <select onChange={handlePageChange} value={selectedPage}>
                         <option value="">Select a page</option>
-                        {[
-                          ...Array(
-                            selectedTractate.tractate_pages_selected
-                          ).keys(),
-                        ].map((page) => (
-                          <option key={page + 1} value={page + 1}>
-                            Page {page + 1}
-                          </option>
-                        ))}
+                        {Array.from({ length: selectedTractate.tractate_pages_selected * 2 }, (_, i) => {
+                          const pageNumber = Math.floor(i / 2) + 1;
+                          const side = i % 2 === 0 ? '.0' : '.5';
+                          const sideLabel = i % 2 === 0 ? 'A' : 'B';
+                          return (
+                            <option key={`${pageNumber}${side}`} value={`${pageNumber}${side}`}>
+                              Page {pageNumber} Side {sideLabel}
+                            </option>
+                          );
+                        })}
                       </select>
                     </label>
                   </>
@@ -141,15 +144,16 @@ function GoalPopup({
                   Select Page:
                   <select onChange={handlePageChange} value={selectedPage}>
                     <option value="">Select a page</option>
-                    {[
-                      ...Array(
-                        goal.goal_tractates[0].tractate_pages_selected
-                      ).keys(),
-                    ].map((page) => (
-                      <option key={page + 1} value={page + 1}>
-                        Page {page + 1}
-                      </option>
-                    ))}
+                    {Array.from({ length: goal.goal_tractates[0].tractate_pages_selected * 2 }, (_, i) => {
+                      const pageNumber = Math.floor(i / 2) + 1;
+                      const side = i % 2 === 0 ? '.0' : '.5';
+                      const sideLabel = i % 2 === 0 ? 'A' : 'B';
+                      return (
+                        <option key={`${pageNumber}${side}`} value={`${pageNumber}${side}`}>
+                          Page {pageNumber} Side {sideLabel}
+                        </option>
+                      );
+                    })}
                   </select>
                 </label>
               </>
