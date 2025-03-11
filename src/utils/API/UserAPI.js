@@ -66,7 +66,7 @@ export const queryUsers = async (filters = {}) => {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  let url = `${API_URL}/admin/users`;
+  let url = `${API_URL}/admin/users/`;
   
   // Dynamically add query parameters if there are any filters
   const queryParams = [];
