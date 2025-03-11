@@ -1,8 +1,3 @@
-// (create json file and add your objects to it)
-// add to "scripts" in package.json :
-// "server": "json-server --watch db.json --port 3004"
-// npm run server
-
 //  cd into parent backend run $python3 manage.py runserver
 
 import Routing from "../utils/Routing";
@@ -51,7 +46,8 @@ function App() {
           {loginOpen && <Login openLogin={openLogin} />}
         </>
       )}
-      {isLoading ? <Loading /> : <Routing />}
+      {isLoading ? <Loading /> : 
+      <Routing />}
     </div>
   );
 }
