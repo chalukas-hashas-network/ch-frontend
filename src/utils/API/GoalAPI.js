@@ -7,7 +7,6 @@ const headers = {
 };
 
 export const createAnnualGoal = async (id, year) => {
-  debugger;
   const token = localStorage.getItem(ACCESS_TOKEN);
 
   if (token) {
@@ -39,7 +38,6 @@ export const createAnnualGoal = async (id, year) => {
 };
 
 export const createTractateGoal = async (goal_id, tractate_id) => {
-  debugger;
   const token = localStorage.getItem(ACCESS_TOKEN);
 
   if (token) {
@@ -47,7 +45,7 @@ export const createTractateGoal = async (goal_id, tractate_id) => {
   }
 
   try {
-    const response = await fetch(API_URL + "/goalTractates/", {
+      const response = await fetch(API_URL + "/goalTractates/", {
       method: "POST",
       headers: headers,
       body: JSON.stringify({
@@ -83,10 +81,7 @@ export const getAllTractates = async () => {
   }
 };
 
-export const updateTractateProgress = async (body) => {
-  // goal_tractate_id: int,
-  // tractate_pages_completed: float, // [select]
-  // tractate_id: int //[optional. select]
+export const updateTractateProgress = async (goalId, page) => {
   const token = localStorage.getItem(ACCESS_TOKEN);
 
   if (token) {
@@ -95,11 +90,12 @@ export const updateTractateProgress = async (body) => {
 
   try {
     const response = await fetch(
-      `${API_URL}/goalTractates/${body.goal_tractate_id}/`,
+      // `${API_URL}/goal-tractate/update/${goalId}/`,
+      `${API_URL}/goalTractates/${goalId}/`,
       {
         method: "PATCH",
         headers,
-        body: JSON.stringify(body),
+        body: JSON.stringify({tractate_pages_completed: page}),
       }
     );
     if (!response.ok) {
