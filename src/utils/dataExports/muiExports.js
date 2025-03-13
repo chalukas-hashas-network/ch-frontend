@@ -9,6 +9,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import DeleteIcon from '@mui/icons-material/Delete';
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemButton from "@mui/material/ListItemButton";
+import Avatar from '@mui/material/Avatar';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 
 export {
   Paper,
@@ -22,4 +29,11 @@ export {
   Button,
   Box,
   CircularProgress,
+  DeleteIcon,
+  List,
+  Divider,
+  ListItemText,
+  ListItemButton,
+  Avatar,
+  ListItemAvatar,
 };
