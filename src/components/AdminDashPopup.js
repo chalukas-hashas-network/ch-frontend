@@ -1,6 +1,6 @@
 import states from "../utils/dataExports/StatesExports";
-import { createCommunity, updateCommunity } from "../utils/API/CommunityAPI";
-
+import { createCommunity, updateCommunity, deleteCommunity } from "../utils/API/CommunityAPI";
+import { Button, DeleteIcon } from "../utils/dataExports/muiExports";
 function AdminDashPopup({
   setUserData,
   userData,
@@ -101,6 +101,10 @@ function AdminDashPopup({
           alert("Error updating user. Please try again.");
         }
         break;
+      case "deleteCommunity":
+        debugger;
+        await deleteCommunity(communityData.id);
+        break;
       default:
         console.log("Invalid popupStatus");
         break;
@@ -114,8 +118,7 @@ function AdminDashPopup({
   return (
     <div className="popup-overlay">
       <div className="popup-card">
-        <button
-          className="close-popup"
+        <Button
           onClick={() => {
             setPopup(false);
             setPopupStatus("");
@@ -128,7 +131,7 @@ function AdminDashPopup({
           }}
         >
           Close
-        </button>
+        </Button>
         {popupStatus === "addCommunity" && (
           <div>
             <form onSubmit={handleSubmit}>
@@ -317,6 +320,14 @@ function AdminDashPopup({
             <button onClick={() => setPopupStatus("editMember")}>
               Edit user
             </button>
+          </div>
+        )}
+        {popupStatus === "deleteCommunity" && (
+          <div>
+            <h2>Are you sure you want to delete this community?</h2>
+            <Button color="error" variant="contained" startIcon={<DeleteIcon />} onClick={(e) => handleSubmit(e)}>
+              Delete
+            </Button>
           </div>
         )}
       </div>
