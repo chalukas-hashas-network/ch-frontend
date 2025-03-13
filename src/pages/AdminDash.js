@@ -7,6 +7,8 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  DeleteIcon,
+  Button,
 } from "../utils/dataExports/muiExports";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -138,7 +140,6 @@ function AdminDash() {
                 );
               });
               setRows(updatedRows);
-              // })
             } catch (e) {
               console.log(e);
             }
@@ -247,7 +248,7 @@ function AdminDash() {
           >
             Add Community Admin
           </Link> */}
-          <Link
+          <Button
             style={{ marginLeft: "20px" }}
             onClick={() => {
               setCommunityData({
@@ -261,18 +262,27 @@ function AdminDash() {
             }}
           >
             Edit Community
-          </Link>
+          </Button>
+          <Button
+            color="error"
+            onClick={() => {
+              setPopup(true);
+              setPopupStatus("deleteCommunity");
+            }}
+          >
+            Delete Community
+          </Button>
           <h4>Community name: {currentCommunity?.name}</h4>
           <h4>Community location: {currentCommunity?.location}</h4>
         </>
       )}
       {isSuperAdmin && adminStatus === "super" && (
-        <Link
+        <Button
           style={{ marginLeft: "20px" }}
           onClick={() => setPopup(true) & setPopupStatus("addCommunity")}
         >
           Add Community
-        </Link>
+        </Button>
       )}
       {/* {isSuperAdmin && (
         <Link
