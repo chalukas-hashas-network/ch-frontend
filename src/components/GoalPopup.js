@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { createTractateGoal, updateTractateProgress } from "../utils/API/GoalAPI";
+import { Button, DeleteIcon } from "../utils/dataExports/muiExports";
+
+// TODO: update users state when goal is created or updated
 
 function GoalPopup({
   setOpenGoal,
@@ -9,12 +12,12 @@ function GoalPopup({
   goal,
 }) {
   const [selectedTractate, setSelectedTractate] = useState("");
-  const [selectedPage, setSelectedPage] = useState(null);
+  const [selectedPage, setSelectedPage] = useState(1);
 
   // Handle change for selecting tractate
   const handleTractateChange = (e) => {
     const selectedGoal = goal.goal_tractates.find(
-      (tractate) => tractate.tractate_name === e.target.value
+      (tractate) => tractate.tractate === e.target.value
     );
     setSelectedTractate(selectedGoal);
     setSelectedPage(selectedGoal?.tractate_pages_completed || null); // Reset page selection
@@ -25,8 +28,8 @@ function GoalPopup({
     setSelectedPage(e.target.value);
   };
 
-  // Set the initial selected tractate if it is available
-  useEffect(() => {
+  // Initialize selected tractate and page when goal has exactly one tractate
+  useEffect(function initializeSingleTractateGoal() {
     if (goal?.goal_tractates?.length === 1) {
       setSelectedTractate(goal.goal_tractates[0]);
       setSelectedPage(goal.goal_tractates[0].tractate_pages_completed); // Default to completed pages
@@ -49,8 +52,9 @@ function GoalPopup({
           const response = await createTractateGoal(goal.id, selectedTractate);
           console.log(response);
           // setUser(response);
-          // setSelectedTractate("");
-          // setOpenGoal(false);
+          alert("Goal created");
+          setSelectedTractate("");
+          setOpenGoal(false);
         } catch (error) {
           console.error("Error updating user goal:", error);
         }
@@ -60,8 +64,13 @@ function GoalPopup({
         break;
       case "update-goal":
         const pageAsFloat = parseFloat(selectedPage);
-        // updateTractateProgress({goal_tractate_id: goal.id, tractate_pages_completed: selectedPage, tractate_id: selectedTractate});
-        console.log(pageAsFloat);
+        try {
+          updateTractateProgress(selectedTractate.id, pageAsFloat);
+          setSelectedPage(1);
+          setOpenGoal(false);
+        } catch (error) {
+          console.error("Error updating user goal:", error);
+        }
         break;
       default:
         console.error("Invalid goal edit option:", goalEditOption);
@@ -106,10 +115,10 @@ function GoalPopup({
                     <option value="">Select a tractate</option>
                     {goal.goal_tractates.map((tractate) => (
                       <option
-                        key={tractate.tractate_name}
-                        value={tractate.tractate_name}
+                        key={tractate.id}
+                        value={tractate.tractate}
                       >
-                        {tractate.tractate_name}
+                        {tractate.tractate}
                       </option>
                     ))}
                   </select>
@@ -137,9 +146,9 @@ function GoalPopup({
                 )}
               </>
             ) : goal?.goal_tractates?.length === 1 ? (
-              // If there is exactly one tractate, show its name and a page dropdown
+              // If there is only one tractate, show its name and a page dropdown
               <>
-                <h3>{goal.goal_tractates[0].tractate_name}</h3>
+                <h3>{goal.goal_tractates[0].tractate}</h3>
                 <label>
                   Select Page:
                   <select onChange={handlePageChange} value={selectedPage}>
@@ -161,10 +170,8 @@ function GoalPopup({
               // If no tractates exist, show a message
               <p>User has no tractate goals</p>
             )}
-            {/* total pages */}
-            {/* amount completed */}
-            {/* drop down, default amount completed, loop.length = total pages */}
             <input type="submit" value="Submit" />
+            <Button variant="outlined" color="error" size="small" startIcon={<DeleteIcon />} onClick={(e) => handleSubmit(e)}>Delete Goal (add dlt req)</Button>
           </form>
         )}
       </div>
