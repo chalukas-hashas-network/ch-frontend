@@ -7,7 +7,6 @@ const headers = {
 };
 
 export const getCommunities = async () => {
-  console.log("hit get request");
   try {
     const response = await fetch(API_URL + "/communities/");
     // Check if the response is OK
@@ -29,7 +28,6 @@ export const queryCommunities = async (
   includeFields = []
 ) => {
   const token = localStorage.getItem(ACCESS_TOKEN);
-  debugger
 
   let url = API_URL + "/admin/communities/?";
   const queryParams = [];
@@ -127,6 +125,30 @@ export const updateCommunity = async (body) => {
           name: body.name,
           location: body.location,
         }),
+      }
+    );
+    if (!response.ok) {
+      // throw new Error(`Error: ${response.statusText}`);
+    }
+
+    return await response.json();
+
+    // setUser(data);  // Set the fetched user data
+  } catch (err) {
+    console.log(err);
+    // setError(err.message);  // Set the error message
+  } finally {
+    // setLoading(false);  // Set loading to false once the fetch is complete
+  }
+};
+
+export const deleteCommunity = async (body) => {
+  try {
+    const response = await fetch(
+      API_URL + "/admin/communities/" + body.id + "/",
+      {
+        method: "DELETE",
+        headers: headers,
       }
     );
     if (!response.ok) {
