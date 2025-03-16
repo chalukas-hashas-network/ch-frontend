@@ -12,23 +12,20 @@ import {
 } from "../utils/dataExports/muiExports";
 import { useState, useEffect } from "react";
 import states from "../utils/dataExports/StatesExports";
-import { getCommunities } from "../utils/API/CommunityAPI";
+// import { getCommunities } from "../utils/API/CommunityAPI";
 
-function CommunityList({ setListSelected, setSelectedCommunity }) {
+function CommunityList({
+  setListSelected,
+  setSelectedCommunity,
+  communities,
+  communityData,
+  setCommunityData,
+}) {
   const [toggleDropdown, setToggleDropdown] = useState("name");
-  const [communities, setCommunities] = useState([]);
-  const [communityData, setCommunityData] = useState([]);
   const [selectedDropdown, setSelectedDropdown] = useState({
     name: "",
     firstLetter: "",
   });
-
-  useEffect(function getAllCommunities() {
-    getCommunities().then((data) => {
-      setCommunities(data);
-      setCommunityData(data);
-    });
-  }, []);
 
   const dropdownOptions =
     toggleDropdown === "name"
