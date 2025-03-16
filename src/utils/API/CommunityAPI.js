@@ -91,7 +91,7 @@ export const queryCommunities = async (
 
 export const createCommunity = async (body) => {
   try {
-    const response = await fetch(API_URL + "/communities/create/", {
+    const response = await fetch(API_URL + "/admin/communities/", {
       method: "POST",
       headers: headers,
       body: JSON.stringify({
@@ -117,7 +117,7 @@ export const createCommunity = async (body) => {
 export const updateCommunity = async (body) => {
   try {
     const response = await fetch(
-      API_URL + "/communities/update/" + body.id + "/",
+      API_URL + "/admin/communities/" + body.id + "/",
       {
         method: "PATCH",
         headers: headers,

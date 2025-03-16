@@ -16,7 +16,7 @@ export const getUser = async () => {
 
   try {
     const response = await fetch(
-      API_URL + "/me/?include_community=true&include_goal=true",
+      API_URL + "/me/?include_community=true&include_goal=true&include_goal_tractates=true",
       {
         method: "GET",
         headers: headers,
