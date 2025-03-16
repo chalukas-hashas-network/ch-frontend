@@ -1,49 +1,47 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import {
-  List,
-  Divider,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-  Avatar,
-} from "../utils/dataExports/muiExports";
-import { getCommunities } from "../utils/API/CommunityAPI";
+import { useState } from "react";
+import CommunityList from "../components/CommunityList";
+import CommunityMembersList from "../components/CommunityMembersList";
+
+// TODO: get new fetch for specific community with members and goal to send to members list
 
 function Community() {
-  const [communities, setCommunities] = useState([]);
-
-  useEffect(function getAllCommunities() {
-    getCommunities().then((data) => setCommunities(data));
-  }, []);
+  const [listSelected, setListSelected] = useState("community");
+  const [selectedCommunity, setSelectedCommunity] = useState({});
 
   return (
     <div>
-      <Link style={{ textDecoration: "none", color: "black" }} to="/profile">
-        {"< Back"}
-      </Link>
-      {/* dropdown for select all communities, default is users community (think of default for visitor) */}
-      <div>
-        <select>
-          <option value="all">All Communities</option>
-          {communities.map((community) => (
-            <option value={community.id}>{community.name}</option>
-          ))}
-        </select>
-      </div>
-      {communities.map((community) => (
-        <List
-          sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+      {listSelected === "community" && (
+        <Link
+          style={{ textDecoration: "none", color: "black" }}
+          to="/profile"
+          underline="none"
+      >
+          {"< Back"}
+        </Link>
+      )}
+      {listSelected === "members" && (
+        <Link
+          style={{ textDecoration: "none", color: "black" }}
+          underline="none"
+          onClick={() => {
+            setListSelected("community");
+          }}
         >
-          <ListItemButton alignItems="flex-start">
-            <ListItemAvatar>
-              <Avatar alt={community.name} src={community?.image} />
-            </ListItemAvatar>
-            <ListItemText primary={community.name} />
-          </ListItemButton>
-          <Divider variant="inset" component="li" />
-        </List>
-      ))}
+          {"< Back"}
+        </Link>
+      )}
+      {listSelected === "community" && (
+        <CommunityList
+          setListSelected={setListSelected}
+          setSelectedCommunity={setSelectedCommunity}
+        />
+      )}
+      {listSelected === "members" && (
+        <CommunityMembersList
+          selectedCommunity={selectedCommunity}
+          />
+      )}
     </div>
   );
 }
