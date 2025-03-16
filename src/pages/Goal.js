@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import GoalPopup from "../components/GoalPopup";
 import { useUser } from "../utils/Context";
 import { createAnnualGoal, getAllTractates } from "../utils/API/GoalAPI";
+import { Box, LinearProgress, Typography } from "../utils/dataExports/muiExports";
 
 /*
 TODO: 
@@ -93,9 +94,23 @@ function Goal() {
       <Link style={{ textDecoration: "none", color: "black" }} to="/profile">
         {"< Back"}
       </Link>
-      <div className="card" style={{ height: "100px" }}>
+      <div className="card" style={{ height: "150px" }}>
         <>User Progress Bar </>
-        <br />
+        <Box sx={{ display: "flex", alignItems: "center", margin: "10px" }}>
+          <Box sx={{ width: "100%", mr: 1 }}>
+            <LinearProgress
+              variant="determinate"
+              value={goal.user_percentage_completed}
+              style={{ margin: "10px", height: "20px" }}
+            />
+          </Box>
+          <Box sx={{ minWidth: 35 }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+            >{`${goal.user_percentage_completed}%`}</Typography>
+          </Box>
+        </Box>
         {user?.goal?.goal_tractates?.length > 1 ? (
           <div>
             <select
@@ -125,13 +140,11 @@ function Goal() {
               {user?.goal?.goal_tractates?.[0]?.tractate ||
                 "No tractate selected"}
             </span>
-            Pages complete for {user?.goal?.goal_tractates?.[0]?.tractate}:{" "}
-            {goal?.user_total_completed_pages} /{" "}
+            <br />
+            Pages complete: {goal?.user_total_completed_pages} /{" "}
             {goal?.user_total_selected_pages}
           </div>
         )}
-        <br />
-        <></>
         <select
           style={{ position: "absolute", right: "20px", margin: "10px" }}
           id="yearDropdown"
