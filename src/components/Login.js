@@ -6,13 +6,12 @@ import { useUser } from "../utils/Context";
 import { Button } from "../utils/dataExports/muiExports";
 import states from "../utils/dataExports/StatesExports";
 
-function Login({openLogin}) {
+function Login({ setLoginOpen, userStatus, setUserStatus }) {
   const location = useLocation();
   const { login, triggerLoading } = useUser();
   const navigate = useNavigate();
 
   const [signupPopup, setSignupPopup] = useState(false);
-  const [userStatus, setUserStatus] = useState("Login");
   const [userData, setUserData] = useState({
     email: "",
     username: "",
@@ -26,7 +25,6 @@ function Login({openLogin}) {
 
   useEffect(() => {
     if (location.pathname.includes("/invite")) {
-      // if (location.pathname.startsWith("/login/invite/")) {
       setUserStatus("Signup");
     }
   }, [location.pathname]);
@@ -60,8 +58,8 @@ function Login({openLogin}) {
       try {
         await login(userData.username, userData.password);
         triggerLoading();
-        openLogin(false);
-        navigate("/profile");
+        setLoginOpen(false);
+        navigate("/home");
       } catch (err) {
         alert("Invalid credentials");
         return;
@@ -88,7 +86,7 @@ function Login({openLogin}) {
       try {
         // const user = await createUser(userData);
         // console.log("User created", user);
-        navigate("/profile");
+        navigate("/home");
       } catch (err) {
         console.error("Error creating user", err);
         alert("Error creating user");
@@ -100,7 +98,7 @@ function Login({openLogin}) {
   return (
     <div className="popup-overlay">
       <div className="popup-card">
-        <h5 onClick={() => openLogin(false)}>X</h5>
+        <h5 onClick={() => setLoginOpen(false)}>X</h5>
         <article className="input" style={{ marginTop: "10px" }}>
           {userStatus === "Login" && (
             <form
