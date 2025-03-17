@@ -24,7 +24,7 @@ function Community() {
       {listSelected === "community" && (
         <Link
           style={{ textDecoration: "none", color: "black" }}
-          to="/profile"
+          to="/home"
           underline="none"
       >
           {"< Back"}

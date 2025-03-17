@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Profile from "../pages/Profile.js";
+import Home from "../pages/Home.js";
 import Settings from "../pages/Settings.js";
 import AdminDash from "../pages/AdminDash.js";
 import Community from "../pages/Community.js";
@@ -15,7 +15,7 @@ export default function Routing() {
       {!isLoading && (
         <Routes>
           <Route exact path="/community" element={<Community />} />
-          <Route exact path="/profile" element={<Profile />} />
+          <Route path="/home/*" element={<Home />} />
           {isAuth && (
             <>
               <Route exact path="/goal" element={<Goal />} />

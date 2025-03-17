@@ -91,7 +91,7 @@ function Goal() {
 
   return (
     <div>
-      <Link style={{ textDecoration: "none", color: "black" }} to="/profile">
+      <Link style={{ textDecoration: "none", color: "black" }} to="/home">
         {"< Back"}
       </Link>
       <div className="card" style={{ height: "150px" }}>

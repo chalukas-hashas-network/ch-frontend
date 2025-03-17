@@ -227,7 +227,7 @@ function AdminDash() {
 
   return (
     <>
-      <Link style={{ textDecoration: "none", color: "black" }} to="/profile">
+      <Link style={{ textDecoration: "none", color: "black" }} to="/home">
         {"< Back"}
       </Link>
       {isSuperAdmin && adminStatus === "admin" && (

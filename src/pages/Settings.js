@@ -55,7 +55,7 @@ function Settings() {
 
   return (
     <>
-      <Link style={{ textDecoration: "none", color: "black" }} to="/profile">
+      <Link style={{ textDecoration: "none", color: "black" }} to="/home">
         {"< Back"}
       </Link>
       <form onSubmit={submitUpdatedProfile}>

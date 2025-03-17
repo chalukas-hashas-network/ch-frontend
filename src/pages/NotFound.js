@@ -7,7 +7,7 @@ function NotFound() {
       <h3>Uh Oh! You are lost.</h3>
       <br/>
       <p>This page you are looking for does not exist.</p>
-      <Link style={{ textDecoration: "none", color: "blue" }} to="/profile">
+      <Link style={{ textDecoration: "none", color: "blue" }} to="/home">
         {"HOME"}
       </Link>
     </div>
