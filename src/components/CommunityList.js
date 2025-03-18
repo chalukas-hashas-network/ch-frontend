@@ -67,13 +67,12 @@ function CommunityList({
     [selectedDropdown, toggleDropdown]
   );
 
-  const handleDropdownChange = (e, newAlignment) => {
-    setToggleDropdown(newAlignment);
+  const handleDropdownChange = (e) => {
+    setToggleDropdown(e.target.value);
   };
 
   return (
-    <div>
-      <h1>Community List</h1>
+    <div style={{ color: "black" }}>
       <div
         style={{
           alignItems: "center",
@@ -87,15 +86,19 @@ function CommunityList({
             color="primary"
             value={toggleDropdown}
             exclusive
-            onChange={handleDropdownChange}
+            onChange={(e) => handleDropdownChange(e)}
             aria-label="Platform"
           >
-            <ToggleButton value="name">Name</ToggleButton>
-            <ToggleButton value="state">State</ToggleButton>
+            <ToggleButton value="name" sx={{ color: "white" }}>
+              Name
+            </ToggleButton>
+            <ToggleButton value="state" sx={{ color: "white" }}>
+              State
+            </ToggleButton>
           </ToggleButtonGroup>
         </div>
         <br />
-        <div>
+        <div style={{ color: "white" }}>
           <Autocomplete
             options={dropdownOptions.sort(
               (a, b) => -b.firstLetter.localeCompare(a.firstLetter)

@@ -226,30 +226,23 @@ function AdminDash() {
   };
 
   return (
-    <>
-      <Link style={{ textDecoration: "none", color: "black" }} to="/home">
-        {"< Back"}
-      </Link>
+    <div style={{ color: "white", paddingTop: "100px" }}>
+      {isSuperAdmin && adminStatus === "admin" ? (
+        <Link
+          style={{ textDecoration: "none", color: "white" }}
+          onClick={() => setAdminStatus("super") & setCurrentCommunity([])}
+        >
+          {"< Back"}
+        </Link>
+      ) : (
+        <Link style={{ textDecoration: "none", color: "white" }} to="/home">
+          {"< Back"}
+        </Link>
+      )}
       {isSuperAdmin && adminStatus === "admin" && (
         <>
-          <Link
-            style={{
-              textDecoration: "none",
-              color: "blue",
-              marginLeft: "20px",
-            }}
-            onClick={() => setAdminStatus("super") & setCurrentCommunity([])}
-          >
-            {"< Back"}
-          </Link>
-          {/* <Link
-            style={{ marginLeft: "20px" }}
-            onClick={() => setPopup(true) & setPopupStatus("addCommunityAdmin")}
-          >
-            Add Community Admin
-          </Link> */}
           <Button
-            style={{ marginLeft: "20px" }}
+            style={{ marginLeft: "20px", color: "#e3a41e" }}
             onClick={() => {
               setCommunityData({
                 name: currentCommunity?.name,
@@ -278,7 +271,7 @@ function AdminDash() {
       )}
       {isSuperAdmin && adminStatus === "super" && (
         <Button
-          style={{ marginLeft: "20px" }}
+          style={{ marginLeft: "20px", color: "#e3a41e" }}
           onClick={() => setPopup(true) & setPopupStatus("addCommunity")}
         >
           Add Community
@@ -370,7 +363,7 @@ function AdminDash() {
           createSuperData={createSuperData}
         />
       )}
-    </>
+    </div>
   );
 }
 

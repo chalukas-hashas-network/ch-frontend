@@ -90,7 +90,7 @@ function Goal() {
   };
 
   return (
-    <div>
+    <div style={{ color: "white", paddingTop: "100px" }}>
       <Link style={{ textDecoration: "none", color: "black" }} to="/home">
         {"< Back"}
       </Link>
@@ -108,6 +108,7 @@ function Goal() {
             <Typography
               variant="body2"
               color="text.secondary"
+              style={{ color: "white" }}
             >{`${goal.user_percentage_completed}%`}</Typography>
           </Box>
         </Box>

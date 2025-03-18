@@ -20,7 +20,7 @@ function Community() {
   }, []);
 
   return (
-    <div>
+    <div style={{ color: "white", paddingTop: "100px" }}>
       {listSelected === "community" && (
         <Link
           style={{ textDecoration: "none", color: "black" }}

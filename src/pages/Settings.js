@@ -24,12 +24,12 @@ function Settings() {
       [e.target.name]: e.target.value,
     });
   };
-  
+
   function capitalizeWord(str) {
     return str
-      .split(' ')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) 
-      .join(' ');
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
   }
 
   const submitUpdatedProfile = async (e) => {
@@ -54,85 +54,87 @@ function Settings() {
   };
 
   return (
-    <>
-      <Link style={{ textDecoration: "none", color: "black" }} to="/home">
+    <div style={{ color: "white", paddingTop: "100px" }}>
+      <Link style={{ textDecoration: "none", color: "white" }} to="/home">
         {"< Back"}
       </Link>
-      <form onSubmit={submitUpdatedProfile}>
-        <label>
-          Username:
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={userData.username}
-            onChange={handleDataChange}
-          />
-        </label>
-        <br />
-        <label>
-          First Name:
-          <input
-            type="text"
-            name="first_name"
-            placeholder="First Name"
-            value={userData.first_name}
-            onChange={handleDataChange}
-          />
-        </label>
-        <br />
-        <label>
-          Last Name:
-          <input
-            type="text"
-            name="last_name"
-            placeholder="Last Name"
-            value={userData.last_name}
-            onChange={handleDataChange}
-          />
-        </label>
-        <br />
-        <label>
-          Email:
-          <input
-            type="text"
-            name="email"
-            placeholder="Email"
-            value={userData.email}
-            onChange={handleDataChange}
-          />
-        </label>
-        <br />
-        <label>
-          Phone Number:
-          <input
-            type="text"
-            name="phone_number"
-            placeholder="Phone Number"
-            value={userData.phone_number}
-            onChange={handleDataChange}
-          />
-        </label>
-        <br />
-        <label>
-          State:
-          <select
-            value={capitalizeWord(userData.location)}
-            name="location"
-            onChange={handleDataChange}
-          >
-            <option value="">Select state</option>
-            {states.map((state, index) => (
-              <option key={index} value={state}>
-                {state}
-              </option>
-            ))}
-          </select>
-        </label>
-        <br />
-        <input type="submit" value="Update Profile" />
-      </form>
-    </>
+      <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <form onSubmit={submitUpdatedProfile}>
+          <label>
+            Username:{" "}
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              value={userData.username}
+              onChange={handleDataChange}
+            />
+          </label>
+          <br />
+          <label>
+            First Name:{" "}
+            <input
+              type="text"
+              name="first_name"
+              placeholder="First Name"
+              value={userData.first_name}
+              onChange={handleDataChange}
+            />
+          </label>
+          <br />
+          <label>
+            Last Name:{" "}
+            <input
+              type="text"
+              name="last_name"
+              placeholder="Last Name"
+              value={userData.last_name}
+              onChange={handleDataChange}
+            />
+          </label>
+          <br />
+          <label>
+            Email:{" "}
+            <input
+              type="text"
+              name="email"
+              placeholder="Email"
+              value={userData.email}
+              onChange={handleDataChange}
+            />
+          </label>
+          <br />
+          <label>
+            Phone Number:{" "}
+            <input
+              type="text"
+              name="phone_number"
+              placeholder="Phone Number"
+              value={userData.phone_number}
+              onChange={handleDataChange}
+            />
+          </label>
+          <br />
+          <label>
+            State:{" "}
+            <select
+              value={capitalizeWord(userData.location)}
+              name="location"
+              onChange={handleDataChange}
+            >
+              <option value="">Select state</option>
+              {states.map((state, index) => (
+                <option key={index} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+          </label>
+          <br />
+          <input type="submit" value="Update Profile" />
+        </form>
+      </div>
+    </div>
   );
 }
 
