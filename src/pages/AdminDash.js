@@ -242,7 +242,7 @@ function AdminDash() {
       {isSuperAdmin && adminStatus === "admin" && (
         <>
           <Button
-            style={{ marginLeft: "20px", color: "#e3a41e" }}
+            style={{ marginLeft: "20px", color: "var(--orange)" }}
             onClick={() => {
               setCommunityData({
                 name: currentCommunity?.name,
@@ -271,7 +271,7 @@ function AdminDash() {
       )}
       {isSuperAdmin && adminStatus === "super" && (
         <Button
-          style={{ marginLeft: "20px", color: "#e3a41e" }}
+          style={{ marginLeft: "20px", color: "var(--orange)" }}
           onClick={() => setPopup(true) & setPopupStatus("addCommunity")}
         >
           Add Community
