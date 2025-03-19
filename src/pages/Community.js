@@ -23,7 +23,7 @@ function Community() {
     <div style={{ color: "white", paddingTop: "100px" }}>
       {listSelected === "community" && (
         <Link
-          style={{ textDecoration: "none", color: "black" }}
+          style={{ textDecoration: "none", color: "white" }}
           to="/home"
           underline="none"
       >
@@ -32,7 +32,7 @@ function Community() {
       )}
       {listSelected === "members" && (
         <Link
-          style={{ textDecoration: "none", color: "black" }}
+          style={{ textDecoration: "none", color: "white" }}
           underline="none"
           onClick={() => {
             setListSelected("community");

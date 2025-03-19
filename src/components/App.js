@@ -1,6 +1,5 @@
 //  cd into parent backend run $python3 manage.py runserver
 // TODO: input validations, error handling, update user state upon any edits
-// ! when creating community, location is lowercase. only on community edit does it make it as uppercase.
 
 import Routing from "../utils/Routing";
 import { useUser } from "../utils/Context";
@@ -16,7 +15,7 @@ function App() {
   }, []);
 
   return (
-    <div className="App" style={{backgroundColor: "#3d1515"}}>
+    <div className="App">
       {!isLoading && <Nav />}
       {isLoading ? <Loading /> : <Routing />}
     </div>

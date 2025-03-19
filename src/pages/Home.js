@@ -67,7 +67,7 @@ function Home() {
               color="primary"
               sx={{
                 marginTop: "20px",
-                backgroundColor: "#e3a41e",
+                backgroundColor: "var(--orange)",
               }}
             >
               Sign up
@@ -77,7 +77,7 @@ function Home() {
             variant="contained"
             sx={{
               marginTop: "20px",
-              backgroundColor: "#e3a41e",
+              backgroundColor: "var(--orange)",
               marginLeft: "25px",
             }}
           >
@@ -174,7 +174,7 @@ function Home() {
               minWidth: "150px",
               maxWidth: "360px",
               height: "150px",
-              backgroundColor: "#e3a41e",
+              backgroundColor: "var(--orange)",
             }}
           >
             <CardActionArea

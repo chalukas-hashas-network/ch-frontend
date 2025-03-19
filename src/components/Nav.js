@@ -235,7 +235,7 @@ function Nav() {
                       setLoginOpen(true);
                     }}
                     sx={{
-                      backgroundColor: "#e3a41e",
+                      backgroundColor: "var(--orange)",
                       color: "rgb(255, 255, 255)",
                     }}
                   >
@@ -259,6 +259,7 @@ function Nav() {
           setLoginOpen={setLoginOpen}
           userStatus={userStatus}
           setUserStatus={setUserStatus}
+          loginOpen={loginOpen}
         />
       )}
     </>

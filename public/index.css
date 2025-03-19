@@ -16,7 +16,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.3); /* Slightly dark background */
+  background-color: rgba(0, 0, 0, 0.1); /* Slightly dark background */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,7 +29,7 @@
 .popup-card {
   background-color: white;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 400px; /* Adjust as needed */
   text-align: center;
@@ -50,3 +50,10 @@
   background-color: #d32f2f;
 }
 
+#body{
+  background-color: #3d1515;
+}
+
+:root {
+  --orange: #e3a41e;
+}

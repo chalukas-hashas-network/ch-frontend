@@ -125,6 +125,7 @@ function CommunityList({
         {communityData.length > 0 ? (
           communityData.map((community) => (
             <List
+              key={community.id}
               sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
               onClick={() => {
                 setListSelected("members");

@@ -9,7 +9,7 @@ export default function Loading() {
         height: " 100vh",
       }}
     >
-      <CircularProgress size="3rem" />
+      <CircularProgress size="3rem" style={{ color: "var(--orange)" }} />
     </Box>
   );
 }
