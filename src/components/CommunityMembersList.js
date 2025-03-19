@@ -9,14 +9,41 @@ import {
   Divider,
   Avatar,
 } from "../utils/dataExports/muiExports";
+import { useEffect, useState } from "react";
+import { getCommunities } from "../utils/API/CommunityAPI";
 
 function CommunityMembersList({ selectedCommunity }) {
-  const { community_goal, members, name } = selectedCommunity;
+  const [communityData, setCommunityData] = useState({
+    community_goal: {
+      community_total_completed_pages: 0,
+      community_total_selected_pages: 0,
+    },
+    members: [],
+    name: "",
+  });
+  const { community_goal, members, name } = communityData;
 
-  const {
-    community_total_completed_pages = 0,
-    community_total_selected_pages = 0,
-  } = community_goal || {};
+  useEffect(function getCommunityData() {
+    getCommunities({ id: selectedCommunity.id }, [
+      "members",
+      "community_goal",
+    ]).then((data) => {
+      console.log("community data", data[0]);
+      setCommunityData({
+        community_goal: {
+          community_total_completed_pages:
+            data[0].community_goal[0].community_total_completed_pages,
+          community_total_selected_pages:
+            data[0].community_goal[0].community_total_selected_pages,
+        },
+        members: data[0].members,
+        name: data[0].name,
+      });
+    });
+  }, []);
+
+  const { community_total_completed_pages, community_total_selected_pages } =
+    community_goal;
 
   const percentageCompleted =
     (community_total_completed_pages / community_total_selected_pages) * 100;
@@ -39,7 +66,7 @@ function CommunityMembersList({ selectedCommunity }) {
             </Box>
             <Box sx={{ minWidth: 35 }}>
               <Typography variant="body2" color="text.secondary">
-                {percentageCompleted ? `${percentageCompleted}%` : "0%"}
+                {percentageCompleted ? `${percentageCompleted.toFixed(2)}%` : "0%"}
               </Typography>
             </Box>
           </Box>
@@ -60,10 +87,12 @@ function CommunityMembersList({ selectedCommunity }) {
           {members?.length > 0 ? (
             members?.map((member) => (
               <List
+                key={member.id}
                 sx={{
                   width: "100%",
                   maxWidth: 360,
                   bgcolor: "background.paper",
+                  color: "black",
                 }}
                 onClick={() => {
                   console.log("member", member);
