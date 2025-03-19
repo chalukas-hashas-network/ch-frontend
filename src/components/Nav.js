@@ -92,10 +92,32 @@ function Nav() {
                 sx={{ textAlign: "center", color: "black" }}
                 onClick={() => navigate("/community")}
               >
-                Community
+                Community Page
               </Typography>
             </MenuItem>
-
+            <MenuItem>
+              <Typography
+                sx={{ textAlign: "center", color: "black" }}
+                onClick={() => navigate("/goal")}
+              >
+                Goal Page
+              </Typography>
+            </MenuItem>
+            <MenuItem>
+              <Typography
+                sx={{ textAlign: "center", color: "black" }}
+                onClick={() => navigate("/settings")}
+              >
+                Settings
+              </Typography>
+            </MenuItem>
+            {isAdmin && (
+              <MenuItem onClick={() => navigate("/dashboard")}>
+                <Typography sx={{ textAlign: "center" }}>
+                  Admin Dashboard
+                </Typography>
+              </MenuItem>
+            )}
             {isAuth ? (
               <MenuItem onClick={handleLogout}>
                 <Typography sx={{ textAlign: "center" }}>Logout</Typography>
@@ -119,13 +141,6 @@ function Nav() {
                   <Typography sx={{ textAlign: "center" }}>Sign up</Typography>
                 </MenuItem>
               </>
-            )}
-            {isAdmin && (
-              <MenuItem onClick={() => navigate("/dashboard")}>
-                <Typography sx={{ textAlign: "center" }}>
-                  Admin Dashboard
-                </Typography>
-              </MenuItem>
             )}
           </Menu>
         </Box>
@@ -161,6 +176,13 @@ function Nav() {
               right: "5em",
             }}
           >
+            <Button
+              key="goal"
+              onClick={() => navigate("/home")}
+              sx={{ color: "rgb(255, 255, 255)" }}
+            >
+              Home
+            </Button>
             <Button
               key="Community Page"
               onClick={() => navigate("/community")}
