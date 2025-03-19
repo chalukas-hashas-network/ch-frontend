@@ -6,9 +6,26 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-export const getCommunities = async () => {
+export const getCommunities = async (filterField = {}, includeFields = []) => {
+  let url = API_URL + "/communities/?";
+  const queryParams = [];
+
+  // Add the filter parameter to the query string if it's provided
+  for (const [key, value] of Object.entries(filterField)) {
+    queryParams.push(`by_${key}=${value}`);
+  }
+
+  // Add each include parameter to the query string
+  includeFields.forEach((field) => {
+    queryParams.push(`include_${field}=true`);
+  });
+
+  if (queryParams.length > 0) {
+    url += queryParams.join("&");
+  }
+
   try {
-    const response = await fetch(API_URL + "/communities/");
+    const response = await fetch(url);
     // Check if the response is OK
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
