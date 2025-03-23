@@ -28,16 +28,21 @@ function CommunityMembersList({ selectedCommunity }) {
       "members",
       "community_goal",
     ]).then((data) => {
-      console.log("community data", data[0]);
+      const { members, community_goal, location, name } = data[0];
+
+      const goal = community_goal?.[0] || {
+        community_total_completed_pages: 0,
+        community_total_selected_pages: 0,
+      };
+      
+      console.log("goal", goal);
       setCommunityData({
         community_goal: {
-          community_total_completed_pages:
-            data[0].community_goal[0].community_total_completed_pages,
-          community_total_selected_pages:
-            data[0].community_goal[0].community_total_selected_pages,
+          community_total_completed_pages: goal.community_total_completed_pages,
+          community_total_selected_pages: goal.community_total_selected_pages,
         },
-        members: data[0].members,
-        name: data[0].name,
+        members: members,
+        name: name,
       });
     });
   }, []);
@@ -66,7 +71,9 @@ function CommunityMembersList({ selectedCommunity }) {
             </Box>
             <Box sx={{ minWidth: 35 }}>
               <Typography variant="body2" color="text.secondary">
-                {percentageCompleted ? `${percentageCompleted.toFixed(2)}%` : "0%"}
+                {percentageCompleted
+                  ? `${percentageCompleted.toFixed(2)}%`
+                  : "0%"}
               </Typography>
             </Box>
           </Box>
