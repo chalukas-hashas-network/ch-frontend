@@ -4,10 +4,14 @@ import {
   Box,
   IconButton,
   Typography,
-  Menu,
-  MenuItem,
   Container,
   MenuIcon,
+  List,
+  ListItem,
+  ListItemButton,
+  Divider,
+  ListItemText,
+  Drawer,
 } from "../utils/dataExports/muiExports";
 import { useUser } from "../utils/Context";
 
@@ -15,9 +19,9 @@ import { useState } from "react";
 import Login from "./Login";
 
 function Nav() {
-  const [anchorElNav, setAnchorElNav] = useState(null);
   const [userStatus, setUserStatus] = useState("Login");
   const [loginOpen, setLoginOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const { logout, isAuth, isAdmin } = useUser();
   const navigate = useNavigate();
 
@@ -25,14 +29,6 @@ function Nav() {
     logout();
     localStorage.clear();
     navigate("/home");
-  };
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   return (
@@ -58,91 +54,109 @@ function Nav() {
           </Link>
           <IconButton
             size="large"
-            onClick={handleOpenNavMenu}
+            onClick={() => setDrawerOpen(true)}
             sx={{ color: "white", position: "absolute", right: "1em" }}
           >
             <MenuIcon />
           </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorElNav}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            open={Boolean(anchorElNav)}
-            onClose={handleCloseNavMenu}
-            sx={{ display: { xs: "block", md: "none" } }}
-          >
-            <MenuItem>
-              <Typography
-                sx={{ textAlign: "center", color: "black" }}
-                onClick={() => navigate("/home")}
-              >
-                Home
-              </Typography>
-            </MenuItem>
-            <MenuItem>
-              <Typography
-                sx={{ textAlign: "center", color: "black" }}
-                onClick={() => navigate("/community")}
-              >
-                Community Page
-              </Typography>
-            </MenuItem>
-            <MenuItem>
-              <Typography
-                sx={{ textAlign: "center", color: "black" }}
-                onClick={() => navigate("/goal")}
-              >
-                Goal Page
-              </Typography>
-            </MenuItem>
-            <MenuItem>
-              <Typography
-                sx={{ textAlign: "center", color: "black" }}
-                onClick={() => navigate("/settings")}
-              >
-                Settings
-              </Typography>
-            </MenuItem>
-            {isAdmin && (
-              <MenuItem onClick={() => navigate("/dashboard")}>
-                <Typography sx={{ textAlign: "center" }}>
-                  Admin Dashboard
-                </Typography>
-              </MenuItem>
-            )}
-            {isAuth ? (
-              <MenuItem onClick={handleLogout}>
-                <Typography sx={{ textAlign: "center" }}>Logout</Typography>
-              </MenuItem>
-            ) : (
-              <>
-                <MenuItem
-                  onClick={() => {
-                    setUserStatus("Login");
-                    setLoginOpen(true);
-                  }}
-                >
-                  <Typography sx={{ textAlign: "center" }}>Log in</Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    setUserStatus("Signup");
-                    setLoginOpen(true);
-                  }}
-                >
-                  <Typography sx={{ textAlign: "center" }}>Sign up</Typography>
-                </MenuItem>
-              </>
-            )}
-          </Menu>
+          <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} anchor="right">
+            <Box sx={{ width: 250 }} role="presentation">
+              <List>
+                <ListItem disablePadding key="home">
+                  <ListItemButton
+                    onClick={() => {
+                      setDrawerOpen(false);
+                      navigate("/home");
+                    }}
+                  >
+                    {/* <ListItemButton onClick={() => setDrawerOpen(false)} and navigate to the page> */}
+                    <ListItemText primary="Home" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding key="community">
+                  <ListItemButton
+                    onClick={() => {
+                      setDrawerOpen(false);
+                      navigate("/community");
+                    }}
+                  >
+                    <ListItemText primary="Community Page" />
+                  </ListItemButton>
+                </ListItem>
+                {isAuth ? (
+                  <>
+                    <ListItem disablePadding key="goal">
+                      <ListItemButton
+                        onClick={() => {
+                          setDrawerOpen(false);
+                          navigate("/goal");
+                        }}
+                      >
+                        <ListItemText primary="Goal Page" />
+                      </ListItemButton>
+                    </ListItem>
+                    {isAdmin && (
+                      <ListItem disablePadding key="admin">
+                        <ListItemButton
+                          onClick={() => {
+                            setDrawerOpen(false);
+                            navigate("/dashboard");
+                          }}
+                        >
+                          <ListItemText primary="Admin Dashboard" />
+                        </ListItemButton>
+                      </ListItem>
+                    )}
+                    <ListItem disablePadding key="settings">
+                      <ListItemButton
+                        onClick={() => {
+                          setDrawerOpen(false);
+                          navigate("/settings");
+                        }}
+                      >
+                        <ListItemText primary="Settings" />
+                      </ListItemButton>
+                    </ListItem>
+                    <Divider variant="middle" />
+                    <ListItem disablePadding key="logout">
+                      <ListItemButton
+                        onClick={() => {
+                          setDrawerOpen(false);
+                          handleLogout();
+                        }}
+                      >
+                        <ListItemText primary="Logout" />
+                      </ListItemButton>
+                    </ListItem>
+                  </>
+                ) : (
+                  <>
+                    <Divider variant="middle" />
+                    <ListItem disablePadding key="login">
+                      <ListItemButton
+                        onClick={() => {
+                          setUserStatus("Login");
+                          setLoginOpen(true);
+                        }}
+                      >
+                        <ListItemText primary="Log in" />
+                      </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding key="signup">
+                      <ListItemButton
+                        onClick={() => {
+                          setUserStatus("Signup");
+                          setLoginOpen(true);
+                        }}
+                      >
+                        <ListItemText primary="Sign up" />
+                      </ListItemButton>
+                    </ListItem>
+                  </>
+                )}
+              </List>
+            </Box>
+          </Drawer>
         </Box>
 
         {/* //* large nav bar */}
@@ -206,16 +220,16 @@ function Nav() {
                 >
                   Settings
                 </Button>
+                {isAdmin && (
+                  <Button
+                    key="Admin Dashboard"
+                    onClick={() => navigate("/dashboard")}
+                    sx={{ color: "rgb(255, 255, 255)" }}
+                  >
+                    Admin Dashboard
+                  </Button>
+                )}
               </>
-            )}
-            {isAdmin && (
-              <Button
-                key="Admin Dashboard"
-                onClick={() => navigate("/dashboard")}
-                sx={{ color: "rgb(255, 255, 255)" }}
-              >
-                Admin Dashboard
-              </Button>
             )}
             <div
               style={{
