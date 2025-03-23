@@ -14,7 +14,7 @@ export const createAnnualGoal = async (id, year) => {
   }
 
   try {
-    const response = await fetch(API_URL + "/goals/create/", {
+    const response = await fetch(API_URL + "/goals/", {
       method: "POST",
       headers: headers,
       body: JSON.stringify({
