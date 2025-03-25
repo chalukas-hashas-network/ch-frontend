@@ -9,6 +9,10 @@ import {
   TableRow,
   DeleteIcon,
   Button,
+  TextField,
+  Box,
+  LinearProgress,
+  Typography,
 } from "../utils/dataExports/muiExports";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -50,13 +54,7 @@ All admins have add (create) new member and add community admin
 const adminColumns = [
   { id: "first_name", label: "First Name", minWidth: 170 },
   { id: "last_name", label: "Last Name", minWidth: 170 },
-  {
-    id: "population",
-    label: "Population",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
+  { id: "email", label: "Email", minWidth: 170 },
   {
     id: "goalComplete",
     label: "Goal Completed",
@@ -69,15 +67,22 @@ const adminColumns = [
 const superColumns = [
   { id: "name", label: "Name", minWidth: 170 },
   { id: "location", label: "Location", minWidth: 170 },
-  // { id: "members", label: "Members", align: "right", minWidth: 170 }
+  { id: "members", label: "Members", align: "right", minWidth: 170 },
+  { id: "goal", label: "Community goal", align: "right", minWidth: 170 },
   // issue with portraying members length when upading community
 ];
 
 function createData(id, first_name, last_name, email, community) {
   return { first_name, last_name, id, email };
 }
-function createSuperData(id, name, location, members) {
-  return { id, name, location, members };
+function createSuperData(id, name, location, members = 0, community_goal) {
+  const completedPages = community_goal?.community_total_completed_pages || 0;
+  const selectedPages = community_goal?.community_total_selected_pages || 0;
+  const goal =
+    selectedPages > 0
+      ? `${((completedPages / selectedPages) * 100).toFixed(2)}%`
+      : "0%";
+  return { id, name, location, members, goal };
 }
 
 function AdminDash() {
@@ -92,8 +97,9 @@ function AdminDash() {
   const [communityData, setCommunityData] = useState({
     name: "",
     location: "",
-    members: [],
+    members: 0,
     id: "",
+    community_goal: {},
   });
   const [userData, setUserData] = useState({
     username: "",
@@ -117,6 +123,9 @@ function AdminDash() {
     }
   }, []);
 
+  // console.log("currentCommunity: ", currentCommunity);
+  // console.log("communityData: ", communityData);
+
   useEffect(
     function setDataBasedOffStatus() {
       let updatedRows = [];
@@ -127,6 +136,7 @@ function AdminDash() {
             try {
               const communities = await queryCommunities({}, [
                 "include_members",
+                "include_community_goal",
               ]);
               setAllCommunities(communities);
               communities.map((community) => {
@@ -135,7 +145,8 @@ function AdminDash() {
                     community?.id,
                     community?.name,
                     capitalizeWord(community?.location),
-                    community?.members
+                    community?.members?.length,
+                    community?.community_goal?.[0]
                   )
                 );
               });
@@ -151,7 +162,8 @@ function AdminDash() {
                   community?.id,
                   community?.name,
                   capitalizeWord(community?.location),
-                  community?.members
+                  community?.members?.length,
+                  community?.community_goal?.[0]
                 )
               );
             });
@@ -162,6 +174,8 @@ function AdminDash() {
           const communityName = isSuperAdmin
             ? currentCommunity?.id
             : user?.community?.id;
+          // instead of quering members, query community with members
+          // TODO: include goal
           const members = await queryUsers({ community_id: communityName });
           if (members?.length > 0) {
             members.map((member) => {
@@ -241,6 +255,21 @@ function AdminDash() {
       )}
       {isSuperAdmin && adminStatus === "admin" && (
         <>
+          {/* <Button
+            style={{ marginLeft: "20px", color: "var(--orange)" }}
+            onClick={() => {
+              setCommunityData({
+                name: currentCommunity?.name,
+                location: currentCommunity?.location,
+                members: currentCommunity?.members,
+                id: currentCommunity?.id,
+              });
+              setPopup(true);
+              setPopupStatus("editCommunity");
+            }}
+          >
+            Create community Goal
+          </Button> */}
           <Button
             style={{ marginLeft: "20px", color: "var(--orange)" }}
             onClick={() => {
@@ -289,6 +318,34 @@ function AdminDash() {
           {"Create New User"}
         </Link>
       )} */}
+      {adminStatus === "admin" && (
+        <Box sx={{ display: "flex", alignItems: "center", margin: "10px" }}>
+          <Box sx={{ width: "100%", mr: 1 }}>
+            <LinearProgress
+              variant="determinate"
+              value={parseFloat(currentCommunity?.goal?.replace("%", ""))}
+              sx={{
+                margin: "10px",
+                height: "20px",
+                backgroundColor: "var(--orange-light)",
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: "var(--orange)",
+                },
+              }}
+            />
+          </Box>
+          <Box sx={{ minWidth: 35 }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              style={{ color: "white" }}
+            >
+              {currentCommunity?.goal}
+            </Typography>
+          </Box>
+        </Box>
+      )}
+
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
