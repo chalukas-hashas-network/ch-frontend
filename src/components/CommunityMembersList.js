@@ -60,17 +60,24 @@ function CommunityMembersList({ selectedCommunity }) {
       <h1>{name} Members List</h1>
       <div>
         <div className="card" style={{ height: "150px" }}>
-          <>{name} Progress Bar </>
+          <div>{name} Progress Bar </div>
           <Box sx={{ display: "flex", alignItems: "center", margin: "10px" }}>
             <Box sx={{ width: "100%", mr: 1 }}>
               <LinearProgress
                 variant="determinate"
                 value={percentageCompleted}
-                style={{ margin: "10px", height: "20px" }}
+                sx={{ 
+                  margin: "10px", 
+                  height: "20px",
+                  backgroundColor: "var(--orange-light)",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: "var(--orange)"
+                  }
+                }}
               />
             </Box>
             <Box sx={{ minWidth: 35 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" style={{ color: "white" }}>
                 {percentageCompleted
                   ? `${percentageCompleted.toFixed(2)}%`
                   : "0%"}
