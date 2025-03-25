@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../utils/Context";
+import { createUser } from "../utils/API/UserAPI";
 import {
   Button,
   CloseRoundedIcon,
@@ -22,16 +23,22 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
     email: "",
     username: "",
     password: "",
-    confirmPassword: "",
+    password_confirmation: "",
     phone_number: "",
     first_name: "",
     last_name: "",
     location: "",
   });
 
-  useEffect(() => {
+  useEffect(function checkPathForAction() {
+    
     if (location.pathname.includes("/invite")) {
       setUserStatus("Signup");
+    }
+
+    if (location.pathname.includes("/adminInvite")) {
+      // TODO: set up logic to make user admin
+      // if user exists, log them in, else sign them up
     }
   }, [location.pathname]);
 
@@ -40,7 +47,7 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
   };
 
   const handleSignup = () => {
-    if (userData.password !== userData.confirmPassword) {
+    if (userData.password !== userData.password_confirmation) {
       alert("Passwords do not match");
       return;
     }
@@ -48,7 +55,7 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
       alert("Please enter an email");
       return;
     }
-    if (userData.password === "" || userData.confirmPassword === "") {
+    if (userData.password === "" || userData.password_confirmation === "") {
       alert("Please enter a password");
       return;
     }
@@ -66,7 +73,7 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
         await login(userData.username, userData.password);
         triggerLoading();
         setLoginOpen(false);
-        navigate("/home");
+        navigate(location.pathname);
       } catch (err) {
         alert("Invalid credentials");
         return;
@@ -88,12 +95,21 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
         );
         return; // Exit the function early
       }
+      console.log("userData.phone_number", typeof userData.phone_number);
+      if(userData.phone_number.length !== 10 && !/^\d{10}$/.test(userData.phone_number)) {
+        alert("Please enter a valid phone number");
+        return;
+      }
       console.log("Registering user", userData);
       // navigate("/profile");
       try {
-        // const user = await createUser(userData);
-        // console.log("User created", user);
-        navigate("/home");
+        const user = await createUser(userData);
+        console.log("User created", user);
+        if(user === "Account successfully created") {
+          navigate("/community");
+        } else {
+          alert("Error creating user");
+        }
       } catch (err) {
         console.error("Error creating user", err);
         alert("Error creating user");
@@ -103,11 +119,20 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
   };
 
   return (
-    <Dialog open={loginOpen} className="popup-overlay" style={{borderRadius: "20px"}}>
+    <Dialog
+      open={loginOpen}
+      className="popup-overlay"
+      onClose={() => setLoginOpen(false)}
+      PaperComponent={"Card"}
+    >
       {!signupPopup && (
         <div
           className="popup-card"
-          style={{ position: "relative", height: "30em", width: "22em", borderRadius: "20px" }}
+          style={{
+            position: "relative",
+            height: "30em",
+            width: "22em",
+          }}
         >
           <Button
             onClick={() => setLoginOpen(false)}
@@ -133,7 +158,7 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
                   value={userData.username}
                   onChange={handleChange}
                   style={{
-                    width: "100%",
+                    width: "90%",
                     marginBottom: "1em",
                     marginTop: "2em",
                   }}
@@ -146,12 +171,12 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
                   name="password"
                   value={userData.password}
                   onChange={handleChange}
-                  style={{ width: "100%", marginBottom: "1em" }}
+                  style={{ width: "90%", marginBottom: "1em" }}
                 />
                 <Button
                   type="submit"
                   variant="contained"
-                  style={{ backgroundColor: "var(--orange)", width: "100%" }}
+                  style={{ backgroundColor: "var(--orange)", width: "90%" }}
                 >
                   Login
                 </Button>
@@ -177,7 +202,7 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
                     value={userData.email}
                     onChange={handleChange}
                     style={{
-                      width: "100%",
+                      width: "90%",
                       marginBottom: "1em",
                       marginTop: "2em",
                     }}
@@ -190,22 +215,22 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
                     name="password"
                     value={userData.password}
                     onChange={handleChange}
-                    style={{ width: "100%", marginBottom: "1em" }}
+                    style={{ width: "90%", marginBottom: "1em" }}
                   />
                   <TextField
                     id="confirm-password"
                     label="Confirm Password"
                     variant="outlined"
                     type="password"
-                    name="confirmPassword"
-                    value={userData.confirmPassword}
+                    name="password_confirmation"
+                    value={userData.password_confirmation}
                     onChange={handleChange}
-                    style={{ width: "100%", marginBottom: "1em" }}
+                    style={{ width: "90%", marginBottom: "1em" }}
                   />
                   <Button
                     type="submit"
                     variant="contained"
-                    style={{ backgroundColor: "var(--orange)", width: "100%" }}
+                    style={{ backgroundColor: "var(--orange)", width: "90%" }}
                   >
                     Signup
                   </Button>
@@ -259,7 +284,7 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
               name="username"
               value={userData.username}
               onChange={handleChange}
-              style={{ width: "100%", marginBottom: "1em", marginTop: "2em" }}
+              style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}
             />
             <TextField
               id="first-name"
@@ -269,7 +294,7 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
               name="first_name"
               value={userData.first_name}
               onChange={handleChange}
-              style={{ width: "100%", marginBottom: "1em" }}
+              style={{ width: "90%", marginBottom: "1em" }}
             />
             <TextField
               id="last-name"
@@ -279,7 +304,7 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
               name="last_name"
               value={userData.last_name}
               onChange={handleChange}
-              style={{ width: "100%", marginBottom: "1em" }}
+              style={{ width: "90%", marginBottom: "1em" }}
             />
             <TextField
               id="phone-number"
@@ -289,7 +314,7 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
               name="phone_number"
               value={userData.phone_number}
               onChange={handleChange}
-              style={{ width: "100%", marginBottom: "1em" }}
+              style={{ width: "90%", marginBottom: "1em" }}
             />
             <TextField
               id="outlined-select-state"
@@ -299,7 +324,7 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
               value={userData.location}
               onChange={handleChange}
               defaultValue="Select state"
-              style={{ width: "100%", marginBottom: "1em" }}
+              style={{ width: "90%", marginBottom: "1em" }}
             >
               {states.map((state, index) => (
                 <MenuItem key={index} value={state}>
@@ -310,7 +335,7 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
             <Button
               type="submit"
               variant="contained"
-              style={{ backgroundColor: "var(--orange)", width: "100%" }}
+              style={{ backgroundColor: "var(--orange)", width: "90%" }}
             >
               Create Account
             </Button>
