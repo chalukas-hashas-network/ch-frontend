@@ -1,18 +1,18 @@
 import {
-  List,
-  Divider,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-  Avatar,
   TextField,
   Autocomplete,
   ToggleButton,
   ToggleButtonGroup,
+  Box,
+  Grid,
+  Card,
+  CardActionArea,
+  CardContent,
+  Typography,
+  Slider,
 } from "../utils/dataExports/muiExports";
 import { useState, useEffect } from "react";
 import states from "../utils/dataExports/StatesExports";
-// import { getCommunities } from "../utils/API/CommunityAPI";
 
 function CommunityList({
   setListSelected,
@@ -83,16 +83,33 @@ function CommunityList({
       >
         <div>
           <ToggleButtonGroup
-            color="primary"
             value={toggleDropdown}
             exclusive
             onChange={(e) => handleDropdownChange(e)}
             aria-label="Platform"
           >
-            <ToggleButton value="name" sx={{ color: "white" }}>
+            <ToggleButton
+              value="name"
+              sx={{
+                color: toggleDropdown === "name" ? "var(--orange)" : "gray",
+                "&.Mui-selected": {
+                  color: "var(--orange)",
+                  backgroundColor: "rgba(185, 108, 26, 0.08)",
+                },
+              }}
+            >
               Name
             </ToggleButton>
-            <ToggleButton value="state" sx={{ color: "white" }}>
+            <ToggleButton
+              value="state"
+              sx={{
+                color: toggleDropdown === "state" ? "var(--orange)" : "gray",
+                "&.Mui-selected": {
+                  color: "var(--orange)",
+                  backgroundColor: "rgba(185, 108, 26, 0.08)",
+                },
+              }}
+            >
               State
             </ToggleButton>
           </ToggleButtonGroup>
@@ -111,36 +128,169 @@ function CommunityList({
                 firstLetter: newValue ? newValue.firstLetter : "",
               });
             }}
-            sx={{ width: 300 }}
+            sx={{
+              width: 300,
+              "& .MuiOutlinedInput-root": {
+                color: "black",
+                "& fieldset": {
+                  borderColor: "white",
+                },
+                "&:hover fieldset": {
+                  borderColor: "var(--orange-light)",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "var(--orange)",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "black",
+                "&.Mui-focused": {
+                  color: "white",
+                },
+              },
+              "& .MuiSelect-select": {
+                color: "var(--orange)",
+              },
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label={`Select ${
                   toggleDropdown === "name" ? "Community" : "State"
                 }`}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    backgroundColor: "var(--orange)",
+                    "&.Mui-focused fieldset": {
+                      borderColor: "var(--orange)",
+                    },
+                  },
+                }}
               />
             )}
           />
         </div>
         {communityData.length > 0 ? (
-          communityData.map((community) => (
-            <List
-              key={community.id}
-              sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-              onClick={() => {
-                setListSelected("members");
-                setSelectedCommunity(community);
+          <Box>
+            <Grid
+              container
+              direction="row"
+              size={8}
+              sx={{
+                justifyContent: "center",
+                alignItems: "flex-end",
+                gap: "1em",
+                marginTop: "1em",
               }}
             >
-              <ListItemButton alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar alt={community.name} src={community?.image} />
-                </ListItemAvatar>
-                <ListItemText primary={community.name} />
-              </ListItemButton>
-              <Divider variant="inset" component="li" />
-            </List>
-          ))
+              {communityData.map((community, index) => (
+                <Grid
+                  key={community.id}
+                  onClick={() => {
+                    setListSelected("members");
+                    setSelectedCommunity(community);
+                  }}
+                >
+                  <Card
+                    key={community.id}
+                    sx={{
+                      flex: "1 1 300px",
+                      minWidth: "320px",
+                      maxWidth: "400px",
+                      height: "150px",
+                    }}
+                  >
+                    <CardActionArea
+                      sx={{
+                        height: "100%",
+                        "&[data-active]": {
+                          backgroundColor: "action.selected",
+                          "&:hover": {
+                            backgroundColor: "action.selectedHover",
+                          },
+                        },
+                      }}
+                    >
+                      <CardContent
+                        sx={{
+                          height: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <img src={community.image} alt="Community" />
+                        <div>
+                          <Typography variant="body2" component="div">
+                            {community.name}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Community in {community.location}
+                          </Typography>
+                          <br />
+                          <br />
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              margin: "10px",
+                            }}
+                          >
+                            <Box sx={{ width: "100%", mr: 1 }}>
+                              <Slider
+                                disabled
+                                defaultValue={
+                                  community.community_goal?.length > 0
+                                    ? (community.community_goal[0]
+                                        .community_total_completed_pages /
+                                        community.community_goal[0]
+                                          .community_total_selected_pages) *
+                                      100
+                                    : 0
+                                }
+                                aria-label="Disabled slider"
+                                sx={{
+                                  "& .MuiSlider-thumb": {
+                                    color: "var(--orange)",
+                                    height: "12px",
+                                    width: "12px",
+                                  },
+                                  "& .MuiSlider-track": {
+                                    color: "var(--orange)",
+                                  },
+                                  "& .MuiSlider-rail": {
+                                    color: "var(--orange-light)",
+                                  },
+                                }}
+                              />
+                            </Box>
+                            <Box sx={{ minWidth: 35 }}>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                {`${
+                                  community.community_goal?.length > 0
+                                    ? (
+                                        parseFloat(
+                                          community.community_goal[0]
+                                            .community_total_completed_pages /
+                                            community.community_goal[0]
+                                              .community_total_selected_pages
+                                        ) * 100
+                                      ).toFixed(2)
+                                    : 0
+                                }%`}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </div>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
         ) : (
           <p>No communities found</p>
         )}
