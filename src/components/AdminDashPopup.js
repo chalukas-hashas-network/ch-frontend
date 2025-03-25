@@ -1,6 +1,22 @@
 import states from "../utils/dataExports/StatesExports";
-import { createCommunity, updateCommunity, deleteCommunity } from "../utils/API/CommunityAPI";
-import { Button, DeleteIcon } from "../utils/dataExports/muiExports";
+import {
+  createCommunity,
+  updateCommunity,
+  deleteCommunity,
+} from "../utils/API/CommunityAPI";
+import {
+  Button,
+  DeleteIcon,
+  Dialog,
+  TextField,
+  MenuItem,
+  CloseRoundedIcon,
+} from "../utils/dataExports/muiExports";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+
+// TODO: add make admin to edit member and show if admin or not
+
 function AdminDashPopup({
   setUserData,
   userData,
@@ -116,8 +132,20 @@ function AdminDashPopup({
   };
 
   return (
-    <div className="popup-overlay">
-      <div className="popup-card">
+    <Dialog
+      open={true}
+      className="popup-overlay"
+      onClose={() => setPopup(false)}
+      PaperComponent={"Card"}
+    >
+      <div
+        className="popup-card"
+        style={{
+          position: "relative",
+          height: "20em",
+          width: "20em",
+        }}
+      >
         <Button
           onClick={() => {
             setPopup(false);
@@ -129,88 +157,105 @@ function AdminDashPopup({
               id: "",
             });
           }}
+          style={{ position: "absolute", top: "10px", right: "10px" }}
         >
-          Close
+          <CloseRoundedIcon style={{ color: "var(--orange)" }} />
         </Button>
         {popupStatus === "addCommunity" && (
           <div>
             <form onSubmit={handleSubmit}>
-              <label>
-                name:
-                <input
-                  type="text"
-                  placeholder="Community Name"
-                  value={communityData.name}
-                  onChange={(e) =>
-                    setCommunityData({
-                      ...communityData,
-                      name: e.target.value,
-                    })
-                  }
-                />
-              </label>
-              <label>
-                location:
-                <select
-                  value={capitalizeWord(communityData.location)}
-                  onChange={(e) =>
-                    setCommunityData({
-                      ...communityData,
-                      location: e.target.value,
-                    })
-                  }
-                >
-                  <option value="">Select state</option>
-                  {states.map((state, index) => (
-                    <option key={index} value={state}>
-                      {state}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <input type="submit" value="Submit" />
+              <TextField
+                id="name"
+                label="Community Name"
+                variant="outlined"
+                type="text"
+                name="name"
+                value={communityData.name}
+                onChange={(e) =>
+                  setCommunityData({
+                    ...communityData,
+                    name: e.target.value,
+                  })
+                }
+                style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}
+              />
+              <TextField
+                id="outlined-select-state"
+                select
+                label="State"
+                name="location"
+                value={capitalizeWord(communityData.location)}
+                onChange={(e) =>
+                  setCommunityData({
+                    ...communityData,
+                    location: e.target.value,
+                  })
+                }
+                defaultValue="Select state"
+                style={{ width: "90%", marginBottom: "1em" }}
+              >
+                {states.map((state, index) => (
+                  <MenuItem key={index} value={state}>
+                    {state}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Button
+                type="submit"
+                variant="contained"
+                style={{ backgroundColor: "var(--orange)", width: "90%" }}
+              >
+                Create Community
+              </Button>
             </form>
           </div>
         )}
         {popupStatus === "editCommunity" && (
-          <div>
-            <form onSubmit={handleSubmit}>
-              <label>
-                name:
-                <input
-                  type="text"
-                  placeholder="Community Name"
-                  value={communityData.name}
-                  onChange={(e) =>
-                    setCommunityData({
-                      ...communityData,
-                      name: e.target.value,
-                    })
-                  }
-                />
-              </label>
-              <label>
-                location:
-                <select
-                  value={capitalizeWord(communityData.location)}
-                  onChange={(e) =>
-                    setCommunityData({
-                      ...communityData,
-                      location: e.target.value,
-                    })
-                  }
-                >
-                  <option value="">Select state</option>
-                  {states.map((state, index) => (
-                    <option key={index} value={state}>
-                      {state}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <input type="submit" value="Submit" />
-            </form>
-          </div>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              id="name"
+              label="Community Name"
+              variant="outlined"
+              type="text"
+              name="name"
+              value={communityData.name}
+              onChange={(e) =>
+                setCommunityData({
+                  ...communityData,
+                  name: e.target.value,
+                })
+              }
+              style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}
+            />
+            <TextField
+              id="outlined-select-state"
+              select
+              label="State"
+              name="location"
+              value={capitalizeWord(communityData.location)}
+              onChange={(e) =>
+                setCommunityData({
+                  ...communityData,
+                  location: e.target.value,
+                })
+              }
+              defaultValue="Select state"
+              style={{ width: "90%", marginBottom: "1em" }}
+            >
+              {states.map((state, index) => (
+                <MenuItem key={index} value={state}>
+                  {state}
+                </MenuItem>
+              ))}
+            </TextField>
+            <Button
+              type="submit"
+              variant="contained"
+              style={{ backgroundColor: "var(--orange)", width: "90%" }}
+            >
+              Update Community
+            </Button>
+          </form>
         )}
         {popupStatus === "addCommunityAdmin" && (
           <h2>Add Community Admin drop or search for user and community</h2>
@@ -218,48 +263,60 @@ function AdminDashPopup({
         {popupStatus === "editMember" && (
           //? what info should admin/super be allowed to edit
           <form onSubmit={handleSubmit}>
-            <label>
-              name:
-              <input
-                type="text"
-                name="first_name"
-                placeholder="First Name"
-                value={userData.first_name}
-                onChange={handleUserDataChange}
-              />
-            </label>
-            <label>
-              last name:
-              <input
-                type="text"
-                name="last_name"
-                placeholder="Last Name"
-                value={userData.last_name}
-                onChange={handleUserDataChange}
-              />
-            </label>
+            <TextField
+              id="first-name"
+              label="First Name"
+              variant="outlined"
+              type="text"
+              name="first_name"
+              value={userData.first_name}
+              onChange={handleUserDataChange}
+              style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}
+            />
+            <TextField
+              id="last-name"
+              label="Last Name"
+              variant="outlined"
+              type="text"
+              name="last_name"
+              value={userData.last_name}
+              onChange={handleUserDataChange}
+              style={{ width: "90%", marginBottom: "1em" }}
+            />
             {/* {isSuperAdmin && ( */}
-            <label>
-              Make Admin:
-              <input
-                name="is_community_admin"
-                type="checkbox"
-                checked={userData.is_community_admin}
-                value={userData.is_community_admin}
-                onChange={() =>
-                  setUserData({
-                    ...userData,
-                    is_community_admin: !userData.is_community_admin,
-                  })
-                }
-              />
-            </label>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={userData.is_community_admin}
+                  onChange={() =>
+                    setUserData({
+                      ...userData,
+                      is_community_admin: !userData.is_community_admin,
+                    })
+                  }
+                  sx={{
+                    "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                      backgroundColor: "var(--orange)",
+                    },
+                    "& .MuiSwitch-thumb": {
+                      backgroundColor: "var(--orange)",
+                    },
+                  }}
+                />
+              }
+              label={`${userData.is_community_admin ? "Admin" : "Member"}`}
+            />
             {/* )} */}
-            <br />
-            <input type="submit" value="Submit" />
+            <Button
+              type="submit"
+              variant="contained"
+              style={{ backgroundColor: "var(--orange)", width: "90%" }}
+            >
+              Update User
+            </Button>
           </form>
         )}
-        {popupStatus === "createMember" && (
+        {/* {popupStatus === "createMember" && (
           <div>
             <form onSubmit={handleSubmit}>
               <label>
@@ -305,10 +362,13 @@ function AdminDashPopup({
               <input type="submit" value="Submit" />
             </form>
           </div>
-        )}
+        )} */}
         {popupStatus === "viewMember" && (
           <div>
-            <div>
+            <div
+              style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}
+            >
+              {/* // TODO: add users goal bar */}
               <h3>User Details</h3>
               <p>
                 Name: {userData.first_name} {userData.last_name}
@@ -317,21 +377,30 @@ function AdminDashPopup({
               <p> Phone: {userData.phone_number}</p>
               <p>Admin: {userData.is_community_admin ? "Yes" : "No"}</p>
             </div>
-            <button onClick={() => setPopupStatus("editMember")}>
-              Edit user
-            </button>
+            <Button
+              onClick={() => setPopupStatus("editMember")}
+              variant="contained"
+              style={{ backgroundColor: "var(--orange)", width: "90%" }}
+            >
+              Edit User
+            </Button>
           </div>
         )}
         {popupStatus === "deleteCommunity" && (
-          <div>
+          <div style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}>
             <h2>Are you sure you want to delete this community?</h2>
-            <Button color="error" variant="contained" startIcon={<DeleteIcon />} onClick={(e) => handleSubmit(e)}>
+            <Button
+              color="error"
+              variant="contained"
+              startIcon={<DeleteIcon />}
+              onClick={(e) => handleSubmit(e)}
+            >
               Delete
             </Button>
           </div>
         )}
       </div>
-    </div>
+    </Dialog>
   );
 }
 
