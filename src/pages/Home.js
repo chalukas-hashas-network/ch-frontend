@@ -1,7 +1,6 @@
 import {
   Box,
   Typography,
-  LinearProgress,
   Button,
   Card,
   CardContent,
@@ -10,6 +9,7 @@ import {
   Grid,
   PersonAddAltRoundedIcon,
   TaskAltRoundedIcon,
+  Slider,
 } from "../utils/dataExports/muiExports";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../utils/Context";
@@ -19,12 +19,13 @@ function Home() {
   const { isAuth } = useUser();
 
   // get communities and display first 3
-  const cards = [{}, {}, {}];
+  const cards = [{id: 1}, {id: 2}, {id:3}];
+  
   return (
-    <Box style={{ color: "white" }}>
-      <Box
+    <Box style={{ color: "black" }}>
+      <Box className="pageDisplay"
         sx={{
-          height: "625px",
+          height: "550px",
           width: "100%",
           display: "flex",
           justifyContent: "center",
@@ -96,7 +97,7 @@ function Home() {
           Images
         </Card>
       </Box>
-      <Box sx={{}}>
+      <Box className="communityCardPreview">
         <Grid
           container
           direction="row"
@@ -105,14 +106,20 @@ function Home() {
             alignItems: "flex-end",
           }}
         >
-          {cards.map((card, index) => (
+          {cards.map((card) => (
             <Card
               key={card.id}
+              variant="outlined"
               sx={{
+                border: "2px solid lightgrey",
+                borderRadius: "16px",
                 flex: "1 1 200px",
-                minWidth: "150px",
-                maxWidth: "360px",
+                minWidth: "100px",
+                maxWidth: "300px",
                 height: "150px",
+                marginRight: "1em",
+                marginLeft: "1em",
+                marginTop: "1em",
               }}
             >
               <CardActionArea
@@ -144,6 +151,7 @@ function Home() {
                     <br />
                     <br />
                     <Box
+                    className="progressBarContainer"
                       sx={{
                         display: "flex",
                         alignItems: "center",
@@ -151,15 +159,47 @@ function Home() {
                       }}
                     >
                       <Box sx={{ width: "100%", mr: 1 }}>
-                        <LinearProgress
-                          variant="determinate"
-                          value={30}
-                          style={{ margin: "10px", height: "4px" }}
+                        <Slider 
+                          disabled 
+                          defaultValue={30} 
+                          // defaultValue={
+                          //   community.community_goal?.length > 0
+                          //     ? (community.community_goal[0]
+                          //         .community_total_completed_pages /
+                          //         community.community_goal[0]
+                          //           .community_total_selected_pages) *
+                          //       100
+                          //     : 0
+                          // }
+                          aria-label="Disabled slider"
+                          sx={{
+                            '& .MuiSlider-thumb': {
+                              color: '#139ad4',
+                              height: '12px',
+                              width: '12px',
+                            },
+                            '& .MuiSlider-track': {
+                              color: '#139ad4',
+                            },
+                            '& .MuiSlider-rail': {
+                              color: 'grey'
+                            }
+                          }}
                         />
                       </Box>
                       <Box sx={{ minWidth: 35 }}>
                         <Typography variant="body2" color="text.secondary">
-                          {`30%`}
+                          {"30%"}
+                          {/* {` ${community.community_goal?.length > 0
+                                    ? (
+                                        parseFloat(
+                                          community.community_goal[0]
+                                            .community_total_completed_pages /
+                                            community.community_goal[0]
+                                              .community_total_selected_pages
+                                        ) * 100
+                                      ).toFixed(2)
+                                    : 0}%`} */}
                         </Typography>
                       </Box>
                     </Box>
@@ -168,7 +208,7 @@ function Home() {
               </CardActionArea>
             </Card>
           ))}
-          <Card
+          {/* <Card
             sx={{
               flex: "1 1 200px",
               minWidth: "150px",
@@ -203,7 +243,7 @@ function Home() {
                 </Typography>
               </CardContent>
             </CardActionArea>
-          </Card>
+          </Card> */}
         </Grid>
       </Box>
     </Box>
