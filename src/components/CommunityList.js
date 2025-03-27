@@ -72,16 +72,25 @@ function CommunityList({
   };
 
   return (
-    <div style={{ color: "black" }}>
-      <div
-        style={{
-          alignItems: "center",
+    <div
+      style={{
+        color: "black",
+        alignItems: "center",
+        display: "flex",
+        alignContent: "center",
+        flexDirection: "column",
+      }}
+    >
+      <Box
+        className="stateFilterContainer"
+        sx={{
           display: "flex",
-          alignContent: "center",
-          flexDirection: "column",
+          flexDirection: { xs: "column", md: "row" },
+          alignItems: "center",
+          marginTop: "2em",
         }}
       >
-        <div>
+        <div className="filterOptionToggle" style={{ marginRight: "1em" }}>
           <ToggleButtonGroup
             value={toggleDropdown}
             exclusive
@@ -115,7 +124,7 @@ function CommunityList({
           </ToggleButtonGroup>
         </div>
         <br />
-        <div style={{ color: "white" }}>
+        <div className="searchBarDropdown" style={{ color: "black" }}>
           <Autocomplete
             options={dropdownOptions.sort(
               (a, b) => -b.firstLetter.localeCompare(a.firstLetter)
@@ -145,7 +154,7 @@ function CommunityList({
               "& .MuiInputLabel-root": {
                 color: "black",
                 "&.Mui-focused": {
-                  color: "white",
+                  color: "black",
                 },
               },
               "& .MuiSelect-select": {
@@ -170,131 +179,128 @@ function CommunityList({
             )}
           />
         </div>
-        {communityData.length > 0 ? (
-          <Box>
-            <Grid
-              container
-              direction="row"
-              size={8}
-              sx={{
-                justifyContent: "center",
-                alignItems: "flex-end",
-                gap: "1em",
-                marginTop: "1em",
-              }}
-            >
-              {communityData.map((community, index) => (
-                <Grid
+      </Box>
+      {communityData.length > 0 ? (
+        <Box>
+          <Grid
+            container
+            direction="row"
+            size={8}
+            sx={{
+              justifyContent: "center",
+              alignItems: "flex-end",
+              gap: "1em",
+              marginTop: "1em",
+            }}
+          >
+            {communityData.map((community, index) => (
+              <Grid
+                key={community.id}
+                onClick={() => {
+                  setListSelected("members");
+                  setSelectedCommunity(community);
+                }}
+              >
+                <Card
                   key={community.id}
-                  onClick={() => {
-                    setListSelected("members");
-                    setSelectedCommunity(community);
+                  sx={{
+                    flex: "1 1 300px",
+                    minWidth: "320px",
+                    maxWidth: "400px",
+                    height: "150px",
                   }}
                 >
-                  <Card
-                    key={community.id}
+                  <CardActionArea
                     sx={{
-                      flex: "1 1 300px",
-                      minWidth: "320px",
-                      maxWidth: "400px",
-                      height: "150px",
+                      height: "100%",
+                      "&[data-active]": {
+                        backgroundColor: "action.selected",
+                        "&:hover": {
+                          backgroundColor: "action.selectedHover",
+                        },
+                      },
                     }}
                   >
-                    <CardActionArea
+                    <CardContent
                       sx={{
                         height: "100%",
-                        "&[data-active]": {
-                          backgroundColor: "action.selected",
-                          "&:hover": {
-                            backgroundColor: "action.selectedHover",
-                          },
-                        },
+                        display: "flex",
+                        alignItems: "center",
                       }}
                     >
-                      <CardContent
-                        sx={{
-                          height: "100%",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <img src={community.image} alt="Community" />
-                        <div>
-                          <Typography variant="body2" component="div">
-                            {community.name}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Community in {community.location}
-                          </Typography>
-                          <br />
-                          <br />
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              margin: "10px",
-                            }}
-                          >
-                            <Box sx={{ width: "100%", mr: 1 }}>
-                              <Slider
-                                disabled
-                                defaultValue={
-                                  community.community_goal?.length > 0
-                                    ? (community.community_goal[0]
-                                        .community_total_completed_pages /
-                                        community.community_goal[0]
-                                          .community_total_selected_pages) *
-                                      100
-                                    : 0
-                                }
-                                aria-label="Disabled slider"
-                                sx={{
-                                  "& .MuiSlider-thumb": {
-                                    color: "var(--orange)",
-                                    height: "12px",
-                                    width: "12px",
-                                  },
-                                  "& .MuiSlider-track": {
-                                    color: "var(--orange)",
-                                  },
-                                  "& .MuiSlider-rail": {
-                                    color: "var(--orange-light)",
-                                  },
-                                }}
-                              />
-                            </Box>
-                            <Box sx={{ minWidth: 35 }}>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                {`${
-                                  community.community_goal?.length > 0
-                                    ? (
-                                        parseFloat(
-                                          community.community_goal[0]
-                                            .community_total_completed_pages /
-                                            community.community_goal[0]
-                                              .community_total_selected_pages
-                                        ) * 100
-                                      ).toFixed(2)
-                                    : 0
-                                }%`}
-                              </Typography>
-                            </Box>
+                      <img src={community.image} alt="Community" />
+                      <div>
+                        <Typography variant="body2" component="div">
+                          {community.name}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Community in {community.location}
+                        </Typography>
+                        <br />
+                        <br />
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            margin: "10px",
+                          }}
+                        >
+                          <Box sx={{ width: "100%", mr: 1 }}>
+                            <Slider
+                              disabled
+                              defaultValue={
+                                community.community_goal?.length > 0
+                                  ? (community.community_goal[0]
+                                      .community_total_completed_pages /
+                                      community.community_goal[0]
+                                        .community_total_selected_pages) *
+                                    100
+                                  : 0
+                              }
+                              aria-label="Disabled slider"
+                              sx={{
+                                "& .MuiSlider-thumb": {
+                                  color: "#139ad4",
+                                  height: "12px",
+                                  width: "12px",
+                                },
+                                "& .MuiSlider-track": {
+                                  color: "#139ad4",
+                                },
+                                "& .MuiSlider-rail": {
+                                  color: "grey",
+                                },
+                              }}
+                            />
                           </Box>
-                        </div>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        ) : (
-          <p>No communities found</p>
-        )}
-      </div>
+                          <Box sx={{ minWidth: 35 }}>
+                            <Typography variant="body2" color="text.secondary">
+                              {`${
+                                community.community_goal?.length > 0
+                                  ? (
+                                      parseFloat(
+                                        community.community_goal[0]
+                                          .community_total_completed_pages /
+                                          community.community_goal[0]
+                                            .community_total_selected_pages
+                                      ) * 100
+                                    ).toFixed(2)
+                                  : 0
+                              }%`}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </div>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      ) : (
+        <p>No communities found</p>
+      )}
     </div>
   );
 }

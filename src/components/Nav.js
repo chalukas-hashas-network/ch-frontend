@@ -43,7 +43,7 @@ function Nav() {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "white",
+              color: "black",
               textDecoration: "none",
               position: "absolute",
               top: "1.5em",
@@ -55,7 +55,7 @@ function Nav() {
           <IconButton
             size="large"
             onClick={() => setDrawerOpen(true)}
-            sx={{ color: "white", position: "absolute", right: "1em" }}
+            sx={{ color: "black", position: "absolute", right: "1em" }}
           >
             <MenuIcon />
           </IconButton>
@@ -168,7 +168,7 @@ function Nav() {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "white",
+              color: "black",
               textDecoration: "none",
               alignContent: "center",
               display: "relative",
@@ -187,20 +187,21 @@ function Nav() {
               gap: "20px",
               margin: "0 10px",
               position: "absolute",
+              color: "black",
               right: "5em",
             }}
           >
             <Button
               key="goal"
               onClick={() => navigate("/home")}
-              sx={{ color: "rgb(255, 255, 255)" }}
+              sx={{ color: "black" }}
             >
               Home
             </Button>
             <Button
               key="Community Page"
               onClick={() => navigate("/community")}
-              sx={{ color: "rgb(255, 255, 255)" }}
+              sx={{ color: "black" }}
             >
               Community Page
             </Button>
@@ -209,14 +210,14 @@ function Nav() {
                 <Button
                   key="goal"
                   onClick={() => navigate("/goal")}
-                  sx={{ color: "rgb(255, 255, 255)" }}
+                  sx={{ color: "black" }}
                 >
                   Goal Page
                 </Button>
                 <Button
                   key="Settings"
                   onClick={() => navigate("/settings")}
-                  sx={{ color: "rgb(255, 255, 255)" }}
+                  sx={{ color: "black" }}
                 >
                   Settings
                 </Button>
@@ -224,7 +225,7 @@ function Nav() {
                   <Button
                     key="Admin Dashboard"
                     onClick={() => navigate("/dashboard")}
-                    sx={{ color: "rgb(255, 255, 255)" }}
+                    sx={{ color: "black" }}
                   >
                     Admin Dashboard
                   </Button>
@@ -249,7 +250,7 @@ function Nav() {
               {isAuth ? (
                 <Button
                   onClick={handleLogout}
-                  sx={{ color: "rgb(255, 255, 255)", display: "block" }}
+                  sx={{ color: "black", display: "block" }}
                 >
                   <Typography sx={{ textAlign: "center" }}>Logout</Typography>
                 </Button>
@@ -260,7 +261,7 @@ function Nav() {
                       setUserStatus("Login");
                       setLoginOpen(true);
                     }}
-                    sx={{ color: "rgb(255, 255, 255)" }}
+                    sx={{ color: "black" }}
                   >
                     Log in
                   </Button>
@@ -272,7 +273,7 @@ function Nav() {
                     }}
                     sx={{
                       backgroundColor: "var(--orange)",
-                      color: "rgb(255, 255, 255)",
+                      color: "black",
                     }}
                   >
                     Sign up

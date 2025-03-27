@@ -11,11 +11,17 @@ import {
   TextField,
   MenuItem,
   CloseRoundedIcon,
+  Typography,
+  Box,
+  Slider,
 } from "../utils/dataExports/muiExports";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 
 // TODO: add make admin to edit member and show if admin or not
+
+// secondary:
+// TODO: get users progress
 
 function AdminDashPopup({
   setUserData,
@@ -32,6 +38,19 @@ function AdminDashPopup({
   setRows,
   createSuperData,
 }) {
+  console.log("user data admin popup", userData);
+
+  const {
+    username,
+    first_name,
+    last_name,
+    email,
+    community_id,
+    phone_number,
+    goal,
+    is_community_admin,
+  } = userData;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -142,7 +161,7 @@ function AdminDashPopup({
         className="popup-card"
         style={{
           position: "relative",
-          height: "20em",
+          height: "23em",
           width: "20em",
         }}
       >
@@ -163,6 +182,9 @@ function AdminDashPopup({
         </Button>
         {popupStatus === "addCommunity" && (
           <div>
+            <Typography variant="h5" sx={{ marginTop: "1em" }}>
+              Add Community
+            </Typography>
             <form onSubmit={handleSubmit}>
               <TextField
                 id="name"
@@ -212,6 +234,9 @@ function AdminDashPopup({
         )}
         {popupStatus === "editCommunity" && (
           <form onSubmit={handleSubmit}>
+            <Typography variant="h5" sx={{ marginTop: "1em" }}>
+              Edit Community
+            </Typography>
             <TextField
               id="name"
               label="Community Name"
@@ -263,13 +288,16 @@ function AdminDashPopup({
         {popupStatus === "editMember" && (
           //? what info should admin/super be allowed to edit
           <form onSubmit={handleSubmit}>
+            <Typography variant="h5" sx={{ marginTop: "1em" }}>
+              Edit User
+            </Typography>
             <TextField
               id="first-name"
               label="First Name"
               variant="outlined"
               type="text"
               name="first_name"
-              value={userData.first_name}
+              value={first_name}
               onChange={handleUserDataChange}
               style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}
             />
@@ -279,19 +307,19 @@ function AdminDashPopup({
               variant="outlined"
               type="text"
               name="last_name"
-              value={userData.last_name}
+              value={last_name}
               onChange={handleUserDataChange}
               style={{ width: "90%", marginBottom: "1em" }}
             />
-            {/* {isSuperAdmin && ( */}
+            <Typography style={{ marginRight: "1em" }}>Admin Status</Typography>
             <FormControlLabel
               control={
                 <Switch
-                  checked={userData.is_community_admin}
+                  checked={is_community_admin}
                   onChange={() =>
                     setUserData({
                       ...userData,
-                      is_community_admin: !userData.is_community_admin,
+                      is_community_admin: !is_community_admin,
                     })
                   }
                   sx={{
@@ -304,13 +332,16 @@ function AdminDashPopup({
                   }}
                 />
               }
-              label={`${userData.is_community_admin ? "Admin" : "Member"}`}
+              label={`${is_community_admin ? "Admin" : "Member"}`}
             />
-            {/* )} */}
             <Button
               type="submit"
               variant="contained"
-              style={{ backgroundColor: "var(--orange)", width: "90%" }}
+              style={{
+                backgroundColor: "var(--orange)",
+                width: "90%",
+                marginTop: "1em",
+              }}
             >
               Update User
             </Button>
@@ -325,7 +356,7 @@ function AdminDashPopup({
                   type="text"
                   name="first_name"
                   placeholder="First Name"
-                  value={userData.first_name}
+                  value={first_name}
                   onChange={(e) =>
                     setUserData({ ...userData, first_name: e.target.value })
                   }
@@ -337,7 +368,7 @@ function AdminDashPopup({
                   type="text"
                   name="last_name"
                   placeholder="Last Name"
-                  value={userData.last_name}
+                  value={last_name}
                   onChange={(e) =>
                     setUserData({ ...userData, last_name: e.target.value })
                   }
@@ -348,12 +379,12 @@ function AdminDashPopup({
                 <input
                   name="is_community_admin"
                   type="checkbox"
-                  checked={userData.is_community_admin}
-                  value={userData.is_community_admin}
+                  checked={is_community_admin}
+                  value={is_community_admin}
                   onChange={() =>
                     setUserData({
                       ...userData,
-                      is_community_admin: !userData.is_community_admin,
+                      is_community_admin: !is_community_admin,
                     })
                   }
                 />
@@ -365,32 +396,97 @@ function AdminDashPopup({
         )} */}
         {popupStatus === "viewMember" && (
           <div>
+            <Typography variant="h5" sx={{ marginTop: "1em" }}>
+              User Details
+            </Typography>
             <div
-              style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                flexWrap: " wrap",
+                alignContent: "center",
+                alignItems: "flex-start",
+                width: "90%",
+                marginBottom: "1em",
+                marginTop: "2em",
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
             >
-              {/* // TODO: add users goal bar */}
-              <h3>User Details</h3>
-              <p>
-                Name: {userData.first_name} {userData.last_name}
-              </p>
-              <p>Email: {userData.email}</p>
-              <p> Phone: {userData.phone_number}</p>
-              <p>Admin: {userData.is_community_admin ? "Yes" : "No"}</p>
+              <Typography variant="body1" sx={{ marginTop: "1em" }}>
+                Name: {first_name} {last_name}
+              </Typography>
+              <Typography variant="body1" sx={{ marginTop: "1em" }}>
+                Email: {email}
+              </Typography>
+              <Typography variant="body1" sx={{ marginTop: "1em" }}>
+                Phone: {phone_number}
+              </Typography>
+              <Typography variant="body1" sx={{ marginTop: "1em" }}>
+                Admin status: {is_community_admin ? "Yes" : "No"}
+              </Typography>
             </div>
+            <Box
+              className="progressBarContainer"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                margin: "10px",
+              }}
+            >
+              <Box sx={{ width: "100%", mr: 1 }}>
+                <Slider
+                  disabled
+                  defaultValue={goal}
+                  aria-label="Disabled slider"
+                  sx={{
+                    "& .MuiSlider-thumb": {
+                      color: "var(--orange)",
+                      height: "12px",
+                      width: "12px",
+                    },
+                    "& .MuiSlider-track": {
+                      color: "var(--orange)",
+                    },
+                    "& .MuiSlider-rail": {
+                      color: "var(--orange-light)",
+                    },
+                  }}
+                />
+              </Box>
+              <Box sx={{ minWidth: 35 }}>
+                <Typography variant="body2" color="text.secondary">
+                  {` ${goal}%`}
+                </Typography>
+              </Box>
+            </Box>
             <Button
               onClick={() => setPopupStatus("editMember")}
               variant="contained"
-              style={{ backgroundColor: "var(--orange)", width: "90%" }}
+              style={{
+                backgroundColor: "var(--orange)",
+                width: "90%",
+                marginTop: "1em",
+              }}
             >
               Edit User
             </Button>
           </div>
         )}
         {popupStatus === "deleteCommunity" && (
-          <div style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}>
-            <h2>Are you sure you want to delete this community?</h2>
+          <div
+            style={{
+              position: "absolute",
+              width: "90%",
+              marginTop: "2em",
+            }}
+          >
+            <Typography variant="h5">
+              Are you sure you want to delete this community?
+            </Typography>
             <Button
               color="error"
+              sx={{ marginTop: "3em" }}
               variant="contained"
               startIcon={<DeleteIcon />}
               onClick={(e) => handleSubmit(e)}

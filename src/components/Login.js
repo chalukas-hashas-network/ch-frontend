@@ -30,17 +30,19 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
     location: "",
   });
 
-  useEffect(function checkPathForAction() {
-    
-    if (location.pathname.includes("/invite")) {
-      setUserStatus("Signup");
-    }
+  useEffect(
+    function checkPathForAction() {
+      if (location.pathname.includes("/invite")) {
+        setUserStatus("Signup");
+      }
 
-    if (location.pathname.includes("/adminInvite")) {
-      // TODO: set up logic to make user admin
-      // if user exists, log them in, else sign them up
-    }
-  }, [location.pathname]);
+      if (location.pathname.includes("/adminInvite")) {
+        // TODO: set up logic to make user admin
+        // if user exists, log them in, else sign them up
+      }
+    },
+    [location.pathname]
+  );
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -96,7 +98,10 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
         return; // Exit the function early
       }
       console.log("userData.phone_number", typeof userData.phone_number);
-      if(userData.phone_number.length !== 10 && !/^\d{10}$/.test(userData.phone_number)) {
+      if (
+        userData.phone_number.length !== 10 &&
+        !/^\d{10}$/.test(userData.phone_number)
+      ) {
         alert("Please enter a valid phone number");
         return;
       }
@@ -105,7 +110,7 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
       try {
         const user = await createUser(userData);
         console.log("User created", user);
-        if(user === "Account successfully created") {
+        if (user === "Account successfully created") {
           navigate("/community");
         } else {
           alert("Error creating user");
@@ -116,6 +121,29 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
         return;
       }
     }
+  };
+
+  const cardStyle = {
+    width: "90%",
+    marginBottom: "1em",
+    "& .MuiOutlinedInput-root": {
+      color: "black",
+      "& fieldset": {
+        borderColor: "black",
+      },
+      "&:hover fieldset": {
+        borderColor: "var(--orange-light)",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "var(--orange)",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      color: "black",
+    },
+    "& .MuiSelect-select": {
+      color: "var(--orange)",
+    },
   };
 
   return (
@@ -157,10 +185,9 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
                   name="username"
                   value={userData.username}
                   onChange={handleChange}
-                  style={{
-                    width: "90%",
-                    marginBottom: "1em",
+                  sx={{
                     marginTop: "2em",
+                    ...cardStyle,
                   }}
                 />
                 <TextField
@@ -171,7 +198,9 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
                   name="password"
                   value={userData.password}
                   onChange={handleChange}
-                  style={{ width: "90%", marginBottom: "1em" }}
+                  sx={{
+                    ...cardStyle
+                  }}
                 />
                 <Button
                   type="submit"
@@ -201,10 +230,9 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
                     name="email"
                     value={userData.email}
                     onChange={handleChange}
-                    style={{
-                      width: "90%",
-                      marginBottom: "1em",
+                    sx={{
                       marginTop: "2em",
+                      ...cardStyle
                     }}
                   />
                   <TextField
@@ -215,7 +243,9 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
                     name="password"
                     value={userData.password}
                     onChange={handleChange}
-                    style={{ width: "90%", marginBottom: "1em" }}
+                    sx={{
+                      ...cardStyle
+                    }}
                   />
                   <TextField
                     id="confirm-password"
@@ -225,7 +255,9 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
                     name="password_confirmation"
                     value={userData.password_confirmation}
                     onChange={handleChange}
-                    style={{ width: "90%", marginBottom: "1em" }}
+                    sx={{
+                      ...cardStyle
+                    }}
                   />
                   <Button
                     type="submit"
@@ -284,7 +316,10 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
               name="username"
               value={userData.username}
               onChange={handleChange}
-              style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}
+              sx={{
+                marginTop: "2em",
+              ...cardStyle
+              }}
             />
             <TextField
               id="first-name"
@@ -294,7 +329,9 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
               name="first_name"
               value={userData.first_name}
               onChange={handleChange}
-              style={{ width: "90%", marginBottom: "1em" }}
+              sx={{
+              ...cardStyle
+              }}
             />
             <TextField
               id="last-name"
@@ -304,7 +341,9 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
               name="last_name"
               value={userData.last_name}
               onChange={handleChange}
-              style={{ width: "90%", marginBottom: "1em" }}
+              sx={{
+              ...cardStyle
+              }}
             />
             <TextField
               id="phone-number"
@@ -314,7 +353,9 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
               name="phone_number"
               value={userData.phone_number}
               onChange={handleChange}
-              style={{ width: "90%", marginBottom: "1em" }}
+              sx={{
+              ...cardStyle
+              }}
             />
             <TextField
               id="outlined-select-state"
@@ -324,7 +365,9 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
               value={userData.location}
               onChange={handleChange}
               defaultValue="Select state"
-              style={{ width: "90%", marginBottom: "1em" }}
+              sx={{
+              ...cardStyle
+              }}
             >
               {states.map((state, index) => (
                 <MenuItem key={index} value={state}>

@@ -34,7 +34,7 @@ function CommunityMembersList({ selectedCommunity }) {
         community_total_completed_pages: 0,
         community_total_selected_pages: 0,
       };
-      
+
       console.log("goal", goal);
       setCommunityData({
         community_goal: {
@@ -58,78 +58,83 @@ function CommunityMembersList({ selectedCommunity }) {
   return (
     <div>
       <h1>{name} Members List</h1>
-      <div>
-        <div className="card" style={{ height: "150px" }}>
-          <div>{name} Progress Bar </div>
-          <Box sx={{ display: "flex", alignItems: "center", margin: "10px" }}>
-            <Box sx={{ width: "100%", mr: 1 }}>
-              <LinearProgress
-                variant="determinate"
-                value={percentageCompleted}
-                sx={{ 
-                  margin: "10px", 
-                  height: "20px",
-                  backgroundColor: "var(--orange-light)",
-                  "& .MuiLinearProgress-bar": {
-                    backgroundColor: "var(--orange)"
-                  }
-                }}
-              />
-            </Box>
-            <Box sx={{ minWidth: 35 }}>
-              <Typography variant="body2" color="text.secondary" style={{ color: "white" }}>
-                {percentageCompleted
-                  ? `${percentageCompleted.toFixed(2)}%`
-                  : "0%"}
-              </Typography>
-            </Box>
-          </Box>
-          <div>
-            Pages complete: {community_total_completed_pages} /{" "}
-            {community_total_selected_pages}
-          </div>
-        </div>
-        <br />
-        <div
-          style={{
-            alignItems: "center",
-            display: "flex",
-            alignContent: "center",
-            flexDirection: "column",
-          }}
+      <div className="card" style={{ height: "150px" }}>
+        <div>{name} Progress Bar </div>
+        <Box
+          className="progressBarContainer"
+          sx={{ display: "flex", alignItems: "center", margin: "10px" }}
         >
-          {members?.length > 0 ? (
-            members?.map((member) => (
-              <List
-                key={member.id}
-                sx={{
-                  width: "100%",
-                  maxWidth: 360,
-                  bgcolor: "background.paper",
-                  color: "black",
-                }}
-                onClick={() => {
-                  console.log("member", member);
-                }}
-              >
-                <ListItemButton alignItems="flex-start">
-                  <ListItemAvatar>
-                    <Avatar
-                      alt={member.first_name + " " + member.last_name}
-                      src={member?.image}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={member.first_name + " " + member.last_name}
-                  />
-                </ListItemButton>
-                <Divider variant="inset" component="li" />
-              </List>
-            ))
-          ) : (
-            <p>No members for this community</p>
-          )}
+          <Box className="progressBar" sx={{ width: "100%", mr: 1 }}>
+            <LinearProgress
+              variant="determinate"
+              value={percentageCompleted}
+              sx={{
+                margin: "10px",
+                height: "20px",
+                backgroundColor: "var(--orange-light)",
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: "var(--orange)",
+                },
+              }}
+            />
+          </Box>
+          <Box className="percentageNum" sx={{ minWidth: 35 }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              style={{ color: "black" }}
+            >
+              {percentageCompleted
+                ? `${percentageCompleted.toFixed(2)}%`
+                : "0%"}
+            </Typography>
+          </Box>
+        </Box>
+        <div>
+          Pages complete: {community_total_completed_pages} /{" "}
+          {community_total_selected_pages}
         </div>
+      </div>
+      <br />
+      <div
+        style={{
+          alignItems: "center",
+          display: "flex",
+          alignContent: "center",
+          flexDirection: "column",
+        }}
+      >
+        {members?.length > 0 ? (
+          members?.map((member) => (
+            <List
+              key={member.id}
+              sx={{
+                width: "100%",
+                maxWidth: 360,
+                bgcolor: "background.paper",
+                color: "black",
+              }}
+              onClick={() => {
+                console.log("member", member);
+              }}
+            >
+              <ListItemButton alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar
+                    alt={member.first_name + " " + member.last_name}
+                    src={member?.image}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={member.first_name + " " + member.last_name}
+                />
+              </ListItemButton>
+              <Divider variant="inset" component="li" />
+            </List>
+          ))
+        ) : (
+          <p>No members for this community</p>
+        )}
       </div>
     </div>
   );

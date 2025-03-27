@@ -3,14 +3,19 @@ import { useState } from "react";
 import { updateUser } from "../utils/API/UserAPI";
 import { useUser } from "../utils/Context";
 import states from "../utils/dataExports/StatesExports";
-import { Button, TextField, MenuItem } from "../utils/dataExports/muiExports";
+import {
+  Button,
+  TextField,
+  MenuItem,
+  ArrowBackIcon,
+} from "../utils/dataExports/muiExports";
 
 function Settings() {
   const { user } = useUser();
   const { first_name, last_name, username, email, phone_number, location } =
     user;
 
-    /*
+  /*
      required:
      username, email, 
      */
@@ -30,6 +35,8 @@ function Settings() {
       [e.target.name]: e.target.value,
     });
   };
+
+  // console.log("selected state", userData.location === "");
 
   function capitalizeWord(str) {
     return str
@@ -59,10 +66,36 @@ function Settings() {
     }
   };
 
+  const textFieldStyle = {
+    width: { xs: "75%", md: "50%" },
+    marginBottom: "1em",
+    "& .MuiOutlinedInput-root": {
+      color: "black",
+      "& fieldset": {
+        borderColor: "black",
+      },
+      "&:hover fieldset": {
+        borderColor: "var(--orange-light)",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "var(--orange)",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      color: "black",
+    },
+    "& .MuiSelect-select": {
+      color: "var(--orange)",
+    },
+  };
+
   return (
-    <div style={{ color: "white", paddingTop: "100px"}}>
-      <Link style={{ textDecoration: "none", color: "white" }} to="/home">
-        {"< Back"}
+    <div style={{ color: "black", paddingTop: "100px" }}>
+      <Link
+        style={{ textDecoration: "none", color: "black", marginLeft: "2em" }}
+        to="/home"
+      >
+        <ArrowBackIcon />
       </Link>
       <div
         style={{
@@ -70,9 +103,20 @@ function Settings() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
         }}
       >
-        <form onSubmit={submitUpdatedProfile} style={{color: "white"}}>
+        <form
+          onSubmit={submitUpdatedProfile}
+          style={{
+            color: "black",
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <TextField
             id="username"
             label="Username"
@@ -81,16 +125,10 @@ function Settings() {
             name="username"
             value={userData.username}
             onChange={handleDataChange}
-            sx={{ width: "90%", marginBottom: "1em", marginTop: "2em", 
-              //  "& .MuiOutlinedInput-root": {
-              // backgroundColor: "white",
-              // "&.Mui-focused fieldset": {
-              //   borderColor: "black"
-              // },
-               "& input": {
-                color: "white"
-              // }
-            }}}
+            sx={{
+              marginTop: "2em",
+              ...textFieldStyle,
+            }}
           />
           <TextField
             id="first-name"
@@ -100,9 +138,9 @@ function Settings() {
             name="first_name"
             value={userData.first_name}
             onChange={handleDataChange}
-            sx={{ width: "90%", marginBottom: "1em", "& input": {
-                color: "white"
-              } }}
+            sx={{
+              ...textFieldStyle,
+            }}
           />
           <TextField
             id="last-name"
@@ -112,9 +150,9 @@ function Settings() {
             name="last_name"
             value={userData.last_name}
             onChange={handleDataChange}
-              sx={{ width: "90%", marginBottom: "1em", "& input": {
-                color: "white"
-              } }}
+            sx={{
+              ...textFieldStyle,
+            }}
           />
           <TextField
             id="email"
@@ -124,9 +162,9 @@ function Settings() {
             name="email"
             value={userData.email}
             onChange={handleDataChange}
-              sx={{ width: "90%", marginBottom: "1em", "& input": {
-                color: "white"
-              } }}
+            sx={{
+              ...textFieldStyle,
+            }}
           />
           <TextField
             id="phone-number"
@@ -136,23 +174,51 @@ function Settings() {
             name="phone_number"
             value={userData.phone_number}
             onChange={handleDataChange}
-              sx={{ width: "90%", marginBottom: "1em", "& input": {
-                color: "white"
-              } }}
+            sx={{
+              ...textFieldStyle,
+            }}
           />
           <TextField
             id="outlined-select-state"
             select
             label="State"
             name="location"
-            value={capitalizeWord(userData.location)}
+            value={
+              userData.location === ""
+                ? "Selected state"
+                : capitalizeWord(userData.location)
+            }
             onChange={handleDataChange}
-            defaultValue="Select state"
-            sx={{ width: "90%", marginBottom: "1em", "& input": {
-                color: "white"
-              } }}
+            defaultValue={
+              userData.location === ""
+                ? "Selected state"
+                : capitalizeWord(userData.location)
+            }
+            sx={{
+              width: { xs: "75%", md: "50%" },
+              marginBottom: "1em",
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "black",
+                },
+                "&:hover fieldset": {
+                  borderColor: "var(--orange-light)",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "var(--orange)",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "black",
+              },
+              "& .MuiSelect-select": {
+                color: "black",
+              },
+            }}
           >
-            <MenuItem value="Select state">Select state</MenuItem>
+            <MenuItem disabled value="">
+              <em>Select State</em>
+            </MenuItem>
             {states.map((state, index) => (
               <MenuItem key={index} value={state}>
                 {state}
@@ -162,9 +228,28 @@ function Settings() {
           <Button
             type="submit"
             variant="contained"
-            sx={{ backgroundColor: "var(--orange)", width: "90%", "& input": {
-                color: "white"
-              } }}
+            sx={{
+              backgroundColor: "var(--orange)",
+              width: { xs: "50%", md: "25%" },
+              color: "black",
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "black",
+                },
+                "&:hover fieldset": {
+                  borderColor: "var(--orange-light)",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "var(--orange)",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "black",
+              },
+              "& .MuiSelect-select": {
+                color: "var(--orange)",
+              },
+            }}
           >
             Update Profile
           </Button>
