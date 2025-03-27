@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import CommunityList from "../components/CommunityList";
 import CommunityMembersList from "../components/CommunityMembersList";
 import { getCommunities } from "../utils/API/CommunityAPI";
-
-// TODO: get new fetch for specific community with members and goal to send to members list
+import { Button, ArrowBackIcon } from "../utils/dataExports/muiExports";
 
 function Community() {
   const [listSelected, setListSelected] = useState("community");
@@ -13,34 +12,42 @@ function Community() {
   const [communityData, setCommunityData] = useState([]);
 
   useEffect(function getAllCommunities() {
-    getCommunities().then((data) => {
+    getCommunities({}, ["community_goal"]).then((data) => {
       setCommunities(data);
       setCommunityData(data);
     });
   }, []);
 
   return (
-    <div style={{ color: "white", paddingTop: "100px" }}>
+    <div style={{ color: "black", paddingTop: "100px" }}>
       {listSelected === "community" && (
-        <Link
-          style={{ textDecoration: "none", color: "white" }}
-          to="/home"
-          underline="none"
-      >
-          {"< Back"}
+        <Link style={{ textDecoration: "none", color: "black", marginLeft: "2em" }} to="/home">
+          <ArrowBackIcon />
         </Link>
       )}
       {listSelected === "members" && (
         <Link
-          style={{ textDecoration: "none", color: "white" }}
+          style={{ textDecoration: "none", color: "black", marginLeft: "2em" }}
           underline="none"
           onClick={() => {
             setListSelected("community");
           }}
         >
-          {"< Back"}
+          <ArrowBackIcon />
         </Link>
       )}
+      {/* // TODO: build button logic, if isAuth, popup with communities, else login popup */}
+      <Button
+        variant="contained"
+        sx={{
+          position: "absolute",
+          right: "25px",
+          backgroundColor: "var(--orange)",
+          color: "black",
+        }}
+      >
+        Join community
+      </Button>
       {listSelected === "community" && (
         <CommunityList
           setListSelected={setListSelected}
@@ -52,9 +59,7 @@ function Community() {
         />
       )}
       {listSelected === "members" && (
-        <CommunityMembersList
-          selectedCommunity={selectedCommunity}
-          />
+        <CommunityMembersList selectedCommunity={selectedCommunity} />
       )}
     </div>
   );
