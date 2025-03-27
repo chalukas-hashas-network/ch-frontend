@@ -13,6 +13,7 @@ import {
   Box,
   LinearProgress,
   Typography,
+  ArrowBackIcon,
 } from "../utils/dataExports/muiExports";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -109,6 +110,7 @@ function AdminDash() {
     community_id: "",
     phone_number: "",
     is_community_admin: false,
+    goal: 0,
   });
 
   const { isSuperAdmin, user } = useUser();
@@ -219,7 +221,7 @@ function AdminDash() {
       setCurrentCommunity(row);
       setAdminStatus("admin");
     } else {
-      console.log("admin clicked community: ", row);
+      console.log("admin clicked member: ", row);
       try {
         const userData = await findUserById(row?.id);
         console.log("userData: ", userData);
@@ -229,6 +231,7 @@ function AdminDash() {
           last_name: userData?.last_name,
           email: userData?.email,
           phone_number: userData?.phone_number,
+          goal: userData?.goal?.user_percentage_completed,
         });
         setPopup(true);
         setPopupStatus("viewMember");
@@ -240,17 +243,20 @@ function AdminDash() {
   };
 
   return (
-    <div style={{ color: "white", paddingTop: "100px" }}>
+    <div style={{ color: "black", paddingTop: "100px" }}>
       {isSuperAdmin && adminStatus === "admin" ? (
         <Link
-          style={{ textDecoration: "none", color: "white" }}
+          style={{ textDecoration: "none", color: "black", marginLeft: "2em" }}
           onClick={() => setAdminStatus("super") & setCurrentCommunity([])}
         >
-          {"< Back"}
+          <ArrowBackIcon />
         </Link>
       ) : (
-        <Link style={{ textDecoration: "none", color: "white" }} to="/home">
-          {"< Back"}
+        <Link
+          style={{ textDecoration: "none", color: "black", marginLeft: "2em" }}
+          to="/home"
+        >
+          <ArrowBackIcon />
         </Link>
       )}
       {isSuperAdmin && adminStatus === "admin" && (
@@ -338,7 +344,7 @@ function AdminDash() {
             <Typography
               variant="body2"
               color="text.secondary"
-              style={{ color: "white" }}
+              style={{ color: "black" }}
             >
               {currentCommunity?.goal}
             </Typography>
@@ -346,7 +352,7 @@ function AdminDash() {
         </Box>
       )}
 
-      <Paper sx={{ width: "100%", overflow: "hidden" }}>
+      <Paper sx={{ width: "100%", overflow: "hidden", marginTop: "1em" }}>
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
