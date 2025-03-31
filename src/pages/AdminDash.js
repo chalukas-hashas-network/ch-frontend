@@ -356,7 +356,7 @@ function AdminDash() {
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
-              <TableRow key={"header"}>
+              <TableRow key="header">
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}

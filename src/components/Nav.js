@@ -38,7 +38,7 @@ function Nav() {
         <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
           <Link
             variant="h6"
-            noWrap
+            nowrap="true"
             style={{
               fontFamily: "monospace",
               fontWeight: 700,
@@ -163,7 +163,7 @@ function Nav() {
         <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
           <Link
             variant="h5"
-            noWrap
+            nowrap="true"
             style={{
               fontFamily: "monospace",
               fontWeight: 700,

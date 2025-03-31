@@ -174,15 +174,15 @@ function Home() {
                           aria-label="Disabled slider"
                           sx={{
                             '& .MuiSlider-thumb': {
-                              color: '#139ad4',
+                              color: 'var(--light-blue)',
                               height: '12px',
                               width: '12px',
                             },
                             '& .MuiSlider-track': {
-                              color: '#139ad4',
+                              color: 'var(--light-blue)',
                             },
                             '& .MuiSlider-rail': {
-                              color: 'grey'
+                              color: 'var(--light-grey)'
                             }
                           }}
                         />

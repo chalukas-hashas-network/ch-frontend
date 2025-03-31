@@ -10,6 +10,7 @@ import {
   TextField,
   MenuItem,
   Dialog,
+  Card,
 } from "../utils/dataExports/muiExports";
 import states from "../utils/dataExports/StatesExports";
 
@@ -151,7 +152,7 @@ function Login({ setLoginOpen, userStatus, setUserStatus, loginOpen }) {
       open={loginOpen}
       className="popup-overlay"
       onClose={() => setLoginOpen(false)}
-      PaperComponent={"Card"}
+      PaperComponent={Card}
     >
       {!signupPopup && (
         <div

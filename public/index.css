@@ -33,6 +33,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 400px; /* Adjust as needed */
   text-align: center;
+  color: black;
 }
 
 /* Close button styling */
@@ -51,9 +52,12 @@
 }
 
 #body{
-  background-color: #3d1515;
+  /* background-color: #3d1515; */
 }
 
 :root {
   --orange: #e3a41e;
+  --orange-light: #ffe3a8;
+  --light-blue: #2393e3;
+  --light-grey: #c1c1c1; 
 }

@@ -14,6 +14,7 @@ import {
   Typography,
   Box,
   Slider,
+  Card,
 } from "../utils/dataExports/muiExports";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
@@ -155,7 +156,7 @@ function AdminDashPopup({
       open={true}
       className="popup-overlay"
       onClose={() => setPopup(false)}
-      PaperComponent={"Card"}
+      PaperComponent={Card}
     >
       <div
         className="popup-card"
