@@ -1,8 +1,21 @@
 import { useState, useEffect } from "react";
-import { createTractateGoal, updateTractateProgress } from "../utils/API/GoalAPI";
-import { Button, DeleteIcon } from "../utils/dataExports/muiExports";
+import {
+  createTractateGoal,
+  updateTractateProgress,
+} from "../utils/API/GoalAPI";
+import {
+  Button,
+  CloseRoundedIcon,
+  DeleteIcon,
+  Dialog,
+  MenuItem,
+  TextField,
+  Typography,
+  Card,
+} from "../utils/dataExports/muiExports";
 
 // TODO: update users state when goal is created or updated
+// TODO: make sure data type for page number, if string then convert to int where necessary, if int, make sure its refelective everywhere
 
 function GoalPopup({
   setOpenGoal,
@@ -11,33 +24,44 @@ function GoalPopup({
   tractates,
   goal,
 }) {
-  const [selectedTractate, setSelectedTractate] = useState("");
-  const [selectedPage, setSelectedPage] = useState(1);
+  const [selectedTractate, setSelectedTractate] = useState({
+    id: "",
+    tractate: "",
+  });
+  const [selectedPage, setSelectedPage] = useState(0);
 
   // Handle change for selecting tractate
   const handleTractateChange = (e) => {
     const selectedGoal = goal.goal_tractates.find(
-      (tractate) => tractate.tractate === e.target.value
+      (tractate) => tractate.id === e.target.value
     );
-    setSelectedTractate(selectedGoal);
-    setSelectedPage(selectedGoal?.tractate_pages_completed || null); // Reset page selection
+    setSelectedTractate(selectedGoal || { id: "", tractate: "" });
+    setSelectedPage(selectedGoal?.tractate_pages_completed || 0); // Reset page selection
   };
 
   // Handle change for selecting page number
   const handlePageChange = (e) => {
+    console.log("page change", e.target.value);
     setSelectedPage(e.target.value);
   };
 
   // Initialize selected tractate and page when goal has exactly one tractate
-  useEffect(function initializeSingleTractateGoal() {
-    if (goal?.goal_tractates?.length === 1) {
-      setSelectedTractate(goal.goal_tractates[0]);
-      setSelectedPage(goal.goal_tractates[0].tractate_pages_completed); // Default to completed pages
-    }
-  }, [goal]);
+  useEffect(
+    function initializeSingleTractateGoal() {
+      if (goal?.goal_tractates?.length === 1) {
+        console.log("goal: ", goal);
+        setSelectedTractate(goal.goal_tractates[0]);
+        setSelectedPage(goal.goal_tractates[0].tractate_pages_completed || 0); // Default to completed pages
+      }
+    },
+    [goal]
+  );
 
   const handleTractateCreateChange = (e) => {
-    setSelectedTractate(e.target.value);
+    const selectedTractate = tractates.find(
+      (tractate) => tractate.id === e.target.value
+    );
+    setSelectedTractate(selectedTractate || { id: "", tractate: "" });
   };
 
   const handleSubmit = async (e) => {
@@ -49,17 +73,20 @@ function GoalPopup({
           return;
         }
         try {
-          const response = await createTractateGoal(goal.id, selectedTractate);
+          const response = await createTractateGoal(
+            goal.id,
+            selectedTractate.id
+          );
           console.log(response);
           // setUser(response);
           alert("Goal created");
-          setSelectedTractate("");
+          setSelectedTractate("Select tractate");
           setOpenGoal(false);
         } catch (error) {
           console.error("Error updating user goal:", error);
         }
         console.log("Selected tractate:", selectedTractate);
-        setSelectedTractate("");
+        setSelectedTractate("Select tractate");
         setOpenGoal(false);
         break;
       case "update-goal":
@@ -79,103 +106,259 @@ function GoalPopup({
   };
 
   return (
-    <div className="popup-overlay">
-      <div className="popup-card">
-        <h6
+    <Dialog
+      open={true}
+      className="popup-overlay"
+      onClose={() => setOpenGoal(false)}
+      PaperComponent={Card}
+    >
+      <div
+        className="popup-card"
+        style={{
+          position: "relative",
+          height: "20em",
+          width: "20em",
+        }}
+      >
+        <Button
           onClick={() => {
             setOpenGoal(false);
             setGoalEditOption("");
           }}
+          style={{ position: "absolute", top: "10px", right: "10px" }}
         >
-          X
-        </h6>
-        {goalEditOption === "create-goal" && (
-          <form onSubmit={(e) => handleSubmit(e)}>
-            <select value={selectedTractate} onChange={handleTractateCreateChange}>
-              <option value={""}>Select a tractate</option>
-              {tractates.map((tractate) => {
-                return (
-                  <option key={tractate.id} value={tractate.id}>
-                    {tractate.name}
-                  </option>
-                );
-              })}
-            </select>
-            <input type="submit" value="Submit" />
-          </form>
-        )}
-        {goalEditOption === "update-goal" && (
-          <form onSubmit={(e) => handleSubmit(e)}>
-            {goal?.goal_tractates?.length > 1 ? (
-              // If there are multiple tractates, show a dropdown for selecting tractate and page
-              <>
-                <label>
-                  Select Tractate:
-                  <select onChange={handleTractateChange}>
-                    <option value="">Select a tractate</option>
-                    {goal.goal_tractates.map((tractate) => (
-                      <option
-                        key={tractate.id}
-                        value={tractate.tractate}
-                      >
-                        {tractate.tractate}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                {selectedTractate && (
-                  <>
-                    <label>
-                      Select Page:
-                      <select onChange={handlePageChange} value={selectedPage}>
-                        <option value="">Select a page</option>
-                        {Array.from({ length: selectedTractate.tractate_pages_selected * 2 }, (_, i) => {
-                          const pageNumber = Math.floor(i / 2) + 1;
-                          const side = i % 2 === 0 ? '.0' : '.5';
-                          const sideLabel = i % 2 === 0 ? 'A' : 'B';
-                          return (
-                            <option key={`${pageNumber}${side}`} value={`${pageNumber}${side}`}>
-                              Page {pageNumber} Side {sideLabel}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </label>
-                  </>
-                )}
-              </>
-            ) : goal?.goal_tractates?.length === 1 ? (
-              // If there is only one tractate, show its name and a page dropdown
-              <>
-                <h3>{goal.goal_tractates[0].tractate}</h3>
-                <label>
-                  Select Page:
-                  <select onChange={handlePageChange} value={selectedPage}>
-                    <option value="">Select a page</option>
-                    {Array.from({ length: goal.goal_tractates[0].tractate_pages_selected * 2 }, (_, i) => {
-                      const pageNumber = Math.floor(i / 2) + 1;
-                      const side = i % 2 === 0 ? '.0' : '.5';
-                      const sideLabel = i % 2 === 0 ? 'A' : 'B';
+          <CloseRoundedIcon style={{ color: "var(--orange)" }} />
+        </Button>
+        <form
+          onSubmit={(e) => handleSubmit(e)}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginTop: "2em",
+            height: "90%",
+          }}
+        >
+          {goalEditOption === "create-goal" && (
+            <div>
+              <TextField
+                select
+                label="Select Tractate"
+                value={selectedTractate.id || ""}
+                onChange={handleTractateCreateChange}
+                sx={{
+                  width: "90%",
+                  "& .MuiOutlinedInput-root": {
+                    color: "black",
+                    "& fieldset": {
+                      borderColor: "black",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "var(--orange-light)",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "var(--orange)",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "black",
+                  },
+                }}
+              >
+                <MenuItem disabled key="default" value="">
+                  <em>Select a tractate</em>
+                </MenuItem>
+                {tractates.map((tractate) => {
+                  return (
+                    <MenuItem key={tractate.id} value={tractate.id}>
+                      {tractate.name}
+                    </MenuItem>
+                  );
+                })}
+              </TextField>
+            </div>
+          )}
+          {goalEditOption === "update-goal" && (
+            <div>
+              {goal?.goal_tractates?.length > 1 ? (
+                // If there are multiple tractates, show a dropdown for selecting tractate and page
+                <div className="selectTractateDropdown">
+                  <TextField
+                    select
+                    label="Select Tractate"
+                    value={selectedTractate.id || ""}
+                    onChange={handleTractateChange}
+                    sx={{
+                      width: "90%",
+                      "& .MuiOutlinedInput-root": {
+                        color: "black",
+                        "& fieldset": {
+                          borderColor: "black",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "var(--orange-light)",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "var(--orange)",
+                        },
+                      },
+                      "& .MuiInputLabel-root": {
+                        color: "black",
+                      },
+                    }}
+                  >
+                    <MenuItem disabled key="default" value="">
+                      <em>Select a tractate</em>
+                    </MenuItem>
+                    {goal?.goal_tractates.map((tractate) => {
                       return (
-                        <option key={`${pageNumber}${side}`} value={`${pageNumber}${side}`}>
-                          Page {pageNumber} Side {sideLabel}
-                        </option>
+                        <MenuItem key={tractate.id} value={tractate.id}>
+                          {tractate.tractate}
+                        </MenuItem>
                       );
                     })}
-                  </select>
-                </label>
-              </>
-            ) : (
-              // If no tractates exist, show a message
-              <p>User has no tractate goals</p>
-            )}
-            <input type="submit" value="Submit" />
-            <Button variant="outlined" color="error" size="small" startIcon={<DeleteIcon />} onClick={(e) => handleSubmit(e)}>Delete Goal (add dlt req)</Button>
-          </form>
-        )}
+                  </TextField>
+                  {selectedTractate.id !== "" && (
+                    <div
+                      className="pageSelectDropdown"
+                      style={{ marginTop: "2em" }}
+                    >
+                      <TextField
+                        select
+                        label="Select Page"
+                        value={selectedPage}
+                        onChange={handlePageChange}
+                        sx={{
+                          width: "90%",
+                          "& .MuiOutlinedInput-root": {
+                            color: "black",
+                            "& fieldset": {
+                              borderColor: "black",
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "var(--orange-light)",
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "var(--orange)",
+                            },
+                          },
+                          "& .MuiInputLabel-root": {
+                            color: "black",
+                          },
+                        }}
+                      >
+                        <MenuItem disabled value="">
+                          <em>Select a page</em>
+                        </MenuItem>
+                        {Array.from(
+                          {
+                            length:
+                              selectedTractate?.tractate_pages_selected * 2 - 1,
+                          },
+                          (_, i) => {
+                            const pageNumber = Math.floor(i / 2);
+                            const side = i % 2 === 0 ? "A" : "B";
+                            return (
+                              <MenuItem key={i} value={i}>
+                                Page {pageNumber + 2} Side {side}
+                              </MenuItem>
+                            );
+                          }
+                        )}
+                        <MenuItem
+                          key={selectedTractate?.tractate_pages_selected}
+                          value={selectedTractate?.tractate_pages_selected}
+                        >
+                          Completed
+                        </MenuItem>
+                      </TextField>
+                    </div>
+                  )}
+                </div>
+              ) : goal?.goal_tractates?.length === 1 ? (
+                // If there is only one tractate, show its name and a page dropdown
+                <div className="updateSingleTractate">
+                  <h3>{goal?.goal_tractates[0].tractate}</h3>
+                  <TextField
+                    select
+                    label="Select Page"
+                    value={selectedPage.tractate}
+                    onChange={handlePageChange}
+                    sx={{
+                      width: "90%",
+                      "& .MuiOutlinedInput-root": {
+                        color: "black",
+                        "& fieldset": {
+                          borderColor: "black",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "var(--orange-light)",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "var(--orange)",
+                        },
+                      },
+                      "& .MuiInputLabel-root": {
+                        color: "black",
+                      },
+                    }}
+                  >
+                    {Array.from(
+                      {
+                        length:
+                          goal?.goal_tractates[0]?.tractate_pages_selected * 2 -
+                          1,
+                      },
+                      (_, i) => {
+                        const pageNumber = Math.floor(i / 2);
+                        const side = i % 2 === 0 ? "A" : "B";
+                        return (
+                          <MenuItem key={i} value={i}>
+                            Page {pageNumber + 2} Side {side}
+                          </MenuItem>
+                        );
+                      }
+                    )}
+                    <MenuItem
+                      key={goal?.goal_tractates[0]?.tractate_pages_selected}
+                      value={goal?.goal_tractates[0]?.tractate_pages_selected}
+                    >
+                      Completed
+                    </MenuItem>
+                  </TextField>
+                </div>
+              ) : (
+                // If no tractates exist, show a message
+                <Typography variant="h5">User has no tractate goals</Typography>
+              )}
+              {/* <Button
+              variant="outlined"
+              color="error"
+              size="small"
+              startIcon={<DeleteIcon />}
+              onClick={(e) => handleSubmit(e)}
+            >
+              Delete Goal (add dlt req)
+            </Button> */}
+            </div>
+          )}
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              backgroundColor: "var(--orange)",
+              marginTop: "1em",
+              width: "50%",
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+              bottom: "3em",
+            }}
+          >
+            {goalEditOption === "create-goal" ? "Create Goal" : "Update Goal"}
+          </Button>
+        </form>
       </div>
-    </div>
+    </Dialog>
   );
 }
 
