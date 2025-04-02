@@ -54,12 +54,25 @@ function Settings() {
           alert(`${key} cannot be empty`);
           return;
         }
+        if (
+          userData.phone_number.length !== 10 &&
+          !/^\d{10}$/.test(userData.phone_number)
+        ) {
+          alert("Please enter a valid phone number");
+          return;
+        }
         updatedFields[key] = userData[key];
       }
     }
     try {
       await updateUser(updatedFields);
-      // alert("Profile updated successfully!");
+      // TODO: return errors from fetch for API validations
+
+      // update state
+      for (let key in updatedFields) {
+        user[key] = updatedFields[key];
+      }
+      alert("Profile updated successfully!");
     } catch (err) {
       console.error(err);
       alert("Failed to update profile. Please try again later.");
