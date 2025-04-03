@@ -11,6 +11,11 @@ import {
   Paper,
   MenuItem,
   TextField,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+  NoteAddIcon,
+  UpgradeIcon,
 } from "../utils/dataExports/muiExports";
 
 /*
@@ -126,8 +131,10 @@ function Goal() {
         }}
       >
         <Paper
-          elevation={3}
+          elevation={0}
           sx={{
+            border: "2px solid var(--light-grey)",
+            borderRadius: "16px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
@@ -181,7 +188,7 @@ function Goal() {
               <>
                 <TextField
                   select
-                  autoWidth
+                  autowidth="true"
                   value={selectedTractate.tractate}
                   onChange={handleTractateChange}
                   id="grouped-select"
@@ -230,10 +237,10 @@ function Goal() {
               </>
             ) : (
               <>
-                <span style={{ marginLeft: "10px" }}>
+                <Typography style={{ marginLeft: "10px" }}>
                   {user?.goal?.goal_tractates?.[0]?.tractate ||
                     "No tractate selected"}
-                </span>
+                </Typography>
                 <br />
                 <Typography>
                   Pages completed: {goal?.user_total_completed_pages} /{" "}
@@ -256,7 +263,79 @@ function Goal() {
         </select> */}
         </Paper>
         <Box
+          className="speedDialForMobile"
           sx={{
+            height: 320,
+            transform: "translateZ(0px)",
+            flexGrow: 1,
+            display: { xs: "flex", md: "none" },
+            justifyContent: "center",
+            position: "relative",
+          }}
+        >
+          <SpeedDial
+            ariaLabel="SpeedDial basic example"
+            sx={{
+              position: "absolute",
+              bottom: 30,
+              left: "50%",
+              transform: "translateX(-50%)",
+              "&.MuiSpeedDial-root": {
+                "& .MuiSpeedDial-fab": {
+                  backgroundColor: "var(--orange)",
+                  color: "white",
+                },
+              },
+            }}
+            icon={<SpeedDialIcon />}
+          >
+            <SpeedDialAction
+              key={"update"}
+              icon={<UpgradeIcon />}
+              onClick={() => {
+                setOpenGoal(true);
+                setGoalEditOption("update-goal");
+              }}
+              slotProps={{
+                tooltip: {
+                  title: "Update",
+                  open: true,
+                },
+              }}
+            />
+            {goal?.year?.includes(currentYear) ? (
+              <SpeedDialAction
+                key={"create"}
+                icon={<NoteAddIcon />}
+                onClick={() => {
+                  setOpenGoal(true);
+                  setGoalEditOption("create-goal");
+                }}
+                slotProps={{
+                  tooltip: {
+                    title: "Create",
+                    open: true,
+                  },
+                }}
+              />
+            ) : (
+              <SpeedDialAction
+                key={"create"}
+                icon={<NoteAddIcon />}
+                onClick={() => createGoalForCurrentYear()}
+                slotProps={{
+                  tooltip: {
+                    title: "Create",
+                    open: true,
+                  },
+                }}
+              />
+            )}
+          </SpeedDial>
+        </Box>
+        <Box
+          sx={{
+            display: { xs: "none", md: "flow" },
             width: { xs: "50%", md: "25%" },
             height: "300px",
             marginTop: "2em",
