@@ -20,11 +20,10 @@ import {
 
 /*
 TODO: 
-get all goals (might be array of all years)
 see if theres a goal with goal.year.includes(current.year) (may have to change year check later)
 if not, on submit, create new goal then create new goalTractate
 or have start goal for {current.year} and onclick create goal and open popup for "create goal"
-TODO: build out progress bar, allow for user to delete goal, finish year logic, update user state upon any edits, close popup on submit, fix page dropdown after submit (goes to default)
+TODO: allow for user to delete goal, finish year logic, update user state upon any edits, fix page dropdown after submit (goes to default)
 TODO: if goal is empty, show "no goal"
 */
 
@@ -46,15 +45,13 @@ function Goal() {
     function getTractates() {
       const fetchTractates = async () => {
         try {
-          const tractates = await getAllTractates();
-          //TODO:  if tractates are filled dont populate
-          setTractates(tractates);
-          console.log("tractates", tractates);
+          const allTractates = await getAllTractates();
+          setTractates(allTractates);
         } catch (e) {
           console.error("Error fetching tractates:", e);
         }
       };
-      if (goalEditOption === "create-goal") {
+      if (goalEditOption === "create-goal" && tractates.length === 0) {
         fetchTractates();
       }
     },
