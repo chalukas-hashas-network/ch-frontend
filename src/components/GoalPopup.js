@@ -15,7 +15,8 @@ import {
 } from "../utils/dataExports/muiExports";
 
 // TODO: update users state when goal is created or updated
-// TODO: make sure data type for page number, if string then convert to int where necessary, if int, make sure its refelective everywhere
+// TODO: make sure data type for page number, if string then convert to int where necessary, if int, make sure its reflective everywhere
+// ? why cant user update page to be 0?
 
 function GoalPopup({
   setOpenGoal,
@@ -29,6 +30,13 @@ function GoalPopup({
     tractate: "",
   });
   const [selectedPage, setSelectedPage] = useState(0);
+
+  const resetData = () => {
+    setSelectedTractate({ id: "", tractate: "" });
+    setSelectedPage(0);
+    setOpenGoal(false);
+    setGoalEditOption("");
+  };
 
   // Handle change for selecting tractate
   const handleTractateChange = (e) => {
@@ -48,8 +56,12 @@ function GoalPopup({
   // Initialize selected tractate and page when goal has exactly one tractate
   useEffect(
     function initializeSingleTractateGoal() {
-      if (goal?.goal_tractates?.length === 1) {
-        console.log("goal: ", goal);
+      if (
+        goal?.goal_tractates?.length === 1 &&
+        goalEditOption === "update-goal"
+      ) {
+        // console.log("goal: ", goal);
+        // * is a number
         setSelectedTractate(goal.goal_tractates[0]);
         setSelectedPage(goal.goal_tractates[0].tractate_pages_completed || 0); // Default to completed pages
       }
@@ -61,6 +73,7 @@ function GoalPopup({
     const selectedTractate = tractates.find(
       (tractate) => tractate.id === e.target.value
     );
+    // * is a number
     setSelectedTractate(selectedTractate || { id: "", tractate: "" });
   };
 
@@ -73,28 +86,55 @@ function GoalPopup({
           return;
         }
         try {
+          // TODO: response should return updated goal, not just new goal.goal_tractate
           const response = await createTractateGoal(
             goal.id,
             selectedTractate.id
           );
-          console.log(response);
+          /*
+          update user object with updated response
+          update data: 
+          
+          goal.
+          user_percentage_completed:
+          user_total_completed_pages: 
+          user_total_selected_pages: 
+          goal_tractates.
+          tractate: selectedTractate.name
+          tractate_pages_completed: 0.0
+          tractate_pages_selected: selectedTractate.number_of_pages
+          */
+
+          // console.log(response);
           // setUser(response);
+          // TODO: update state
           alert("Goal created");
-          setSelectedTractate("Select tractate");
-          setOpenGoal(false);
+          // setSelectedTractate("Select tractate");
+          // setOpenGoal(false);
+          resetData();
         } catch (error) {
           console.error("Error updating user goal:", error);
         }
         console.log("Selected tractate:", selectedTractate);
-        setSelectedTractate("Select tractate");
-        setOpenGoal(false);
+        // setSelectedTractate("Select tractate");
+        // setOpenGoal(false);
+        resetData();
         break;
       case "update-goal":
         const pageAsFloat = parseFloat(selectedPage);
         try {
-          updateTractateProgress(selectedTractate.id, pageAsFloat);
-          setSelectedPage(1);
-          setOpenGoal(false);
+          const response = await updateTractateProgress(
+            selectedTractate.id,
+            pageAsFloat
+          );
+          // TODO: update state
+          /*
+          get updated % 
+          update total completed, total %, goal.tractate pages completed
+          */
+          // setSelectedPage(1);
+          // setOpenGoal(false);
+          resetData();
         } catch (error) {
           console.error("Error updating user goal:", error);
         }
@@ -109,7 +149,7 @@ function GoalPopup({
     <Dialog
       open={true}
       className="popup-overlay"
-      onClose={() => setOpenGoal(false)}
+      onClose={() => resetData()}
       PaperComponent={Card}
     >
       <div
@@ -121,10 +161,7 @@ function GoalPopup({
         }}
       >
         <Button
-          onClick={() => {
-            setOpenGoal(false);
-            setGoalEditOption("");
-          }}
+          onClick={() => resetData()}
           style={{ position: "absolute", top: "10px", right: "10px" }}
         >
           <CloseRoundedIcon style={{ color: "var(--orange)" }} />
@@ -277,11 +314,13 @@ function GoalPopup({
               ) : goal?.goal_tractates?.length === 1 ? (
                 // If there is only one tractate, show its name and a page dropdown
                 <div className="updateSingleTractate">
-                  <h3>{goal?.goal_tractates[0].tractate}</h3>
+                  <Typography variant="h6" sx={{ marginBottom: "1em" }}>
+                    {goal?.goal_tractates[0].tractate}
+                  </Typography>
                   <TextField
                     select
                     label="Select Page"
-                    value={selectedPage.tractate}
+                    value={selectedPage}
                     onChange={handlePageChange}
                     sx={{
                       width: "90%",
@@ -354,7 +393,7 @@ function GoalPopup({
               bottom: "3em",
             }}
           >
-            {goalEditOption === "create-goal" ? "Create Goal" : "Update Goal"}
+            {goalEditOption === "create-goal" ? "Create " : "Update "} Goal
           </Button>
         </form>
       </div>
