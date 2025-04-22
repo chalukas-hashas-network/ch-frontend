@@ -13,16 +13,14 @@ import {
   ListItemText,
   Drawer,
 } from "../utils/dataExports/muiExports";
-import { useUser } from "../utils/Context";
+import { useUser, useLogin } from "../utils/Context";
 
 import { useState } from "react";
-import Login from "./Login";
 
 function Nav() {
-  const [userStatus, setUserStatus] = useState("Login");
-  const [loginOpen, setLoginOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { logout, isAuth, isAdmin } = useUser();
+  const { setLoginOpen, setUserStatus } = useLogin();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -59,7 +57,11 @@ function Nav() {
           >
             <MenuIcon />
           </IconButton>
-          <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} anchor="right">
+          <Drawer
+            open={drawerOpen}
+            onClose={() => setDrawerOpen(false)}
+            anchor="right"
+          >
             <Box sx={{ width: 250 }} role="presentation">
               <List>
                 <ListItem disablePadding key="home">
@@ -135,6 +137,7 @@ function Nav() {
                     <ListItem disablePadding key="login">
                       <ListItemButton
                         onClick={() => {
+                          setDrawerOpen(false);
                           setUserStatus("Login");
                           setLoginOpen(true);
                         }}
@@ -145,6 +148,7 @@ function Nav() {
                     <ListItem disablePadding key="signup">
                       <ListItemButton
                         onClick={() => {
+                          setDrawerOpen(false);
                           setUserStatus("Signup");
                           setLoginOpen(true);
                         }}
@@ -291,14 +295,6 @@ function Nav() {
           }}
         />
       </Container>
-      {loginOpen && (
-        <Login
-          setLoginOpen={setLoginOpen}
-          userStatus={userStatus}
-          setUserStatus={setUserStatus}
-          loginOpen={loginOpen}
-        />
-      )}
     </>
   );
 }
