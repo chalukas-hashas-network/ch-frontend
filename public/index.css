@@ -20,7 +20,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* Ensure it appears above other content */
+  z-index: 9998; /* Ensure it appears above other content */
   backdrop-filter: blur(5px); /* This applies the blur effect */
   -webkit-backdrop-filter: blur(5px); /* For Safari support */
 }
@@ -56,9 +56,10 @@
 }
 
 :root {
-  --orange: #e3a41e;
+  --orange: #FBA62A;
   --orange-light: #ffe3a8;
-  --light-blue: #2393e3;
+  --light-blue: #38B6FE;
   --light-grey: #e2e2e2; 
   --brown: #785843; 
+  --black: #303030;
 }
