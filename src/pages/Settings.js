@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { updateUser } from "../utils/API/UserAPI";
 import { useUser } from "../utils/Context";
@@ -15,6 +15,7 @@ function Settings() {
   const { first_name, last_name, username, email, phone_number, location } =
     user;
 
+  const navigate = useNavigate();
   /*
      required:
      username, email, 
@@ -106,7 +107,7 @@ function Settings() {
     <div style={{ color: "black", paddingTop: "100px" }}>
       <Link
         style={{ textDecoration: "none", color: "black", marginLeft: "2em" }}
-        to="/home"
+        onClick={() => navigate(-1)}
       >
         <ArrowBackIcon />
       </Link>
@@ -242,6 +243,7 @@ function Settings() {
             type="submit"
             variant="contained"
             sx={{
+              boxShadow: "none",
               backgroundColor: "var(--orange)",
               width: { xs: "50%", md: "25%" },
               color: "black",
