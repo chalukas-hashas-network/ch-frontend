@@ -2,14 +2,16 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./components/App.js";
 import reportWebVitals from "./reportWebVitals.js";
-import { UserProvider } from "./utils/Context.js";
+import { UserProvider, LoginProvider } from "./utils/Context";
 
 const root = createRoot(document.getElementById("root"));
 root.render(
   <UserProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <LoginProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </LoginProvider>
   </UserProvider>
 );
 
