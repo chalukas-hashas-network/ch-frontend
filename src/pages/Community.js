@@ -21,13 +21,13 @@ function Community() {
   return (
     <div style={{ color: "black", paddingTop: "100px" }}>
       {listSelected === "community" && (
-        <Link style={{ textDecoration: "none", color: "black", marginLeft: "2em" }} to="/home">
+        <Link style={{ textDecoration: "none", color: "black", marginLeft: "2em", zIndex: "9999", position: "relative" }} to="/home">
           <ArrowBackIcon />
         </Link>
       )}
       {listSelected === "members" && (
         <Link
-          style={{ textDecoration: "none", color: "black", marginLeft: "2em" }}
+          style={{ textDecoration: "none", color: "black", marginLeft: "2em", zIndex: "9999", position: "relative" }}
           underline="none"
           onClick={() => {
             setListSelected("community");
@@ -36,18 +36,6 @@ function Community() {
           <ArrowBackIcon />
         </Link>
       )}
-      {/* // TODO: build button logic, if isAuth, popup with communities, else login popup */}
-      <Button
-        variant="contained"
-        sx={{
-          position: "absolute",
-          right: "25px",
-          backgroundColor: "var(--orange)",
-          color: "black",
-        }}
-      >
-        Join community
-      </Button>
       {listSelected === "community" && (
         <CommunityList
           setListSelected={setListSelected}
