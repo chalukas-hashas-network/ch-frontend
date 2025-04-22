@@ -137,6 +137,7 @@ function CommunityMembersList({ selectedCommunity }) {
           {members?.length > 0 ? (
             members?.map((member) => (
               <Card
+                elevation={0}
                 sx={{
                   backgroundColor: "var(--light-grey)",
                   width: "90%",
@@ -154,7 +155,17 @@ function CommunityMembersList({ selectedCommunity }) {
               </Card>
             ))
           ) : (
-            <p>No members for this community</p>
+            <Typography
+              variant="h5"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              No members for this community
+            </Typography>
           )}
         </Paper>
       </Paper>
@@ -188,8 +199,7 @@ function CommunityMembersList({ selectedCommunity }) {
             }}
           >
             <Typography sx={{ color: "var(--light-blue)", fontSize: "1em" }}>
-              {community_total_completed_pages} /{" "}
-              {community_total_selected_pages}
+              {community_total_completed_pages}
             </Typography>
             <Typography sx={{ color: "black", fontSize: ".8em" }}>
               Pages Learned
