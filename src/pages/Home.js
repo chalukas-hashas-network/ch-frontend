@@ -12,18 +12,20 @@ import {
   Slider,
 } from "../utils/dataExports/muiExports";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../utils/Context";
+import { useUser, useLogin } from "../utils/Context";
 
 function Home() {
   const navigate = useNavigate();
   const { isAuth } = useUser();
+  const { setLoginOpen, setUserStatus } = useLogin();
 
   // get communities and display first 3
-  const cards = [{id: 1}, {id: 2}, {id:3}];
-  
+  const cards = [{ id: 1 }, { id: 2 }, { id: 3 }];
+
   return (
     <Box style={{ color: "black" }}>
-      <Box className="pageDisplay"
+      <Box
+        className="pageDisplay"
         sx={{
           height: "550px",
           width: "100%",
@@ -35,40 +37,66 @@ function Home() {
         }}
       >
         <Box>
-          <Typography variant="h4">United through learning</Typography>
-          <Typography variant="h4">Chalukas Hashas</Typography>
-          <Typography
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <TaskAltRoundedIcon /> Track your progress
+          <Typography variant="h4" sx={{ color: "var(--black)" }}>
+            United through learning
+          </Typography>
+          <Typography variant="h4" sx={{ color: "var(--black)" }}>
+            Chalukas Hashas
           </Typography>
           <Typography
-            style={{
+            variant="overline"
+            sx={{
               display: "flex",
               alignItems: "center",
+              fontSize: "0.5em",
+              marginTop: "1em",
             }}
           >
-            <TaskAltRoundedIcon /> Connect with a Chavrusa
+            <TaskAltRoundedIcon
+              sx={{ marginRight: "7px", color: "var(--orange)" }}
+            />{" "}
+            Track your progress
           </Typography>
           <Typography
-            style={{
+            variant="overline"
+            sx={{
               display: "flex",
               alignItems: "center",
+              fontSize: "0.5em",
             }}
           >
-            <TaskAltRoundedIcon /> Explore community events
+            <TaskAltRoundedIcon
+              sx={{ marginRight: "7px", color: "var(--orange)" }}
+            />{" "}
+            Connect with a Chavrusa
           </Typography>
-          {/* //! figure out how to trigger signup from here  */}
+          <Typography
+            variant="overline"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              fontSize: "0.5em",
+            }}
+          >
+            <TaskAltRoundedIcon
+              sx={{ marginRight: "7px", color: "var(--orange)" }}
+            />{" "}
+            Explore community events
+          </Typography>
           {!isAuth && (
             <Button
               variant="contained"
               color="primary"
               sx={{
+                boxShadow: "none",
                 marginTop: "20px",
-                backgroundColor: "var(--orange)",
+                backgroundColor: "var(--black)",
+                borderRadius: "10px",
+                textTransform: "none",
+              }}
+              onClick={() => {
+                setLoginOpen(true);
+                setUserStatus("Signup");
               }}
             >
               Sign up
@@ -77,12 +105,16 @@ function Home() {
           <Button
             variant="contained"
             sx={{
+              boxShadow: "none",
               marginTop: "20px",
               backgroundColor: "var(--orange)",
               marginLeft: "25px",
+              borderRadius: "10px",
+              textTransform: "none",
             }}
+            onClick={() => navigate("/community")}
           >
-            <PersonAddAltRoundedIcon /> Find a Chavrusa
+            View Communities
           </Button>
         </Box>{" "}
         <Card
@@ -111,7 +143,7 @@ function Home() {
               key={card.id}
               variant="outlined"
               sx={{
-                border: "2px solid lightgrey",
+                border: "2px solid var(--light-grey)",
                 borderRadius: "16px",
                 flex: "1 1 200px",
                 minWidth: "100px",
@@ -151,7 +183,7 @@ function Home() {
                     <br />
                     <br />
                     <Box
-                    className="progressBarContainer"
+                      className="progressBarContainer"
                       sx={{
                         display: "flex",
                         alignItems: "center",
@@ -159,10 +191,10 @@ function Home() {
                       }}
                     >
                       <Box sx={{ width: "100%", mr: 1 }}>
-                        <Slider 
-                          disabled 
-                          defaultValue={30} 
-                          // defaultValue={
+                        <Slider
+                          disabled
+                          defaultValue={30}
+                          // value={
                           //   community.community_goal?.length > 0
                           //     ? (community.community_goal[0]
                           //         .community_total_completed_pages /
@@ -173,17 +205,17 @@ function Home() {
                           // }
                           aria-label="Disabled slider"
                           sx={{
-                            '& .MuiSlider-thumb': {
-                              color: 'var(--light-blue)',
-                              height: '12px',
-                              width: '12px',
+                            "& .MuiSlider-thumb": {
+                              color: "var(--light-blue)",
+                              height: "12px",
+                              width: "12px",
                             },
-                            '& .MuiSlider-track': {
-                              color: 'var(--light-blue)',
+                            "& .MuiSlider-track": {
+                              color: "var(--light-blue)",
                             },
-                            '& .MuiSlider-rail': {
-                              color: 'var(--light-grey)'
-                            }
+                            "& .MuiSlider-rail": {
+                              color: "var(--light-grey)",
+                            },
                           }}
                         />
                       </Box>

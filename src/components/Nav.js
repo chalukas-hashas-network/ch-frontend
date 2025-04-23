@@ -254,7 +254,12 @@ function Nav() {
               {isAuth ? (
                 <Button
                   onClick={handleLogout}
-                  sx={{ color: "black", display: "block" }}
+                  sx={{
+                    color: "black",
+                    display: "block",
+                    boxShadow: "none",
+                    textTransform: "none",
+                  }}
                 >
                   <Typography sx={{ textAlign: "center" }}>Logout</Typography>
                 </Button>
@@ -265,7 +270,11 @@ function Nav() {
                       setUserStatus("Login");
                       setLoginOpen(true);
                     }}
-                    sx={{ color: "black" }}
+                    sx={{
+                      boxShadow: "none",
+                      textTransform: "none",
+                      color: "black",
+                    }}
                   >
                     Log in
                   </Button>
@@ -278,6 +287,8 @@ function Nav() {
                     sx={{
                       backgroundColor: "var(--orange)",
                       color: "black",
+                      boxShadow: "none",
+                      textTransform: "none",
                     }}
                   >
                     Sign up
