@@ -21,13 +21,26 @@ function Community() {
   return (
     <div style={{ color: "black", paddingTop: "100px" }}>
       {listSelected === "community" && (
-        <Link style={{ textDecoration: "none", color: "black", marginLeft: "2em", zIndex: "9999", position: "relative" }} to="/home">
+        <Link
+          style={{
+            textDecoration: "none",
+            color: "black",
+            marginLeft: "2em",
+            position: "relative",
+          }}
+          to="/home"
+        >
           <ArrowBackIcon />
         </Link>
       )}
       {listSelected === "members" && (
         <Link
-          style={{ textDecoration: "none", color: "black", marginLeft: "2em", zIndex: "9999", position: "relative" }}
+          style={{
+            textDecoration: "none",
+            color: "black",
+            marginLeft: "2em",
+            position: "relative",
+          }}
           underline="none"
           onClick={() => {
             setListSelected("community");
