@@ -22,18 +22,14 @@ export const createAnnualGoal = async (id, year) => {
         year: year,
       }),
     });
+
     if (!response.ok) {
-      // throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error: ${response.statusText}`);
     }
 
     return await response.json();
-
-    // setUser(data);  // Set the fetched user data
   } catch (err) {
-    console.log(err);
-    // setError(err.message);  // Set the error message
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
+    console.log("Error while creating annual goal: ", err);
   }
 };
 
@@ -45,7 +41,7 @@ export const createTractateGoal = async (goal_id, tractate_id) => {
   }
 
   try {
-      const response = await fetch(API_URL + "/goalTractates/", {
+    const response = await fetch(API_URL + "/goalTractates/", {
       method: "POST",
       headers: headers,
       body: JSON.stringify({
@@ -53,18 +49,14 @@ export const createTractateGoal = async (goal_id, tractate_id) => {
         tractate_id: parseInt(tractate_id),
       }),
     });
+
     if (!response.ok) {
-      // throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error: ${response.statusText}`);
     }
 
     return await response.json();
-
-    // setUser(data);  // Set the fetched user data
   } catch (err) {
-    console.log(err);
-    // setError(err.message);  // Set the error message
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
+    console.log("Error while creating goal: ", err);
   }
 };
 
@@ -77,7 +69,7 @@ export const getAllTractates = async () => {
 
     return await response.json();
   } catch (e) {
-    console.error("Error fetching tactates:", e);
+    console.error("Error fetching tractates: ", e);
   }
 };
 
@@ -89,24 +81,38 @@ export const updateTractateProgress = async (goalId, page) => {
   }
 
   try {
-    const response = await fetch(
-      // `${API_URL}/goal-tractate/update/${goalId}/`,
-      `${API_URL}/goalTractates/${goalId}/`,
-      {
-        method: "PATCH",
-        headers,
-        body: JSON.stringify({tractate_pages_completed: page}),
-      }
-    );
+    const response = await fetch(`${API_URL}/goalTractates/${goalId}/`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ tractate_pages_completed: page }),
+    });
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
 
     return await response.json();
-    // setUser(data);  // Set the fetched user data
   } catch (err) {
-    // setError(err.message);  // Set the error message
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
+    console.log("Error while trying to update tractate progress: ", err);
+  }
+};
+
+export const deleteTractateGoal = async (goalId) => {
+  const token = localStorage.getItem(ACCESS_TOKEN);
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/goals/${goalId}/`, {
+      method: "DELETE",
+      headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+  } catch (err) {
+    console.log("Error while trying to delete goal: ", err);
   }
 };
