@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import {
   createTractateGoal,
   updateTractateProgress,
+  createAnnualGoal,
+  deleteTractateGoal,
 } from "../utils/API/GoalAPI";
 import {
   Button,
@@ -14,7 +16,7 @@ import {
   Card,
 } from "../utils/dataExports/muiExports";
 
-// TODO: update users state when goal is created or updated
+// TODO: update users state when goal is created
 // TODO: make sure data type for page number, if string then convert to int where necessary, if int, make sure its reflective everywhere
 // ? why cant user update page to be 0?
 
@@ -23,13 +25,17 @@ function GoalPopup({
   goalEditOption,
   setGoalEditOption,
   tractates,
-  goal,
+  // goal,
+  user,
+  setSelectedTractateData,
 }) {
+  const { goal } = user;
+
+  const [selectedPage, setSelectedPage] = useState(0);
   const [selectedTractate, setSelectedTractate] = useState({
     id: "",
     tractate: "",
   });
-  const [selectedPage, setSelectedPage] = useState(0);
 
   const resetData = () => {
     setSelectedTractate({ id: "", tractate: "" });
@@ -37,6 +43,8 @@ function GoalPopup({
     setOpenGoal(false);
     setGoalEditOption("");
   };
+
+  const currentYear = new Date().getFullYear();
 
   // Handle change for selecting tractate
   const handleTractateChange = (e) => {
@@ -87,10 +95,25 @@ function GoalPopup({
         }
         try {
           // TODO: response should return updated goal, not just new goal.goal_tractate
+
+          if (!goal?.year?.includes(currentYear)) {
+            // ! get newGoal id to use in creating tractate goal
+            const newGoal = await createAnnualGoal(
+              user.id,
+              `${currentYear - 1}-${currentYear}`
+            );
+            debugger;
+            // setUser(user.goal = {id: newGoal.id})
+            console.log("created new goal for " + currentYear);
+          }
+
+          // ! wont work if user is creating goal for first time
           const response = await createTractateGoal(
             goal.id,
             selectedTractate.id
           );
+
+
           /*
           update user object with updated response
           update data: 
@@ -106,7 +129,6 @@ function GoalPopup({
           */
 
           // console.log(response);
-          // setUser(response);
           // TODO: update state
           alert("Goal created");
           // setSelectedTractate("Select tractate");
@@ -123,17 +145,47 @@ function GoalPopup({
       case "update-goal":
         const pageAsFloat = parseFloat(selectedPage);
         try {
+          // ! cant make the page 0
           const response = await updateTractateProgress(
             selectedTractate.id,
             pageAsFloat
           );
-          // TODO: update state
-          /*
-          get updated % 
-          update total completed, total %, goal.tractate pages completed
-          */
-          // setSelectedPage(1);
-          // setOpenGoal(false);
+
+          const updatedTractate = goal.goal_tractates.find(
+            (tractate) => tractate.id === selectedTractate.id
+          );
+
+          // Calculate the difference in completed pages and update the total
+          // If user decreased their progress, subtract the difference from total
+          if (updatedTractate.tractate_pages_completed > pageAsFloat) {
+            goal.user_total_completed_pages =
+              goal.user_total_completed_pages -
+              (updatedTractate.tractate_pages_completed - pageAsFloat);
+            // If user increased their progress, add the difference to total
+          } else if (updatedTractate.tractate_pages_completed < pageAsFloat) {
+            goal.user_total_completed_pages =
+              goal.user_total_completed_pages +
+              (pageAsFloat - updatedTractate.tractate_pages_completed);
+          }
+
+          // update the specific tractates completed pages
+          updatedTractate.tractate_pages_completed = pageAsFloat;
+
+          goal.user_percentage_completed = Number(
+            (
+              (goal.user_total_completed_pages /
+                goal.user_total_selected_pages) *
+              100
+            ).toFixed(2)
+          );
+
+          setSelectedTractateData({
+            ...selectedTractate,
+            tractate: "total",
+            percentage_completed: goal.user_percentage_completed,
+            pages_completed: goal.user_total_completed_pages,
+          });
+
           resetData();
         } catch (error) {
           console.error("Error updating user goal:", error);
@@ -287,16 +339,13 @@ function GoalPopup({
                           <em>Select a page</em>
                         </MenuItem>
                         {Array.from(
-                          {
-                            length:
-                              selectedTractate?.tractate_pages_selected * 2 - 1,
-                          },
+                          { length: selectedTractate?.tractate_pages_selected },
                           (_, i) => {
-                            const pageNumber = Math.floor(i / 2);
+                            const pageNumber = Math.floor(i / 2) + 2;
                             const side = i % 2 === 0 ? "A" : "B";
                             return (
                               <MenuItem key={i} value={i}>
-                                Page {pageNumber + 2} Side {side}
+                                Page {pageNumber} Side {side}
                               </MenuItem>
                             );
                           }
@@ -342,17 +391,13 @@ function GoalPopup({
                     }}
                   >
                     {Array.from(
-                      {
-                        length:
-                          goal?.goal_tractates[0]?.tractate_pages_selected * 2 -
-                          1,
-                      },
+                      { length: goal?.goal_tractates[0]?.tractate_pages_selected },
                       (_, i) => {
-                        const pageNumber = Math.floor(i / 2);
+                        const pageNumber = Math.floor(i / 2) + 2;
                         const side = i % 2 === 0 ? "A" : "B";
                         return (
                           <MenuItem key={i} value={i}>
-                            Page {pageNumber + 2} Side {side}
+                            Page {pageNumber} Side {side}
                           </MenuItem>
                         );
                       }
@@ -367,7 +412,7 @@ function GoalPopup({
                 </div>
               ) : (
                 // If no tractates exist, show a message
-                <Typography variant="h5">User has no tractate goals</Typography>
+                <Typography variant="h6">You have no goals yet</Typography>
               )}
               {/* <Button
               variant="outlined"
