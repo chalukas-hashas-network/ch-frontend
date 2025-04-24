@@ -26,17 +26,14 @@ export const getCommunities = async (filterField = {}, includeFields = []) => {
 
   try {
     const response = await fetch(url);
-    // Check if the response is OK
+
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
 
     return await response.json();
-    // setUser(data);  // Set the fetched user data
   } catch (err) {
-    // setError(err.message);  // Set the error message
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
+    console.log("Error getting community: ", err);
   }
 };
 
@@ -72,16 +69,14 @@ export const queryCommunities = async (
       method: "GET",
       headers: headers,
     });
+
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
 
     return await response.json();
-    // setUser(data);  // Set the fetched user data
   } catch (err) {
-    // setError(err.message);  // Set the error message
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
+    console.log("Error getting community: ", err);
   }
 };
 
@@ -116,18 +111,14 @@ export const createCommunity = async (body) => {
         location: body?.location,
       }),
     });
+
     if (!response.ok) {
-      // throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error: ${response.statusText}`);
     }
 
     return await response.json();
-
-    // setUser(data);  // Set the fetched user data
   } catch (err) {
-    console.log(err);
-    // setError(err.message);  // Set the error message
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
+    console.log("Error creating community", err);
   }
 };
 
@@ -145,17 +136,12 @@ export const updateCommunity = async (body) => {
       }
     );
     if (!response.ok) {
-      // throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error: ${response.statusText}`);
     }
 
     return await response.json();
-
-    // setUser(data);  // Set the fetched user data
   } catch (err) {
-    console.log(err);
-    // setError(err.message);  // Set the error message
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
+    console.log("Error updating community: ", err);
   }
 };
 
@@ -169,16 +155,11 @@ export const deleteCommunity = async (body) => {
       }
     );
     if (!response.ok) {
-      // throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error: ${response.statusText}`);
     }
 
     return await response.json();
-
-    // setUser(data);  // Set the fetched user data
   } catch (err) {
-    console.log(err);
-    // setError(err.message);  // Set the error message
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
+    console.log("Error deleting community: ", err);
   }
 };
