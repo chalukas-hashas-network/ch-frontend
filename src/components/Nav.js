@@ -94,7 +94,7 @@ function Nav() {
                           navigate("/goal");
                         }}
                       >
-                        <ListItemText primary="Goal Page" />
+                        <ListItemText primary="My Progress" />
                       </ListItemButton>
                     </ListItem>
                     {isAdmin && (
@@ -216,7 +216,7 @@ function Nav() {
                   onClick={() => navigate("/goal")}
                   sx={{ color: "black" }}
                 >
-                  Goal Page
+                  My Progress
                 </Button>
                 <Button
                   key="Settings"
