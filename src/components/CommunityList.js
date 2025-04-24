@@ -1,18 +1,21 @@
 import {
   TextField,
   Autocomplete,
-  ToggleButton,
-  ToggleButtonGroup,
+  MenuItem,
   Box,
   Grid,
   Card,
-  CardActionArea,
   CardContent,
   Typography,
   Slider,
+  Button,
+  SearchRoundedIcon,
 } from "../utils/dataExports/muiExports";
 import { useState, useEffect } from "react";
 import states from "../utils/dataExports/StatesExports";
+import JoinCommunityPopup from "./JoinCommunityPopup";
+
+// TODO: make Join button logic
 
 function CommunityList({
   setListSelected,
@@ -22,6 +25,10 @@ function CommunityList({
   setCommunityData,
 }) {
   const [toggleDropdown, setToggleDropdown] = useState("name");
+  const [joinPopup, setJoinPopup] = useState({
+    isOpen: false,
+    community: null,
+  });
   const [selectedDropdown, setSelectedDropdown] = useState({
     name: "",
     firstLetter: "",
@@ -33,7 +40,7 @@ function CommunityList({
           const firstLetter = community.name[0].toUpperCase();
           return {
             firstLetter: /[0-9]/.test(firstLetter) ? "0-9" : firstLetter,
-            name: community.name,
+            name: capitalizeWord(community.name),
           };
         })
       : states?.map((state) => {
@@ -44,19 +51,30 @@ function CommunityList({
           };
         });
 
+  function capitalizeWord(str) {
+    return str
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  }
+
   useEffect(
     function fillCommunityDataOnDropdownChange() {
       if (selectedDropdown.name !== "") {
         if (toggleDropdown === "name") {
           setCommunityData(
             communities.filter(
-              (community) => community.name === selectedDropdown.name
+              (community) =>
+                community.name.toLowerCase() ===
+                selectedDropdown.name.toLowerCase()
             )
           );
         } else {
           setCommunityData(
             communities.filter(
-              (community) => community.location === selectedDropdown.name
+              (community) =>
+                community.location.toLowerCase() ===
+                selectedDropdown.name.toLowerCase()
             )
           );
         }
@@ -74,6 +92,7 @@ function CommunityList({
   return (
     <div
       style={{
+        marginTop: "1em",
         color: "black",
         alignItems: "center",
         display: "flex",
@@ -85,103 +104,127 @@ function CommunityList({
         className="stateFilterContainer"
         sx={{
           display: "flex",
-          flexDirection: { xs: "column", md: "row" },
           alignItems: "center",
-          marginTop: "2em",
+          marginBottom: "1em",
+          gap: {
+            xs: "0.7em",
+            md: "1.5em",
+          },
         }}
       >
-        <div className="filterOptionToggle" style={{ marginRight: "1em" }}>
-          <ToggleButtonGroup
-            value={toggleDropdown}
-            exclusive
-            onChange={(e) => handleDropdownChange(e)}
-            aria-label="Platform"
-          >
-            <ToggleButton
-              value="name"
-              sx={{
-                color: toggleDropdown === "name" ? "var(--orange)" : "gray",
-                "&.Mui-selected": {
-                  color: "var(--orange)",
-                  backgroundColor: "rgba(185, 108, 26, 0.08)",
+        <TextField
+          className="filterOptionToggle"
+          select
+          value={toggleDropdown}
+          onChange={(e) => handleDropdownChange(e)}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "50px",
+              "& fieldset": {
+                borderRadius: "50px",
+              },
+              "&:hover fieldset": {
+                borderColor: "black",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "var(--light-grey)",
+              },
+              height: "50px",
+            },
+            minWidth: {
+              xs: "46dvw",
+              sm: "300px",
+            },
+            "& .MuiSelect-select": {
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "gray",
+              },
+              color: "gray",
+              fontSize: { xs: "0.7rem", sm: "1em" },
+            },
+          }}
+          SelectProps={{
+            displayEmpty: true,
+            renderValue: () => `Filter by ${toggleDropdown}`,
+          }}
+        >
+          <MenuItem value="name">Name</MenuItem>
+          <MenuItem value="state">State</MenuItem>
+        </TextField>
+        <Autocomplete
+          className="searchBarDropdown"
+          options={dropdownOptions.sort(
+            (a, b) => -b.firstLetter.localeCompare(a.firstLetter)
+          )}
+          groupBy={(option) => option.firstLetter}
+          getOptionLabel={(option) => option.name}
+          onChange={(e, newValue) => {
+            setSelectedDropdown({
+              name: newValue ? newValue.name : "",
+              firstLetter: newValue ? newValue.firstLetter : "",
+            });
+          }}
+          sx={{
+            minWidth: {
+              xs: "46dvw",
+              sm: "300px",
+            },
+            "& .MuiOutlinedInput-root": {
+              color: "black",
+              height: "50px",
+            },
+            "& .MuiInputLabel-root": {
+              color: "black",
+              "&.Mui-focused": {
+                color: "black",
+              },
+            },
+            "& .MuiSelect-select": {
+              color: "var(--orange)",
+            },
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              placeholder="Search by Keyword"
+              slotProps={{
+                input: {
+                  ...params.InputProps,
+                  startAdornment: (
+                    <>
+                      <SearchRoundedIcon
+                        sx={{
+                          mr: 1,
+                          color: "gray",
+                          fontSize: { xs: "1rem", sm: "1.5em" },
+                        }}
+                      />
+                      {params.InputProps.startAdornment}
+                    </>
+                  ),
                 },
               }}
-            >
-              Name
-            </ToggleButton>
-            <ToggleButton
-              value="state"
               sx={{
-                color: toggleDropdown === "state" ? "var(--orange)" : "gray",
-                "&.Mui-selected": {
-                  color: "var(--orange)",
-                  backgroundColor: "rgba(185, 108, 26, 0.08)",
-                },
-              }}
-            >
-              State
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </div>
-        <br />
-        <div className="searchBarDropdown" style={{ color: "black" }}>
-          <Autocomplete
-            options={dropdownOptions.sort(
-              (a, b) => -b.firstLetter.localeCompare(a.firstLetter)
-            )}
-            groupBy={(option) => option.firstLetter}
-            getOptionLabel={(option) => option.name}
-            onChange={(e, newValue) => {
-              setSelectedDropdown({
-                name: newValue ? newValue.name : "",
-                firstLetter: newValue ? newValue.firstLetter : "",
-              });
-            }}
-            sx={{
-              width: 300,
-              "& .MuiOutlinedInput-root": {
-                color: "black",
-                "& fieldset": {
-                  borderColor: "white",
-                },
-                "&:hover fieldset": {
-                  borderColor: "var(--orange-light)",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "var(--orange)",
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: "black",
-                "&.Mui-focused": {
-                  color: "black",
-                },
-              },
-              "& .MuiSelect-select": {
-                color: "var(--orange)",
-              },
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={`Select ${
-                  toggleDropdown === "name" ? "Community" : "State"
-                }`}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "var(--orange)",
-                    "&.Mui-focused fieldset": {
-                      borderColor: "var(--orange)",
-                    },
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "50px",
+                  "& fieldset": {
+                    borderRadius: "50px",
                   },
-                }}
-              />
-            )}
-          />
-        </div>
+                  "&:hover fieldset": {
+                    borderColor: "black",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "var(--light-grey)",
+                  },
+                  fontSize: { xs: "0.7rem", sm: "1em" },
+                },
+              }}
+            />
+          )}
+        />
       </Box>
-      {communityData.length > 0 ? (
-        <Box>
+      <Box className="communityCards">
+        {communityData.length > 0 ? (
           <Grid
             container
             direction="row"
@@ -193,113 +236,171 @@ function CommunityList({
               marginTop: "1em",
             }}
           >
-            {communityData.map((community, index) => (
-              <Grid
+            {communityData.map((community) => (
+              <Card
+                elevation={0}
                 key={community.id}
-                onClick={() => {
-                  setListSelected("members");
-                  setSelectedCommunity(community);
+                sx={{
+                  border: "2px solid var(--light-grey)",
+                  borderRadius: "16px",
+                  minWidth: {
+                    xs: "45dvw",
+                    sm: "300px",
+                  },
+                  maxWidth:
+                    communityData.length === 1
+                      ? "200px"
+                      : {
+                          xs: "calc(50% - 1em)",
+                          sm: "calc(50% - 1em)",
+                          md: "calc(33.333% - 1em)",
+                          lg: "calc(25% - 1em)",
+                        },
+                  height: {
+                    xs: "230px",
+                    sm: "200px",
+                    md: "250px",
+                  },
+                  position: "relative",
+                  margin: "0",
                 }}
               >
-                <Card
-                  key={community.id}
+                <Button
+                  variant="contained"
                   sx={{
-                    flex: "1 1 300px",
-                    minWidth: "320px",
-                    maxWidth: "400px",
-                    height: "150px",
+                    boxShadow: "none",
+                    textTransform: "none",
+                    backgroundColor: "var(--orange)",
+                    borderRadius: "16px",
+                    position: "absolute",
+                    top: "10px",
+                    right: {
+                      xs: "10px",
+                      sm: "10px",
+                      md: "20px",
+                      lg: "30px",
+                    },
+                    height: {
+                      xs: "20px",
+                      sm: "25px",
+                      md: "30px",
+                    },
+                    fontSize: {
+                      xs: "11px",
+                      sm: "13px",
+                      md: "14px",
+                    },
+                    padding: {
+                      xs: "2px 8px",
+                      sm: "3px 10px",
+                      md: "4px 12px",
+                    },
+                  }}
+                  onClick={() => {
+                    setJoinPopup({ isOpen: true, community: community });
                   }}
                 >
-                  <CardActionArea
-                    sx={{
-                      height: "100%",
-                      "&[data-active]": {
-                        backgroundColor: "action.selected",
-                        "&:hover": {
-                          backgroundColor: "action.selectedHover",
-                        },
-                      },
-                    }}
-                  >
-                    <CardContent
+                  Join
+                </Button>
+                <CardContent
+                  sx={{
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div>
+                    <Typography variant="body2" component="div">
+                      {capitalizeWord(community.name)}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Community in {capitalizeWord(community.location)}
+                    </Typography>
+                    <br />
+                    <br />
+                    <Box
+                      className="progressBarContainer"
                       sx={{
-                        height: "100%",
                         display: "flex",
                         alignItems: "center",
+                        margin: "10px",
                       }}
                     >
-                      <img src={community.image} alt="Community" />
-                      <div>
-                        <Typography variant="body2" component="div">
-                          {community.name}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Community in {community.location}
-                        </Typography>
-                        <br />
-                        <br />
-                        <Box
+                      <Box
+                        className="progressBar"
+                        sx={{ width: "100%", mr: 1 }}
+                      >
+                        <Slider
+                          disabled
+                          defaultValue={
+                            community.community_goal?.length > 0
+                              ? (community.community_goal[0]
+                                  .community_total_completed_pages /
+                                  community.community_goal[0]
+                                    .community_total_selected_pages) *
+                                100
+                              : 0
+                          }
+                          aria-label="Disabled slider"
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            margin: "10px",
+                            "& .MuiSlider-thumb": {
+                              color: "var(--light-blue)",
+                              height: "12px",
+                              width: "12px",
+                            },
+                            "& .MuiSlider-track": {
+                              color: "var(--light-blue)",
+                            },
+                            "& .MuiSlider-rail": {
+                              color: "var(--light-grey)",
+                            },
                           }}
-                        >
-                          <Box sx={{ width: "100%", mr: 1 }}>
-                            <Slider
-                              disabled
-                              defaultValue={
-                                community.community_goal?.length > 0
-                                  ? (community.community_goal[0]
+                        />
+                      </Box>
+                      <Box className="progress" sx={{ minWidth: 35 }}>
+                        <Typography variant="body2" color="text.secondary">
+                          {`${
+                            community.community_goal?.length > 0
+                              ? (
+                                  parseFloat(
+                                    community.community_goal[0]
                                       .community_total_completed_pages /
                                       community.community_goal[0]
-                                        .community_total_selected_pages) *
-                                    100
-                                  : 0
-                              }
-                              aria-label="Disabled slider"
-                              sx={{
-                                "& .MuiSlider-thumb": {
-                                  color: "var(--light-blue)",
-                                  height: "12px",
-                                  width: "12px",
-                                },
-                                "& .MuiSlider-track": {
-                                  color: "var(--light-blue)",
-                                },
-                                "& .MuiSlider-rail": {
-                                  color: "var(--light-grey)",
-                                },
-                              }}
-                            />
-                          </Box>
-                          <Box sx={{ minWidth: 35 }}>
-                            <Typography variant="body2" color="text.secondary">
-                              {`${
-                                community.community_goal?.length > 0
-                                  ? (
-                                      parseFloat(
-                                        community.community_goal[0]
-                                          .community_total_completed_pages /
-                                          community.community_goal[0]
-                                            .community_total_selected_pages
-                                      ) * 100
-                                    ).toFixed(2)
-                                  : 0
-                              }%`}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </div>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
+                                        .community_total_selected_pages
+                                  ) * 100
+                                ).toFixed(2)
+                              : 0
+                          }%`}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      setListSelected("members");
+                      setSelectedCommunity(community);
+                    }}
+                    sx={{
+                      boxShadow: "none",
+                      color: "black",
+                      textDecoration: "underline",
+                      fontSize: { xs: "10px", sm: "15px" },
+                    }}
+                  >
+                    View community
+                  </Button>
+                </CardContent>
+              </Card>
             ))}
           </Grid>
-        </Box>
-      ) : (
-        <p>No communities found</p>
+        ) : (
+          <Typography variant="h5">No communities found</Typography>
+        )}
+      </Box>
+      {joinPopup.isOpen && (
+        <JoinCommunityPopup setJoinPopup={setJoinPopup} joinPopup={joinPopup} />
       )}
     </div>
   );
