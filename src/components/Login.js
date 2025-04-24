@@ -105,10 +105,15 @@ function Login() {
 
       // Collect all the missing fields
       for (let key in userData) {
-        if (userData[key] === "") {
+        if (
+          userData[key] === "" &&
+          key !== "location" &&
+          key !== "phone_number"
+        ) {
           missingFields.push(key.replace("_", " "));
         }
       }
+
       // If any fields are missing, alert them
       if (missingFields.length > 0) {
         alert(
@@ -116,8 +121,9 @@ function Login() {
         );
         return; // Exit the function early
       }
-      console.log("userData.phone_number", typeof userData.phone_number);
+
       if (
+        userData.phone_number !== "" &&
         userData.phone_number.length !== 10 &&
         !/^\d{10}$/.test(userData.phone_number)
       ) {
@@ -161,7 +167,7 @@ function Login() {
         }
         // console.log("User created", user);
         // if (user === "Account successfully created") {
-        navigate("/community");
+        navigate("/goal");
         // } else {
         // alert("Error creating user");
         // }
@@ -218,8 +224,8 @@ function Login() {
       >
         <Button
           onClick={() => {
-            setLoginOpen(false)
-            setUserStatus("Login")
+            setLoginOpen(false);
+            setUserStatus("Login");
           }}
           style={{
             position: "absolute",
@@ -241,6 +247,7 @@ function Login() {
           setOnboardingStatus={setOnboardingStatus}
           allCommunities={allCommunities}
           optionalUserData={optionalUserData}
+          allTractates={allTractates}
         />
       </div>
     </div>
