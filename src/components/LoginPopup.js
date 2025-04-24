@@ -17,6 +17,7 @@ function LoginPopup({
   onboardingStatus,
   setOnboardingStatus,
   allCommunities,
+  allTractates,
   optionalUserData,
 }) {
   const { userStatus, setUserStatus } = useLogin();
@@ -288,9 +289,9 @@ function LoginPopup({
                   <MenuItem disabled key="default" value="">
                     <em>Choose a Mesechta</em>
                   </MenuItem>
-                  {allCommunities.map((community, index) => (
-                    <MenuItem key={index} value={community.id}>
-                      {community.name}
+                  {allTractates.map((tractate) => (
+                    <MenuItem key={tractate.id} value={tractate.id}>
+                      {tractate.name}
                     </MenuItem>
                   ))}
                 </TextField>
@@ -312,7 +313,6 @@ function LoginPopup({
                   Back
                 </Button>
                 <Button
-                  //   type="submit"
                   onClick={() => setOnboardingStatus("finalize")}
                   variant="contained"
                   sx={{
@@ -330,7 +330,7 @@ function LoginPopup({
             {onboardingStatus === "finalize" && (
               <div>
                 <Typography variant="h5">Review & Submit</Typography>
-                
+
                 <Button
                   type="submit"
                   variant="contained"
