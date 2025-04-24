@@ -15,6 +15,7 @@ import {
   Box,
   Slider,
   Card,
+  Divider,
 } from "../utils/dataExports/muiExports";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
@@ -39,7 +40,7 @@ function AdminDashPopup({
   setRows,
   createSuperData,
 }) {
-  console.log("user data admin popup", userData);
+  // console.log("user data admin popup", userData);
 
   const {
     username,
@@ -88,12 +89,15 @@ function AdminDashPopup({
           await updateCommunity(communityData);
           setAllCommunities(
             allCommunities.map((community) => {
+              console.log("community: ", community);
               if (community.id === communityData.id) {
+                // debugger;
+                // * the issue is with how the data is being sent up
                 return createSuperData(
                   communityData.id,
                   communityData.name,
                   communityData.location,
-                  communityData?.members
+                  communityData.members
                 );
               }
               return { ...community };
@@ -164,6 +168,8 @@ function AdminDashPopup({
           position: "relative",
           height: "23em",
           width: "20em",
+          display: "flex",
+          justifyContent: "center",
         }}
       >
         <Button
@@ -226,7 +232,12 @@ function AdminDashPopup({
               <Button
                 type="submit"
                 variant="contained"
-                style={{ backgroundColor: "var(--orange)", width: "90%" }}
+                style={{
+                  backgroundColor: "var(--orange)",
+                  width: "90%",
+                  textTransform: "none",
+                  boxShadow: "none",
+                }}
               >
                 Create Community
               </Button>
@@ -234,54 +245,74 @@ function AdminDashPopup({
           </div>
         )}
         {popupStatus === "editCommunity" && (
-          <form onSubmit={handleSubmit}>
-            <Typography variant="h5" sx={{ marginTop: "1em" }}>
-              Edit Community
-            </Typography>
-            <TextField
-              id="name"
-              label="Community Name"
-              variant="outlined"
-              type="text"
-              name="name"
-              value={communityData.name}
-              onChange={(e) =>
-                setCommunityData({
-                  ...communityData,
-                  name: e.target.value,
-                })
-              }
-              style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}
-            />
-            <TextField
-              id="outlined-select-state"
-              select
-              label="State"
-              name="location"
-              value={capitalizeWord(communityData.location)}
-              onChange={(e) =>
-                setCommunityData({
-                  ...communityData,
-                  location: e.target.value,
-                })
-              }
-              defaultValue="Select state"
-              style={{ width: "90%", marginBottom: "1em" }}
-            >
-              {states.map((state, index) => (
-                <MenuItem key={index} value={state}>
-                  {state}
-                </MenuItem>
-              ))}
-            </TextField>
+          <Box>
+            <form onSubmit={handleSubmit}>
+              <Typography variant="h5" sx={{ marginTop: "1em" }}>
+                Edit Community
+              </Typography>
+              <TextField
+                id="name"
+                label="Community Name"
+                variant="outlined"
+                type="text"
+                name="name"
+                value={communityData.name}
+                onChange={(e) =>
+                  setCommunityData({
+                    ...communityData,
+                    name: e.target.value,
+                  })
+                }
+                style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}
+              />
+              <TextField
+                id="outlined-select-state"
+                select
+                label="State"
+                name="location"
+                value={capitalizeWord(communityData.location)}
+                onChange={(e) =>
+                  setCommunityData({
+                    ...communityData,
+                    location: e.target.value,
+                  })
+                }
+                defaultValue="Select state"
+                style={{ width: "90%", marginBottom: "1em" }}
+              >
+                {states.map((state, index) => (
+                  <MenuItem key={index} value={state}>
+                    {state}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Button
+                type="submit"
+                variant="contained"
+                style={{
+                  backgroundColor: "var(--orange)",
+                  width: "90%",
+                  textTransform: "none",
+                  boxShadow: "none",
+                }}
+              >
+                Update Community
+              </Button>
+            </form>
             <Button
-              type="submit"
-              variant="contained"
-              style={{ backgroundColor: "var(--orange)", width: "90%" }}
+              sx={{
+                position: "absolute",
+                bottom: "1px",
+                textTransform: "none",
+              }}
+              color="error"
+              onClick={() => {
+                setPopupStatus("deleteCommunity");
+              }}
             >
-              Update Community
+              Delete Community
             </Button>
-          </form>
+          </Box>
         )}
         {popupStatus === "addCommunityAdmin" && (
           <h2>Add Community Admin drop or search for user and community</h2>
@@ -325,10 +356,10 @@ function AdminDashPopup({
                   }
                   sx={{
                     "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                      backgroundColor: "var(--orange)",
+                      backgroundColor: "var(--light-blue)",
                     },
                     "& .MuiSwitch-thumb": {
-                      backgroundColor: "var(--orange)",
+                      backgroundColor: "var(--light-blue)",
                     },
                   }}
                 />
@@ -342,66 +373,26 @@ function AdminDashPopup({
                 backgroundColor: "var(--orange)",
                 width: "90%",
                 marginTop: "1em",
+                textTransform: "none",
+                boxShadow: "none",
               }}
             >
               Update User
             </Button>
           </form>
         )}
-        {/* {popupStatus === "createMember" && (
-          <div>
-            <form onSubmit={handleSubmit}>
-              <label>
-                name:
-                <input
-                  type="text"
-                  name="first_name"
-                  placeholder="First Name"
-                  value={first_name}
-                  onChange={(e) =>
-                    setUserData({ ...userData, first_name: e.target.value })
-                  }
-                />
-              </label>
-              <label>
-                last name:
-                <input
-                  type="text"
-                  name="last_name"
-                  placeholder="Last Name"
-                  value={last_name}
-                  onChange={(e) =>
-                    setUserData({ ...userData, last_name: e.target.value })
-                  }
-                />
-              </label>
-              <label>
-                Make Admin:
-                <input
-                  name="is_community_admin"
-                  type="checkbox"
-                  checked={is_community_admin}
-                  value={is_community_admin}
-                  onChange={() =>
-                    setUserData({
-                      ...userData,
-                      is_community_admin: !is_community_admin,
-                    })
-                  }
-                />
-              </label>
-              <br />
-              <input type="submit" value="Submit" />
-            </form>
-          </div>
-        )} */}
         {popupStatus === "viewMember" && (
-          <div>
+          <Box>
             <Typography variant="h5" sx={{ marginTop: "1em" }}>
               User Details
             </Typography>
-            <div
-              style={{
+            <Divider variant="middle" sx={{ marginTop: ".5em" }} />
+            <Typography variant="h6">
+              {first_name} {last_name}
+            </Typography>
+            <Box
+              className="userInfo"
+              sx={{
                 display: "flex",
                 flexDirection: "column",
                 flexWrap: " wrap",
@@ -409,24 +400,52 @@ function AdminDashPopup({
                 alignItems: "flex-start",
                 width: "90%",
                 marginBottom: "1em",
-                marginTop: "2em",
                 marginLeft: "auto",
                 marginRight: "auto",
               }}
             >
-              <Typography variant="body1" sx={{ marginTop: "1em" }}>
-                Name: {first_name} {last_name}
-              </Typography>
-              <Typography variant="body1" sx={{ marginTop: "1em" }}>
-                Email: {email}
-              </Typography>
-              <Typography variant="body1" sx={{ marginTop: "1em" }}>
-                Phone: {phone_number}
-              </Typography>
-              <Typography variant="body1" sx={{ marginTop: "1em" }}>
-                Admin status: {is_community_admin ? "Yes" : "No"}
-              </Typography>
-            </div>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: "1em",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="body1" sx={{ paddingRight: "25px" }}>
+                  Email
+                </Typography>
+                <Typography variant="body2">{email}</Typography>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: "1em",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="body1" sx={{ paddingRight: "19px" }}>
+                  Phone
+                </Typography>
+                <Typography variant="body2">{phone_number}</Typography>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: "1em",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="body1" sx={{ paddingRight: "20px" }}>
+                  Admin
+                </Typography>
+                <Typography variant="body2">
+                  {is_community_admin ? "Yes" : "No"}
+                </Typography>
+              </Box>
+            </Box>
             <Box
               className="progressBarContainer"
               sx={{
@@ -442,15 +461,15 @@ function AdminDashPopup({
                   aria-label="Disabled slider"
                   sx={{
                     "& .MuiSlider-thumb": {
-                      color: "var(--orange)",
+                      color: "var(--light-blue)",
                       height: "12px",
                       width: "12px",
                     },
                     "& .MuiSlider-track": {
-                      color: "var(--orange)",
+                      color: "var(--light-blue)",
                     },
                     "& .MuiSlider-rail": {
-                      color: "var(--orange-light)",
+                      color: "var(--light-grey)",
                     },
                   }}
                 />
@@ -468,18 +487,24 @@ function AdminDashPopup({
                 backgroundColor: "var(--orange)",
                 width: "90%",
                 marginTop: "1em",
+                textTransform: "none",
+                boxShadow: "none",
               }}
             >
               Edit User
             </Button>
-          </div>
+          </Box>
         )}
         {popupStatus === "deleteCommunity" && (
-          <div
-            style={{
-              position: "absolute",
+          <Box
+            sx={{
+              height: "80%",
+              display: "flex",
+              flexDirection: "column",
               width: "90%",
               marginTop: "2em",
+              position: "relative",
+              alignItems: "center",
             }}
           >
             <Typography variant="h5">
@@ -487,14 +512,19 @@ function AdminDashPopup({
             </Typography>
             <Button
               color="error"
-              sx={{ marginTop: "3em" }}
+              sx={{
+                position: "absolute",
+                bottom: "1px",
+                textTransform: "none",
+                boxShadow: "none",
+              }}
               variant="contained"
               startIcon={<DeleteIcon />}
               onClick={(e) => handleSubmit(e)}
             >
               Delete
             </Button>
-          </div>
+          </Box>
         )}
       </div>
     </Dialog>
