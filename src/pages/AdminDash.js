@@ -117,13 +117,16 @@ function AdminDash() {
 
   const columns = adminStatus === "super" ? superColumns : adminColumns;
 
-  useEffect(function setStatus() {
-    if (isSuperAdmin) {
-      setAdminStatus("super");
-    } else {
-      setAdminStatus("admin");
-    }
-  }, []);
+  useEffect(
+    function setStatus() {
+      if (isSuperAdmin) {
+        setAdminStatus("super");
+      } else {
+        setAdminStatus("admin");
+      }
+    },
+    [isSuperAdmin]
+  );
 
   // console.log("currentCommunity: ", currentCommunity);
   // console.log("communityData: ", communityData);
@@ -181,7 +184,7 @@ function AdminDash() {
           const members = await queryUsers({ community_id: communityName });
           if (members?.length > 0) {
             members.map((member) => {
-              console.log("member: ", member);
+              // console.log("member: ", member);
               updatedRows.push(
                 createData(
                   member?.id,
@@ -221,10 +224,10 @@ function AdminDash() {
       setCurrentCommunity(row);
       setAdminStatus("admin");
     } else {
-      console.log("admin clicked member: ", row);
+      // console.log("admin clicked member: ", row);
       try {
         const userData = await findUserById(row?.id);
-        console.log("userData: ", userData);
+        // console.log("userData: ", userData);
         setUserData({
           username: userData?.username,
           first_name: userData?.first_name,
@@ -246,108 +249,159 @@ function AdminDash() {
     <div style={{ color: "black", paddingTop: "100px" }}>
       {isSuperAdmin && adminStatus === "admin" ? (
         <Link
-          style={{ textDecoration: "none", color: "black", marginLeft: "2em" }}
-          onClick={() => setAdminStatus("super") & setCurrentCommunity([])}
+          style={{
+            textDecoration: "none",
+            color: "black",
+            marginLeft: "2em",
+            position: "relative",
+          }}
+          onClick={() => {
+            setAdminStatus("super");
+            setCurrentCommunity([]);
+          }}
         >
           <ArrowBackIcon />
         </Link>
       ) : (
         <Link
-          style={{ textDecoration: "none", color: "black", marginLeft: "2em" }}
+          style={{
+            textDecoration: "none",
+            color: "black",
+            marginLeft: "2em",
+            position: "relative",
+          }}
           to="/home"
         >
           <ArrowBackIcon />
         </Link>
       )}
-      {isSuperAdmin && adminStatus === "admin" && (
-        <>
-          {/* <Button
-            style={{ marginLeft: "20px", color: "var(--orange)" }}
-            onClick={() => {
-              setCommunityData({
-                name: currentCommunity?.name,
-                location: currentCommunity?.location,
-                members: currentCommunity?.members,
-                id: currentCommunity?.id,
-              });
-              setPopup(true);
-              setPopupStatus("editCommunity");
-            }}
-          >
-            Create community Goal
-          </Button> */}
-          <Button
-            style={{ marginLeft: "20px", color: "var(--orange)" }}
-            onClick={() => {
-              setCommunityData({
-                name: currentCommunity?.name,
-                location: currentCommunity?.location,
-                members: currentCommunity?.members,
-                id: currentCommunity?.id,
-              });
-              setPopup(true);
-              setPopupStatus("editCommunity");
-            }}
-          >
-            Edit Community
-          </Button>
-          <Button
-            color="error"
-            onClick={() => {
-              setPopup(true);
-              setPopupStatus("deleteCommunity");
-            }}
-          >
-            Delete Community
-          </Button>
-          <h4>Community name: {currentCommunity?.name}</h4>
-          <h4>Community location: {currentCommunity?.location}</h4>
-        </>
-      )}
       {isSuperAdmin && adminStatus === "super" && (
         <Button
-          style={{ marginLeft: "20px", color: "var(--orange)" }}
-          onClick={() => setPopup(true) & setPopupStatus("addCommunity")}
+          style={{ marginLeft: "20px", color: "var(--orange)", textTransform: "none" }}
+          onClick={() => {
+            setPopup(true);
+            setPopupStatus("addCommunity");
+          }}
         >
           Add Community
         </Button>
       )}
-      {/* {isSuperAdmin && (
-        <Link
-          style={{
-            textDecoration: "none",
-            color: "blue",
-            marginLeft: "20px",
-          }}
-          onClick={() => setPopup(true) & setPopupStatus("createMember")}
-        >
-          {"Create New User"}
-        </Link>
-      )} */}
       {adminStatus === "admin" && (
-        <Box sx={{ display: "flex", alignItems: "center", margin: "10px" }}>
-          <Box sx={{ width: "100%", mr: 1 }}>
-            <LinearProgress
-              variant="determinate"
-              value={parseFloat(currentCommunity?.goal?.replace("%", ""))}
+        <Box
+          className="adminHeader"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          {isSuperAdmin && (
+            <Box
               sx={{
-                margin: "10px",
-                height: "20px",
-                backgroundColor: "var(--orange-light)",
-                "& .MuiLinearProgress-bar": {
-                  backgroundColor: "var(--orange)",
-                },
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                width: "100%",
+                marginRight: { md: "6em", xs: "1em" },
+                marginBottom: {md: ".6em"}
               }}
-            />
-          </Box>
-          <Box sx={{ minWidth: 35 }}>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              style={{ color: "black" }}
             >
-              {currentCommunity?.goal}
-            </Typography>
+              {/* <Button
+          style={{ marginLeft: "20px", color: "var(--orange)" }}
+          onClick={() => {
+            setCommunityData({
+              name: currentCommunity?.name,
+              location: currentCommunity?.location,
+              members: currentCommunity?.members,
+              id: currentCommunity?.id,
+            });
+            setPopup(true);
+            setPopupStatus("editCommunity");
+          }}
+        >
+          Create community Goal
+        </Button> */}
+              <Button
+                style={{ marginLeft: "20px", color: "var(--orange)", textTransform: "none" }}
+                onClick={() => {
+                  setCommunityData({
+                    name: currentCommunity?.name,
+                    location: currentCommunity?.location,
+                    members: currentCommunity?.members,
+                    id: currentCommunity?.id,
+                    community_goal: currentCommunity?.goal,
+                  });
+                  setPopup(true);
+                  setPopupStatus("editCommunity");
+                }}
+              >
+                Edit Community
+              </Button>
+            </Box>
+          )}
+          <Box
+            className="communityInfoBox"
+            sx={{
+              border: "1px solid var(--light-grey)",
+              borderRadius: "16px",
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              justifyContent: "center",
+              alignItems: "center",
+              width: "90dvw",
+
+              flex: 1,
+            }}
+          >
+            <Box
+              className="communityName"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: "1em",
+                marginBottom: { md: "1em" },
+              }}
+            >
+              <Typography variant="h6">{currentCommunity?.name}</Typography>
+              <Typography variant="h6">
+                In {currentCommunity?.location}
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                margin: "10px",
+                alignItems: "center",
+              }}
+            >
+              <Box sx={{ width: "30dvw", mr: 1 }}>
+                <LinearProgress
+                  variant="determinate"
+                  value={parseFloat(currentCommunity?.goal?.replace("%", ""))}
+                  sx={{
+                    margin: "10px",
+                    height: "20px",
+                    backgroundColor: "var(--light-grey)",
+                    borderRadius: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    "& .MuiLinearProgress-bar": {
+                      borderRadius: "16px",
+                      height: "16px",
+                      margin: "auto",
+                      backgroundColor: "var(--light-blue)",
+                    },
+                  }}
+                />
+              </Box>
+              <Box sx={{ minWidth: 35 }}>
+                <Typography variant="body2" sx={{ color: "black" }}>
+                  {currentCommunity?.goal}
+                </Typography>
+              </Box>
+            </Box>
           </Box>
         </Box>
       )}
