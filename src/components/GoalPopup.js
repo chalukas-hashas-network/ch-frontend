@@ -26,6 +26,7 @@ function GoalPopup({
   setGoalEditOption,
   tractates,
   // goal,
+  setUser,
   user,
   setSelectedTractateData,
 }) {
@@ -146,44 +147,67 @@ function GoalPopup({
         const pageAsFloat = parseFloat(selectedPage);
         try {
           // ! cant make the page 0
-          const response = await updateTractateProgress(
-            selectedTractate.id,
-            pageAsFloat
-          );
+          await updateTractateProgress(selectedTractate.id, pageAsFloat);
 
-          const updatedTractate = goal.goal_tractates.find(
-            (tractate) => tractate.id === selectedTractate.id
-          );
+          let newPercentageCompleted = 0;
+          let newTotalCompletedPages = 0;
 
-          // Calculate the difference in completed pages and update the total
-          // If user decreased their progress, subtract the difference from total
-          if (updatedTractate.tractate_pages_completed > pageAsFloat) {
-            goal.user_total_completed_pages =
-              goal.user_total_completed_pages -
-              (updatedTractate.tractate_pages_completed - pageAsFloat);
-            // If user increased their progress, add the difference to total
-          } else if (updatedTractate.tractate_pages_completed < pageAsFloat) {
-            goal.user_total_completed_pages =
-              goal.user_total_completed_pages +
-              (pageAsFloat - updatedTractate.tractate_pages_completed);
-          }
+          setUser((prevUser) => {
+            // Create a copy of the goal tractates array
+            const updatedGoalTractates = [...prevUser.goal.goal_tractates];
 
-          // update the specific tractates completed pages
-          updatedTractate.tractate_pages_completed = pageAsFloat;
+            // Find the index of the tractate that needs updating
+            const tractateIndex = updatedGoalTractates.findIndex(
+              (tractate) => tractate.id === selectedTractate.id
+            );
 
-          goal.user_percentage_completed = Number(
-            (
-              (goal.user_total_completed_pages /
-                goal.user_total_selected_pages) *
-              100
-            ).toFixed(2)
-          );
+            if (tractateIndex === -1) return prevUser; // Tractate not found
+
+            const updatedTractate = { ...updatedGoalTractates[tractateIndex] };
+
+            // Calculate new total completed pages
+            newTotalCompletedPages = prevUser.goal.user_total_completed_pages;
+
+            // If user decreased their progress, subtract the difference from total
+            if (updatedTractate.tractate_pages_completed > pageAsFloat) {
+              newTotalCompletedPages -=
+                updatedTractate.tractate_pages_completed - pageAsFloat;
+              // If user increased their progress, add the difference to total
+            } else if (updatedTractate.tractate_pages_completed < pageAsFloat) {
+              newTotalCompletedPages +=
+                pageAsFloat - updatedTractate.tractate_pages_completed;
+            }
+
+            // Update the specific tractate's completed pages
+            updatedTractate.tractate_pages_completed = pageAsFloat;
+            updatedGoalTractates[tractateIndex] = updatedTractate;
+
+            // Calculate new percentage completed
+            newPercentageCompleted = Number(
+              (
+                (newTotalCompletedPages /
+                  prevUser.goal.user_total_selected_pages) *
+                100
+              ).toFixed(2)
+            );
+
+            // Return updated user object with new goal data
+            return {
+              ...prevUser,
+              goal: {
+                ...prevUser.goal,
+                goal_tractates: updatedGoalTractates,
+                user_total_completed_pages: newTotalCompletedPages,
+                user_percentage_completed: newPercentageCompleted,
+              },
+            };
+          });
 
           setSelectedTractateData({
             ...selectedTractate,
             tractate: "total",
-            percentage_completed: goal.user_percentage_completed,
-            pages_completed: goal.user_total_completed_pages,
+            percentage_completed: newPercentageCompleted,
+            pages_completed: newTotalCompletedPages,
           });
 
           resetData();
@@ -391,7 +415,10 @@ function GoalPopup({
                     }}
                   >
                     {Array.from(
-                      { length: goal?.goal_tractates[0]?.tractate_pages_selected },
+                      {
+                        length:
+                          goal?.goal_tractates[0]?.tractate_pages_selected,
+                      },
                       (_, i) => {
                         const pageNumber = Math.floor(i / 2) + 2;
                         const side = i % 2 === 0 ? "A" : "B";
@@ -429,6 +456,8 @@ function GoalPopup({
             type="submit"
             variant="contained"
             sx={{
+              textTransform: "none", 
+              boxShadow: "none",
               backgroundColor: "var(--orange)",
               marginTop: "1em",
               width: "50%",
