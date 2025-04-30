@@ -14,9 +14,13 @@ import {
   LinearProgress,
   Typography,
   ArrowBackIcon,
+  ListItemButton,
+  ListItemText,
+  List,
+  ListItem,
 } from "../utils/dataExports/muiExports";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useUser } from "../utils/Context";
 import AdminDashPopup from "../components/AdminDashPopup";
 import {
@@ -53,16 +57,8 @@ All admins have add (create) new member and add community admin
 */
 
 const adminColumns = [
-  { id: "first_name", label: "First Name", minWidth: 170 },
-  { id: "last_name", label: "Last Name", minWidth: 170 },
+  { id: "name", label: "Name", minWidth: 170 },
   { id: "email", label: "Email", minWidth: 170 },
-  {
-    id: "goalComplete",
-    label: "Goal Completed",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
 ];
 
 const superColumns = [
@@ -73,9 +69,11 @@ const superColumns = [
   // issue with portraying members length when upading community
 ];
 
-function createData(id, first_name, last_name, email, community) {
-  return { first_name, last_name, id, email };
+function createData(id, first_name, last_name, email) {
+  const name = first_name + " " + last_name;
+  return { name, id, email };
 }
+
 function createSuperData(id, name, location, members = 0, community_goal) {
   const completedPages = community_goal?.community_total_completed_pages || 0;
   const selectedPages = community_goal?.community_total_selected_pages || 0;
@@ -90,7 +88,12 @@ function AdminDash() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [adminStatus, setAdminStatus] = useState("");
-  const [currentCommunity, setCurrentCommunity] = useState([]);
+  const [communityAdmins, setCommunityAdmins] = useState([]);
+  const [currentCommunity, setCurrentCommunity] = useState({
+    name: "community",
+    location: "location",
+    goal: "0%",
+  });
   const [allCommunities, setAllCommunities] = useState([]);
   const [rows, setRows] = useState([]);
   const [popup, setPopup] = useState(false);
@@ -103,6 +106,7 @@ function AdminDash() {
     community_goal: {},
   });
   const [userData, setUserData] = useState({
+    id: "",
     username: "",
     first_name: "",
     last_name: "",
@@ -123,17 +127,20 @@ function AdminDash() {
         setAdminStatus("super");
       } else {
         setAdminStatus("admin");
+        setCurrentCommunity({
+          name: user.community.name,
+          location: user.community.location,
+          id: user.community.id,
+        });
       }
     },
     [isSuperAdmin]
   );
 
-  // console.log("currentCommunity: ", currentCommunity);
-  // console.log("communityData: ", communityData);
-
   useEffect(
     function setDataBasedOffStatus() {
       let updatedRows = [];
+      let admins = [];
       const fetchData = async () => {
         if (adminStatus === "super") {
           if (allCommunities.length === 0) {
@@ -176,15 +183,33 @@ function AdminDash() {
           }
         } else if (adminStatus === "admin") {
           // Fetch a specific community if the adminStatus is admin
-          const communityName = isSuperAdmin
+          const communityId = isSuperAdmin
             ? currentCommunity?.id
             : user?.community?.id;
-          // instead of quering members, query community with members
-          // TODO: include goal
-          const members = await queryUsers({ community_id: communityName });
+
+          const selected_community = await queryCommunities(
+            { id: communityId },
+            ["include_members", "include_admins", "include_community_goal"]
+          );
+
+          // set community goal
+          const communityGoal = selected_community[0]?.community_goal?.[0];
+          const communityGoalPercentage = communityGoal
+            ? parseFloat(
+                (communityGoal?.community_total_completed_pages /
+                  communityGoal?.community_total_selected_pages) *
+                  100
+              ).toFixed(2)
+            : "0";
+
+          setCurrentCommunity({
+            ...currentCommunity,
+            goal: `${communityGoalPercentage}%`,
+          });
+
+          const members = selected_community[0].members;
           if (members?.length > 0) {
             members.map((member) => {
-              // console.log("member: ", member);
               updatedRows.push(
                 createData(
                   member?.id,
@@ -193,8 +218,19 @@ function AdminDash() {
                   member?.email
                 )
               );
+
+              // TODO: get endpoint to fetch all admins from community
+              // check if member is an admin
+              if (
+                selected_community[0].community_admins.includes(
+                  member.first_name + " " + member.last_name
+                )
+              ) {
+                admins.push(member);
+              }
             });
           }
+          setCommunityAdmins(admins); // Update the state with the communities admins
           setRows(updatedRows); // Update the state with the new rows
         }
       };
@@ -227,7 +263,7 @@ function AdminDash() {
       // console.log("admin clicked member: ", row);
       try {
         const userData = await findUserById(row?.id);
-        // console.log("userData: ", userData);
+        console.log("userData: ", userData);
         setUserData({
           username: userData?.username,
           first_name: userData?.first_name,
@@ -246,8 +282,8 @@ function AdminDash() {
   };
 
   return (
-    <div style={{ color: "black", paddingTop: "100px" }}>
-      {isSuperAdmin && adminStatus === "admin" ? (
+    <div style={{ marginTop: "2em"}}>
+      {isSuperAdmin && adminStatus === "admin" && (
         <Link
           style={{
             textDecoration: "none",
@@ -258,33 +294,38 @@ function AdminDash() {
           onClick={() => {
             setAdminStatus("super");
             setCurrentCommunity([]);
+            setCommunityAdmins([]);
           }}
-        >
-          <ArrowBackIcon />
-        </Link>
-      ) : (
-        <Link
-          style={{
-            textDecoration: "none",
-            color: "black",
-            marginLeft: "2em",
-            position: "relative",
-          }}
-          to="/home"
         >
           <ArrowBackIcon />
         </Link>
       )}
       {isSuperAdmin && adminStatus === "super" && (
-        <Button
-          style={{ marginLeft: "20px", color: "var(--orange)", textTransform: "none" }}
-          onClick={() => {
-            setPopup(true);
-            setPopupStatus("addCommunity");
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            width: "100%",
           }}
         >
-          Add Community
-        </Button>
+          <Button
+            variant="contained"
+            sx={{
+              marginLeft: "20px",
+              bgcolor: "var(--orange)",
+              textTransform: "none",
+              boxShadow: "none",
+              borderRadius: "13px",
+            }}
+            onClick={() => {
+              setPopup(true);
+              setPopupStatus("addCommunity");
+            }}
+          >
+            Add Community
+          </Button>
+        </div>
       )}
       {adminStatus === "admin" && (
         <Box
@@ -295,18 +336,20 @@ function AdminDash() {
             alignItems: "center",
           }}
         >
-          {isSuperAdmin && (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                width: "100%",
-                marginRight: { md: "6em", xs: "1em" },
-                marginBottom: {md: ".6em"}
-              }}
-            >
-              {/* <Button
+          <Box
+            className="editButtons"
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              width: "100%",
+              marginRight: { md: "6em", xs: "1em" },
+              marginBottom: { md: "1em", xs: ".5em" },
+            }}
+          >
+            {isSuperAdmin && (
+              <>
+                {/* <Button
           style={{ marginLeft: "20px", color: "var(--orange)" }}
           onClick={() => {
             setCommunityData({
@@ -321,85 +364,182 @@ function AdminDash() {
         >
           Create community Goal
         </Button> */}
-              <Button
-                style={{ marginLeft: "20px", color: "var(--orange)", textTransform: "none" }}
-                onClick={() => {
-                  setCommunityData({
-                    name: currentCommunity?.name,
-                    location: currentCommunity?.location,
-                    members: currentCommunity?.members,
-                    id: currentCommunity?.id,
-                    community_goal: currentCommunity?.goal,
-                  });
-                  setPopup(true);
-                  setPopupStatus("editCommunity");
-                }}
-              >
-                Edit Community
-              </Button>
-            </Box>
-          )}
+                <Button
+                  variant="contained"
+                  sx={{
+                    marginLeft: "20px",
+                    bgcolor: "var(--orange)",
+                    textTransform: "none",
+                    boxShadow: "none",
+                    borderRadius: "13px",
+                  }}
+                  onClick={() => {
+                    setCommunityData({
+                      name: currentCommunity?.name,
+                      location: currentCommunity?.location,
+                      members: currentCommunity?.members,
+                      id: currentCommunity?.id,
+                      community_goal: currentCommunity?.goal,
+                    });
+                    setPopup(true);
+                    setPopupStatus("editCommunity");
+                  }}
+                >
+                  Edit Community
+                </Button>
+              </>
+            )}
+            <Button
+              variant="contained"
+              sx={{
+                marginLeft: "20px",
+                bgcolor: "var(--black)",
+                textTransform: "none",
+                boxShadow: "none",
+                borderRadius: "13px",
+              }}
+              onClick={() => {
+                setPopup(true);
+                setPopupStatus("addCommunityAdmin");
+                setUserData({ ...userData, community_id: currentCommunity.id });
+              }}
+            >
+              Edit Admins
+            </Button>
+          </Box>
           <Box
-            className="communityInfoBox"
             sx={{
-              border: "1px solid var(--light-grey)",
-              borderRadius: "16px",
               display: "flex",
               flexDirection: { xs: "column", md: "row" },
-              justifyContent: "center",
-              alignItems: "center",
-              width: "90dvw",
-
-              flex: 1,
+              gap: 1,
             }}
           >
             <Box
-              className="communityName"
+              className="communityAdmins"
               sx={{
+                backgroundColor: "white",
+                borderRadius: "16px",
                 display: "flex",
                 flexDirection: "column",
-                marginTop: "1em",
-                marginBottom: { md: "1em" },
+                justifyContent: "flex-start",
+                alignItems: "center",
+                width: { xs: "90dvw", md: "40dvw" },
+                maxWidth: 500,
+                flex: 1,
+                maxHeight: 150,
+                padding: 2,
+                border: "1px solid var(--light-grey)",
               }}
             >
-              <Typography variant="h6">{currentCommunity?.name}</Typography>
-              <Typography variant="h6">
-                In {currentCommunity?.location}
+              <Typography
+                variant="button"
+                sx={{ fontSize: ".8em", lineHeight: "5px" }}
+              >
+                Community Admins
               </Typography>
+              <List
+                sx={{
+                  width: "100%",
+                  maxWidth: 360,
+                  overflowY: "auto",
+                  maxHeight: "100%",
+                  marginTop: "7px",
+                }}
+              >
+                {communityAdmins.map((admin, index) => {
+                  return (
+                    <ListItem alignItems="flex-start" key={index}>
+                      <ListItemButton
+                        onClick={() => {
+                          console.log(admin.first_name, " clicked");
+                          handleOpenRow(admin);
+                        }}
+                        sx={{
+                          bgcolor: "#F5F5F5",
+                          borderRadius: "16px",
+                          height: "30px",
+                        }}
+                      >
+                        <ListItemText
+                          primary={`${capitalizeWord(
+                            admin.first_name
+                          )} ${capitalizeWord(admin.last_name)}`}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
+              </List>
             </Box>
             <Box
+              className="communityInfoBox"
               sx={{
+                border: "1px solid var(--light-grey)",
+                bgcolor: "white",
+                borderRadius: "16px",
                 display: "flex",
+                flexDirection: { xs: "column", md: "row" },
                 justifyContent: "center",
-                margin: "10px",
                 alignItems: "center",
+                width: { xs: "90dvw", md: "40dvw" },
+                maxWidth: 500,
+                padding: 2,
+                flex: 1,
               }}
             >
-              <Box sx={{ width: "30dvw", mr: 1 }}>
-                <LinearProgress
-                  variant="determinate"
-                  value={parseFloat(currentCommunity?.goal?.replace("%", ""))}
-                  sx={{
-                    margin: "10px",
-                    height: "20px",
-                    backgroundColor: "var(--light-grey)",
-                    borderRadius: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    "& .MuiLinearProgress-bar": {
-                      borderRadius: "16px",
-                      height: "16px",
-                      margin: "auto",
-                      backgroundColor: "var(--light-blue)",
-                    },
-                  }}
-                />
-              </Box>
-              <Box sx={{ minWidth: 35 }}>
-                <Typography variant="body2" sx={{ color: "black" }}>
-                  {currentCommunity?.goal}
+              <Box
+                className="communityName"
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  marginTop: "1em",
+                  marginBottom: { md: "1em" },
+                }}
+              >
+                <Typography variant="h6">{currentCommunity.name}</Typography>
+                <Typography variant="body2">
+                  In {currentCommunity.location}
                 </Typography>
+              </Box>
+              <Box
+                className="communityGoal"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "10px",
+                  alignItems: "center",
+                }}
+              >
+                <Box sx={{ width: { xs: "30dvw", md: "20dvw" }, mr: 1 }}>
+                  <Typography variant="subtitle2" sx={{ paddingLeft: "14px" }}>
+                    Goal Progress
+                  </Typography>
+                  <LinearProgress
+                    variant="determinate"
+                    value={parseFloat(currentCommunity?.goal?.replace("%", ""))}
+                    sx={{
+                      margin: "10px",
+                      marginTop: "0px",
+                      height: "20px",
+                      backgroundColor: "var(--light-grey)",
+                      borderRadius: "16px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      "& .MuiLinearProgress-bar": {
+                        borderRadius: "16px",
+                        height: "16px",
+                        margin: "auto",
+                        backgroundColor: "var(--light-blue)",
+                      },
+                    }}
+                  />
+                </Box>
+                <Box sx={{ minWidth: 35, paddingTop: "12px" }}>
+                  <Typography variant="body2" sx={{ color: "black" }}>
+                    {currentCommunity?.goal}
+                  </Typography>
+                </Box>
               </Box>
             </Box>
           </Box>
@@ -425,21 +565,21 @@ function AdminDash() {
             <TableBody>
               {rows
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
+                .map((row, index) => {
                   return (
                     <TableRow
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={row.code}
+                      key={index}
                       onClick={() => {
                         handleOpenRow(row);
                       }}
                     >
-                      {columns.map((column) => {
+                      {columns.map((column, index) => {
                         const value = row[column.id];
                         return (
-                          <TableCell key={column.id} align={column.align}>
+                          <TableCell key={index} align={column.align}>
                             {column.format && typeof value === "number"
                               ? column.format(value)
                               : value}
@@ -478,6 +618,11 @@ function AdminDash() {
           setAllCommunities={setAllCommunities}
           allCommunities={allCommunities}
           createSuperData={createSuperData}
+          setAdminStatus={setAdminStatus}
+          setCommunityAdmins={setCommunityAdmins}
+          communityAdmins={communityAdmins}
+          setCurrentCommunity={setCurrentCommunity}
+          currentCommunity={currentCommunity}
         />
       )}
     </div>
