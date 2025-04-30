@@ -2,12 +2,21 @@ import {
   Typography,
   Paper,
   Slider,
-  Card,
+  Button,
+  Box,
+  List,
+  ListItem,
+  ListItemText,
 } from "../utils/dataExports/muiExports";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { getCommunities } from "../utils/API/CommunityAPI";
+import JoinCommunityPopup from "./JoinCommunityPopup";
 
 function CommunityMembersList({ selectedCommunity }) {
+  const [joinPopup, setJoinPopup] = useState({
+    isOpen: false,
+    community: null,
+  });
   const [communityData, setCommunityData] = useState({
     community_goal: {
       community_total_completed_pages: 0,
@@ -48,6 +57,13 @@ function CommunityMembersList({ selectedCommunity }) {
     (community_total_completed_pages / community_total_selected_pages) * 100 ||
     0;
 
+  function capitalizeWord(str) {
+    return str
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  }
+
   return (
     <div
       style={{
@@ -56,6 +72,21 @@ function CommunityMembersList({ selectedCommunity }) {
         alignItems: "center",
       }}
     >
+      <Button
+        variant="contained"
+        sx={{
+          boxShadow: "none",
+          textTransform: "none",
+          backgroundColor: "var(--orange)",
+          borderRadius: "20px",
+          width: { xs: "40dvw", md: "200px" },
+        }}
+        onClick={() => {
+          setJoinPopup({ isOpen: true, community: selectedCommunity });
+        }}
+      >
+        Join
+      </Button>
       <Paper
         elevation={0}
         sx={{
@@ -64,9 +95,11 @@ function CommunityMembersList({ selectedCommunity }) {
           justifyContent: "center",
           alignItems: "center",
           width: "90%",
-          marginTop: "20px",
+          maxWidth: 450,
+          marginTop: "10px",
           border: "2px solid lightgrey",
           borderRadius: "16px",
+          padding: "15px",
         }}
       >
         <Typography
@@ -107,106 +140,135 @@ function CommunityMembersList({ selectedCommunity }) {
           {percentageCompleted ? `${percentageCompleted.toFixed(2)}%` : "0%"}
         </Typography>
       </Paper>
-      <br />
-      <Paper
-        className="membersContainer"
-        elevation={0}
+      <Box
+        className="members"
         sx={{
-          alignItems: "center",
-          display: "flex",
-          alignContent: "center",
-          flexDirection: "column",
-          width: "90%",
-          marginTop: "20px",
+          marginTop: "3em",
           backgroundColor: "var(--light-grey)",
-          height: "300px",
+          borderRadius: "16px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          width: "90%",
+          maxWidth: 450,
+          maxHeight: 400,
+          padding: "15px",
+          position: "relative",
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            bgcolor: "var(--light-grey)",
+            height: "100px",
+            width: "200px",
+            top: "-35px",
+            borderRadius: "15px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="body1" sx={{ lineHeight: 3 }}>
+            Members
+          </Typography>
+        </Box>
+        <List
+          sx={{
+            width: "100%",
+            overflowY: "auto",
+            maxHeight: "100%",
+            gap: 1,
+            bgcolor: "white",
+            borderRadius: "16px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          {members?.length > 0 ? (
+            members?.map((member, index) => (
+              <ListItem
+                alignItems="flex-start"
+                key={index}
+                sx={{
+                  backgroundColor: "#f5f5f5",
+                  borderRadius: "55px",
+                  marginBottom: "5px",
+                  maxWidth: "95%",
+                  height: "60px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <ListItemText
+                  primary={`${capitalizeWord(
+                    member.first_name
+                  )} ${capitalizeWord(member.last_name)}`}
+                  secondary={
+                    <Fragment>
+                      <Typography variant="caption">
+                        With {capitalizeWord(member.community)}
+                      </Typography>
+                    </Fragment>
+                  }
+                />
+              </ListItem>
+            ))
+          ) : (
+            <ListItem
+              alignItems="flex-start"
+              sx={{
+                backgroundColor: "white",
+                borderRadius: "16px",
+                marginBottom: "5px",
+              }}
+            >
+              <ListItemText primary="No members in this community yet" />
+            </ListItem>
+          )}
+        </List>
+      </Box>
+      <Paper
+        elevation={0}
+        className="outerContainer"
+        sx={{
+          backgroundColor: "var(--light-grey)",
+          width: "150px",
+          height: "100px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "1em",
           borderRadius: "16px",
         }}
       >
         <Paper
           elevation={0}
-          className="listOfMembers"
+          className="innerContainer"
           sx={{
             backgroundColor: "white",
             width: "90%",
-            height: "80%",
-            margin: "2em",
-            borderRadius: "16px",
-          }}
-        >
-          {members?.length > 0 ? (
-            members?.map((member) => (
-              <Card
-                elevation={0}
-                sx={{
-                  backgroundColor: "var(--light-grey)",
-                  width: "90%",
-                  margin: "1em",
-                  borderRadius: "25px",
-                }}
-                onClick={() => console.log("member", member)}
-              >
-                <Typography variant="h6" sx={{ marginLeft: "1.5em" }}>
-                  {member.first_name + " " + member.last_name}
-                </Typography>
-                <Typography variant="caption" sx={{ marginLeft: "2em" }}>
-                  With {member.community}
-                </Typography>
-              </Card>
-            ))
-          ) : (
-            <Typography
-              variant="h5"
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
-              No members for this community
-            </Typography>
-          )}
-        </Paper>
-      </Paper>
-      <div>
-        <Paper
-          elevation={0}
-          className="outerContainer"
-          sx={{
-            backgroundColor: "var(--light-grey)",
-            width: "150px",
-            height: "100px",
+            height: "90%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginTop: "1em",
+            flexDirection: "column",
             borderRadius: "16px",
           }}
         >
-          <Paper
-            elevation={0}
-            className="innerContainer"
-            sx={{
-              backgroundColor: "white",
-              width: "90%",
-              height: "90%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-              borderRadius: "16px",
-            }}
-          >
-            <Typography sx={{ color: "var(--light-blue)", fontSize: "1em" }}>
-              {community_total_completed_pages}
-            </Typography>
-            <Typography sx={{ color: "black", fontSize: ".8em" }}>
-              Pages Learned
-            </Typography>
-          </Paper>
+          <Typography sx={{ color: "var(--light-blue)", fontSize: "1em" }}>
+            {community_total_completed_pages}
+          </Typography>
+          <Typography sx={{ color: "black", fontSize: ".8em" }}>
+            Pages Learned
+          </Typography>
         </Paper>
-      </div>
+      </Paper>
+      {joinPopup.isOpen && (
+        <JoinCommunityPopup setJoinPopup={setJoinPopup} joinPopup={joinPopup} />
+      )}
     </div>
   );
 }
