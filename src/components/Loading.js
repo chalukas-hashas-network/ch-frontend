@@ -1,15 +1,29 @@
 import { Box, CircularProgress } from "../utils/dataExports/muiExports";
+import { useUser } from "../utils/Context";
+
 export default function Loading() {
+  const { isLoading } = useUser();
+
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: " 100vh",
-      }}
-    >
-      <CircularProgress size="3rem" style={{ color: "var(--orange)" }} />
-    </Box>
+    <>
+      {isLoading && (
+        <Box
+          sx={{
+            position: "fixed",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: " 100vh",
+            top: 0,
+            left: 0,
+            zIndex: 9999,
+            width: "100vw",
+            backgroundColor: "var(--background-color)",
+          }}
+        >
+          <CircularProgress size="3rem" style={{ color: "var(--orange)" }} />
+        </Box>
+      )}
+    </>
   );
 }
