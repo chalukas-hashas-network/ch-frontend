@@ -21,6 +21,8 @@ export const UserProvider = ({ children }) => {
     location: null,
     is_community_admin: false,
     is_superuser: false,
+    goal: null,
+    community: null,
   });
 
   const fetchUser = async () => {
@@ -43,7 +45,7 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    triggerLoading()
+    triggerLoading();
     checkAuth().then(() => fetchUser());
   }, []);
 
@@ -64,12 +66,14 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const triggerLoading = () => {
+  const triggerLoading = (time) => {
     setIsLoading(true);
-  
-    setTimeout(() => {
+
+    const timeoutId = setTimeout(() => {
       setIsLoading(false);
-    }, 1000); 
+    }, time);
+
+    return timeoutId;
   };
 
   const logout = () => {
@@ -86,6 +90,8 @@ export const UserProvider = ({ children }) => {
       location: null,
       is_community_admin: false,
       is_superuser: false,
+      goal: null,
+      community: null,
     });
   };
 
@@ -101,7 +107,8 @@ export const UserProvider = ({ children }) => {
         isSuperAdmin,
         signup,
         isLoading,
-        triggerLoading
+        setIsLoading,
+        triggerLoading,
       }}
     >
       {children}
@@ -116,7 +123,6 @@ export const useUser = () => {
 export const LoginProvider = ({ children }) => {
   const [userStatus, setUserStatus] = useState("Login");
   const [loginOpen, setLoginOpen] = useState(false);
-
 
   return (
     <LoginContext.Provider
