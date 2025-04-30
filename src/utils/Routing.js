@@ -8,24 +8,20 @@ import { useUser } from "./Context.js";
 import NotFound from "../pages/NotFound.js";
 
 export default function Routing() {
-  const { isAdmin, isAuth, isLoading } = useUser();
+  const { isAdmin, isAuth } = useUser();
 
   return (
-    <>
-      {!isLoading && (
-        <Routes>
-          <Route exact path="/community" element={<Community />} />
-          <Route path="/home/*" element={<Home />} />
-          {isAuth && (
-            <>
-              <Route exact path="/goal" element={<Goal />} />
-              <Route exact path="/settings" element={<Settings />} />
-            </>
-          )}
-          {isAdmin && <Route exact path="/dashboard" element={<AdminDash />} />}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+    <Routes>
+      <Route exact path="/community" element={<Community />} />
+      <Route path="/home/*" element={<Home />} />
+      {isAuth && (
+        <>
+          <Route exact path="/goal" element={<Goal />} />
+          <Route exact path="/settings" element={<Settings />} />
+        </>
       )}
-    </>
+      {isAdmin && <Route exact path="/dashboard" element={<AdminDash />} />}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
