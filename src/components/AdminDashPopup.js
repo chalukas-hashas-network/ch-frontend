@@ -3,6 +3,7 @@ import {
   createCommunity,
   updateCommunity,
   deleteCommunity,
+  createAdmin,
 } from "../utils/API/CommunityAPI";
 import {
   Button,
@@ -17,13 +18,8 @@ import {
   Card,
   Divider,
 } from "../utils/dataExports/muiExports";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 
-// TODO: add make admin to edit member and show if admin or not
-
-// secondary:
-// TODO: get users progress
+// TODO: add ability to remove admin
 
 function AdminDashPopup({
   setUserData,
@@ -39,8 +35,13 @@ function AdminDashPopup({
   rows,
   setRows,
   createSuperData,
+  setAdminStatus,
+  setCommunityAdmins,
+  communityAdmins,
+  setCurrentCommunity,
+  currentCommunity,
 }) {
-  // console.log("user data admin popup", userData);
+  console.log("rows", rows);
 
   const {
     username,
@@ -87,11 +88,17 @@ function AdminDashPopup({
         }
         try {
           await updateCommunity(communityData);
+          debugger;
           setAllCommunities(
             allCommunities.map((community) => {
               console.log("community: ", community);
               if (community.id === communityData.id) {
                 // debugger;
+                setCurrentCommunity({
+                  ...currentCommunity,
+                  name: communityData.name,
+                  location: communityData.location,
+                });
                 // * the issue is with how the data is being sent up
                 return createSuperData(
                   communityData.id,
@@ -103,14 +110,11 @@ function AdminDashPopup({
               return { ...community };
             })
           );
-          setPopup(false);
+          resetData();
         } catch (error) {
           console.error("Error updating community:", error);
           alert("Error updating community. Please try again.");
         }
-        break;
-      case "addCommunityAdmin":
-        // do i update admin or community?
         break;
       case "createMember":
         // createUser(userData)
@@ -142,8 +146,37 @@ function AdminDashPopup({
         }
         break;
       case "deleteCommunity":
-        debugger;
-        await deleteCommunity(communityData.id);
+        try {
+          await deleteCommunity(communityData.id);
+          setAllCommunities((prevCommunities) =>
+            prevCommunities.filter(
+              (community) => community.id !== communityData.id
+            )
+          );
+          resetData();
+          setAdminStatus("super");
+        } catch (err) {
+          console.log("Error deleting community: ", err);
+          alert("Error deleting community. Please try again.");
+        }
+        break;
+      case "addCommunityAdmin":
+        if(e.nativeEvent.submitter.value === "add"){
+          // await createAdmin(user_id, community_id)
+          const user = rows.find((user) => user.id === userData.id);
+          const firstName = user.name.split(" ")[0];
+          const lastName = user.name.split(" ").at(-1);
+  
+          setCommunityAdmins([
+            ...communityAdmins,
+            { first_name: firstName, last_name: lastName, id: user.id },
+          ]);
+        } else {
+          // TODO: update state and trigger fetch
+          // ! atm need admin id so till then we wait for updated endpoint
+        }
+
+        resetData();
         break;
       default:
         console.log("Invalid popupStatus");
@@ -155,11 +188,33 @@ function AdminDashPopup({
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
+  const resetData = () => {
+    setPopup(false);
+    setPopupStatus("");
+    setCommunityData({
+      name: "",
+      location: "",
+      members: [],
+      id: "",
+    });
+    setUserData({
+      id: "",
+      username: "",
+      first_name: "",
+      last_name: "",
+      email: "",
+      community_id: "",
+      phone_number: "",
+      is_community_admin: false,
+      goal: 0,
+    });
+  };
+
   return (
     <Dialog
       open={true}
       className="popup-overlay"
-      onClose={() => setPopup(false)}
+      onClose={() => resetData()}
       PaperComponent={Card}
     >
       <div
@@ -173,16 +228,7 @@ function AdminDashPopup({
         }}
       >
         <Button
-          onClick={() => {
-            setPopup(false);
-            setPopupStatus("");
-            setCommunityData({
-              name: "",
-              location: "",
-              members: [],
-              id: "",
-            });
-          }}
+          onClick={() => resetData()}
           style={{ position: "absolute", top: "10px", right: "10px" }}
         >
           <CloseRoundedIcon style={{ color: "var(--orange)" }} />
@@ -221,7 +267,27 @@ function AdminDashPopup({
                   })
                 }
                 defaultValue="Select state"
-                style={{ width: "90%", marginBottom: "1em" }}
+                sx={{
+                  width: "90%",
+                  marginBottom: "1em",
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "black",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "var(--orange-light)",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "var(--orange)",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "black",
+                  },
+                  "& .MuiSelect-select": {
+                    color: "black",
+                  },
+                }}
               >
                 {states.map((state, index) => (
                   <MenuItem key={index} value={state}>
@@ -278,7 +344,27 @@ function AdminDashPopup({
                   })
                 }
                 defaultValue="Select state"
-                style={{ width: "90%", marginBottom: "1em" }}
+                sx={{
+                  width: "90%",
+                  marginBottom: "1em",
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "black",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "var(--orange-light)",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "var(--orange)",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "black",
+                  },
+                  "& .MuiSelect-select": {
+                    color: "black",
+                  },
+                }}
               >
                 {states.map((state, index) => (
                   <MenuItem key={index} value={state}>
@@ -314,9 +400,6 @@ function AdminDashPopup({
             </Button>
           </Box>
         )}
-        {popupStatus === "addCommunityAdmin" && (
-          <h2>Add Community Admin drop or search for user and community</h2>
-        )}
         {popupStatus === "editMember" && (
           //? what info should admin/super be allowed to edit
           <form onSubmit={handleSubmit}>
@@ -343,7 +426,7 @@ function AdminDashPopup({
               onChange={handleUserDataChange}
               style={{ width: "90%", marginBottom: "1em" }}
             />
-            <Typography style={{ marginRight: "1em" }}>Admin Status</Typography>
+            {/* <Typography style={{ marginRight: "1em" }}>Admin Status</Typography>
             <FormControlLabel
               control={
                 <Switch
@@ -365,7 +448,7 @@ function AdminDashPopup({
                 />
               }
               label={`${is_community_admin ? "Admin" : "Member"}`}
-            />
+            /> */}
             <Button
               type="submit"
               variant="contained"
@@ -430,7 +513,7 @@ function AdminDashPopup({
                 </Typography>
                 <Typography variant="body2">{phone_number}</Typography>
               </Box>
-              <Box
+              {/* <Box
                 sx={{
                   display: "flex",
                   flexDirection: "row",
@@ -444,7 +527,7 @@ function AdminDashPopup({
                 <Typography variant="body2">
                   {is_community_admin ? "Yes" : "No"}
                 </Typography>
-              </Box>
+              </Box> */}
             </Box>
             <Box
               className="progressBarContainer"
@@ -525,6 +608,96 @@ function AdminDashPopup({
               Delete
             </Button>
           </Box>
+        )}
+        {popupStatus === "addCommunityAdmin" && (
+          <div>
+            <Typography variant="h5" sx={{ marginTop: "1em" }}>
+              Add Community Admin
+            </Typography>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                id="outlined-select-state"
+                select
+                label="Member"
+                value={userData.id || ""}
+                onChange={(e) => {
+                  setUserData({ ...userData, id: e.target.value });
+                }}
+                defaultValue="Select Member"
+                sx={{
+                  width: "100%",
+                  marginBottom: "1em",
+                  marginTop: "2em",
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "black",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "var(--orange-light)",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "var(--orange)",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "black",
+                  },
+                  "& .MuiSelect-select": {
+                    color: "black",
+                  },
+                }}
+              >
+                <MenuItem disabled value="">
+                  <em>Select member</em>
+                </MenuItem>
+                {rows.map((member, index) => (
+                  <MenuItem key={index} value={member.id}>
+                    {member.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Box
+                sx={{
+                  position: "absolute",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  bottom: "3em",
+                  gap: 1,
+                  width: "100%",
+                }}
+              >
+                <Button
+                  type="submit"
+                  value="add"
+                  variant="contained"
+                  sx={{
+                    textTransform: "none",
+                    boxShadow: "none",
+                    backgroundColor: "var(--orange)",
+                    width: "40%",
+                  }}
+                >
+                  Make Admin
+                </Button>
+                <Button
+                  type="submit"
+                  value="remove"
+                  variant="contained"
+                  sx={{
+                    textTransform: "none",
+                    boxShadow: "none",
+                    backgroundColor: "var(--black)",
+                    width: "40%",
+                  }}
+                >
+                  Remove Admin
+                </Button>
+              </Box>
+            </form>
+          </div>
         )}
       </div>
     </Dialog>
