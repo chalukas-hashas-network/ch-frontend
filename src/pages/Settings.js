@@ -22,7 +22,7 @@ function Settings() {
      */
 
   const [userData, setUserData] = useState({
-    username: username,
+    // username: username,
     email: email,
     first_name: first_name,
     last_name: last_name,
@@ -37,8 +37,6 @@ function Settings() {
     });
   };
 
-  // console.log("selected state", userData.location === "");
-
   function capitalizeWord(str) {
     return str
       .split(" ")
@@ -51,11 +49,16 @@ function Settings() {
     const updatedFields = {};
     for (let key in userData) {
       if (userData[key] !== user[key]) {
-        if (userData[key] === "") {
+        if (
+          userData[key] === "" &&
+          key !== "location" &&
+          key !== "phone_number"
+        ) {
           alert(`${key} cannot be empty`);
           return;
         }
         if (
+          userData.phone_number !== "" &&
           userData.phone_number.length !== 10 &&
           !/^\d{10}$/.test(userData.phone_number)
         ) {
@@ -131,7 +134,7 @@ function Settings() {
             alignItems: "center",
           }}
         >
-          <TextField
+          {/* <TextField
             id="username"
             label="Username"
             variant="outlined"
@@ -143,8 +146,9 @@ function Settings() {
               marginTop: "2em",
               ...textFieldStyle,
             }}
-          />
+          /> */}
           <TextField
+            required
             id="first-name"
             label="First Name"
             variant="outlined"
@@ -157,6 +161,7 @@ function Settings() {
             }}
           />
           <TextField
+            required
             id="last-name"
             label="Last Name"
             variant="outlined"
@@ -169,6 +174,7 @@ function Settings() {
             }}
           />
           <TextField
+            required
             id="email"
             label="Email"
             variant="outlined"
@@ -230,7 +236,7 @@ function Settings() {
               },
             }}
           >
-            <MenuItem disabled value="">
+            <MenuItem value="">
               <em>Select State</em>
             </MenuItem>
             {states.map((state, index) => (
