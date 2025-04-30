@@ -17,7 +17,7 @@ export default function Routing() {
       {isAuth && (
         <>
           <Route exact path="/goal" element={<Goal />} />
-          <Route exact path="/settings" element={<Settings />} />
+          <Route exact path="/goal/settings" element={<Settings />} />
         </>
       )}
       {isAdmin && <Route exact path="/dashboard" element={<AdminDash />} />}
