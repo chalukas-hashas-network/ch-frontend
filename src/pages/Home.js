@@ -5,14 +5,14 @@ import {
   Card,
   CardContent,
   CardActionArea,
-  EastRoundedIcon,
   Grid,
-  PersonAddAltRoundedIcon,
   TaskAltRoundedIcon,
   Slider,
 } from "../utils/dataExports/muiExports";
 import { useNavigate } from "react-router-dom";
 import { useUser, useLogin } from "../utils/Context";
+import Logo from "../components/Logo";
+import Nav from "../components/Nav";
 
 function Home() {
   const navigate = useNavigate();
@@ -24,6 +24,8 @@ function Home() {
 
   return (
     <Box style={{ color: "black" }}>
+      <Logo community="Global"/>
+      <Nav/>
       <Box
         className="pageDisplay"
         sx={{
