@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import CommunityList from "../components/CommunityList";
 import CommunityMembersList from "../components/CommunityMembersList";
 import { getCommunities } from "../utils/API/CommunityAPI";
-import { Button, ArrowBackIcon } from "../utils/dataExports/muiExports";
+import { ArrowBackIcon } from "../utils/dataExports/muiExports";
 
 function Community() {
   const [listSelected, setListSelected] = useState("community");
@@ -19,20 +19,7 @@ function Community() {
   }, []);
 
   return (
-    <div style={{ color: "black", paddingTop: "100px" }}>
-      {listSelected === "community" && (
-        <Link
-          style={{
-            textDecoration: "none",
-            color: "black",
-            marginLeft: "2em",
-            position: "relative",
-          }}
-          to="/home"
-        >
-          <ArrowBackIcon />
-        </Link>
-      )}
+    <div style={{ marginTop: "2em" }}>
       {listSelected === "members" && (
         <Link
           style={{
