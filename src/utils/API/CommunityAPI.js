@@ -145,15 +145,12 @@ export const updateCommunity = async (body) => {
   }
 };
 
-export const deleteCommunity = async (body) => {
+export const deleteCommunity = async (id) => {
   try {
-    const response = await fetch(
-      API_URL + "/admin/communities/" + body.id + "/",
-      {
-        method: "DELETE",
-        headers: headers,
-      }
-    );
+    const response = await fetch(API_URL + "/admin/communities/" + id + "/", {
+      method: "DELETE",
+      headers: headers,
+    });
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
@@ -161,5 +158,32 @@ export const deleteCommunity = async (body) => {
     return await response.json();
   } catch (err) {
     console.log("Error deleting community: ", err);
+  }
+};
+
+export const createAdmin = async (user_id, community_id) => {
+  const token = localStorage.getItem(ACCESS_TOKEN);
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  try {
+    const response = await fetch(API_URL + "/admin/communityAdmins/", {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({
+        user_id: user_id,
+        community_id: community_id,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (err) {
+    console.log("Error creating admin: ", err);
   }
 };
