@@ -1,13 +1,13 @@
 //  cd into parent backend run $python3 manage.py runserver
 // TODO: input validations, error handling, update user state upon any edits
 
-import Routing from "../utils/Routing";
-import { useUser, useLogin } from "../utils/Context";
+import Routing from "./utils/Routing";
+import { useUser, useLogin } from "./utils/Context";
 import { useLocation } from "react-router-dom";
-import Login from "./Login";
-import Loading from "./Loading";
+import Login from "./components/Login";
+import Loading from "./components/Loading";
 import { useEffect } from "react";
-import Nav from "./Nav";
+import Nav from "./components/Nav";
 
 function App() {
   const location = useLocation();
@@ -15,19 +15,25 @@ function App() {
   const { loginOpen, setLoginOpen } = useLogin();
 
   useEffect(() => {
-    triggerLoading();
+    const timeoutId = triggerLoading(1000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(
-    function closeLoginIfPageChange(){
-      setLoginOpen(false)
-    }, [location.pathname]
-  )
+    function closeLoginIfPageChange() {
+      setLoginOpen(false);
+    },
+    [location.pathname]
+  );
 
   return (
     <div className="App">
-      {!isLoading && <Nav />}
-      {isLoading ? <Loading /> : <Routing />}
+      {location.pathname !== "/home" && <Nav />}
+      <Loading />
+      <Routing />
       {loginOpen && <Login />}
     </div>
   );
