@@ -7,7 +7,6 @@ const headers = {
 };
 
 export const getUser = async () => {
-  // add params for added data in path
   const token = localStorage.getItem(ACCESS_TOKEN);
 
   if (token) {
@@ -26,12 +25,9 @@ export const getUser = async () => {
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (err) {
-    // setError(err.message);  // Set the error message
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
+    console.log("Error getting user: ", err);
   }
 };
 
@@ -53,12 +49,9 @@ export const findUserById = async (userId) => {
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (err) {
-    // setError(err.message);  // Set the error message
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
+    console.log("Error finding user: ", err);
   }
 };
 
@@ -92,11 +85,8 @@ export const queryUsers = async (filters = {}) => {
     }
 
     return await response.json();
-    // setUser(data);  // Set the fetched user data
   } catch (err) {
-    // setError(err.message);  // Set the error message
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
+    console.log("Error querying users: ", err);
   }
 };
 
@@ -120,9 +110,8 @@ export const createUser = async (body) => {
     }
 
     return await response.json();
-    // setUser(data);  // Set the fetched user data
   } catch (err) {
-    // setError(err.message);  // Set the error message
+    console.log("Error creating user: ", err);
     // TODO: error messages if arent unique
     //   {
     //     "username": [
@@ -135,8 +124,6 @@ export const createUser = async (body) => {
     //         "Phone number is already taken."
     //     ]
     // }
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
   }
 };
 
@@ -163,8 +150,6 @@ export const updateUser = async (body) => {
     // {"email":["Email is already taken."]}
     // {"email":["Enter a valid email address."]}
   } catch (err) {
-    // setError(err.message);  // Set the error message
-  } finally {
-    // setLoading(false);  // Set loading to false once the fetch is complete
+    console.log("Error updating user: ", err);
   }
 };
