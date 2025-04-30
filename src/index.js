@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import App from "./components/App.js";
+import App from "./App.js";
 import reportWebVitals from "./reportWebVitals.js";
 import { UserProvider, LoginProvider } from "./utils/Context";
 
