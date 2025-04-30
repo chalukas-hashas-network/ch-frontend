@@ -107,7 +107,7 @@ function Settings() {
   };
 
   return (
-    <div style={{ color: "black", paddingTop: "100px" }}>
+    <div style={{ paddingTop: "1em" }}>
       <Link
         style={{ textDecoration: "none", color: "black", marginLeft: "2em" }}
         onClick={() => navigate(-1)}
