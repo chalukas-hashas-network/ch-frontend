@@ -18,7 +18,7 @@ export default function Loading() {
             left: 0,
             zIndex: 9999,
             width: "100vw",
-            backgroundColor: "var(--background-color)",
+            backgroundColor: "white",
           }}
         >
           <CircularProgress size="3rem" style={{ color: "var(--orange)" }} />
