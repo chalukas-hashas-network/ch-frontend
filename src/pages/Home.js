@@ -23,19 +23,18 @@ function Home() {
   const cards = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
   return (
-    <Box style={{ color: "black" }}>
-      <Logo community="Global"/>
-      <Nav/>
+    <Box style={{ marginTop: "3em" }}>
+      <Logo community="Global" />
+      <Nav />
       <Box
         className="pageDisplay"
         sx={{
-          height: "550px",
           width: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           flexDirection: { xs: "column", md: "row" },
-          paddingTop: { xs: "50px", md: "0px" },
+          paddingTop: { xs: "2em", md: "50px" },
         }}
       >
         <Box>
