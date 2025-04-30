@@ -114,326 +114,296 @@ function Goal() {
   };
 
   return (
-    <div style={{ color: "black", paddingTop: "100px" }}>
-      <Link
-        style={{ textDecoration: "none", color: "black", marginLeft: "2em" }}
-        to="/home"
-      >
-        <ArrowBackIcon />
-      </Link>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          marginTop: "1em",
-        }}
-      >
-        <Box className="profileDisplays" sx={{ display: "flex", gap: "1em" }}>
-          <Button
-            variant="contained"
-            disabled
-            sx={{
-              "&.Mui-disabled": {
-                backgroundColor: "var(--orange)",
-                color: "white",
-              },
-              borderRadius: "13px",
-              boxShadow: "none",
-              fontSize: "0.7em",
-              fontWeight: "300",
-              width: "179px",
-              height: "35px",
-              textTransform: "none",
-            }}
-          >
-            {first_name + " " + last_name}
-          </Button>
-          <Button
-            variant="contained"
-            sx={{
-              borderRadius: "13px",
-              boxShadow: "none",
-              backgroundColor: "var(--black)",
-              fontWeight: "300",
-              fontSize: "0.7em",
-              width: "179px",
-              height: "35px",
-              textTransform: "none",
-            }}
-            onClick={() => navigate("/settings")}
-          >
-            My Profile
-            <AccountCircleRoundedIcon
-              sx={{ fontSize: "1rem", marginLeft: ".4em" }}
-            />
-          </Button>
-        </Box>
-        <Box
-          className="pagesAndTractateDisplays"
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginTop: "2em",
+      }}
+    >
+      <Box className="profileDisplays" sx={{ display: "flex", gap: "1em" }}>
+        <Button
+          variant="contained"
+          disabled
           sx={{
-            display: "flex",
-            gap: "1em",
-            alignItems: "stretch",
-            marginTop: "20px",
+            "&.Mui-disabled": {
+              backgroundColor: "var(--orange)",
+              color: "white",
+            },
+            borderRadius: "13px",
+            boxShadow: "none",
+            fontSize: "0.7em",
+            fontWeight: "300",
+            width: "179px",
+            height: "35px",
+            textTransform: "none",
           }}
         >
-          <Card
-            elevation={0}
-            className="tractatesDisplay"
-            sx={{
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              border: "2px solid var(--light-grey)",
-              borderRadius: "16px",
-              paddingTop: "30px",
-              paddingBottom: "10px",
-              position: "relative",
-              width: "175px",
-            }}
-          >
-            <Typography
-              variant="subtitle2"
-              sx={{ position: "absolute", top: "10px" }}
-            >
-              Your Mesechtas:
-            </Typography>
-            <Box
-              sx={{
-                marginTop: "5px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              {user?.goal?.goal_tractates?.length > 1 ? (
-                <Box
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(2, 1fr)",
-                    gap: "4px",
-                    width: "100%",
-                    padding: "0 7px",
-                    placeItems: "center",
-                  }}
-                >
-                  {user.goal.goal_tractates.map((tractate) => (
-                    <Typography
-                      key={tractate.tractate}
-                      variant="caption"
-                      sx={{
-                        border: "1.5px solid var(--light-grey)",
-                        borderRadius: "20px",
-                        padding: "3px 7px",
-                        textAlign: "center",
-                        overflow: "hidden",
-                        width: "60px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      {tractate.tractate}
-                    </Typography>
-                  ))}
-                </Box>
-              ) : (
-                <Typography
-                  variant="caption"
-                  sx={{
-                    border: "1.5px solid var(--light-grey)",
-                    borderRadius: "20px",
-                    padding: "3px 7px",
-                  }}
-                >
-                  {user?.goal?.goal_tractates?.[0]?.tractate ||
-                    "No tractate selected"}
-                </Typography>
-              )}
-            </Box>
-          </Card>
-          <Card
-            elevation={0}
-            className="pagesDisplay"
-            sx={{
-              height: "auto",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              border: "2px solid var(--light-grey)",
-              borderRadius: "16px",
-              paddingTop: "30px",
-              paddingBottom: "10px",
-              position: "relative",
-              width: "175px",
-            }}
-          >
-            <Typography
-              variant="subtitle2"
-              sx={{ position: "absolute", top: "10px" }}
-            >
-              Pages completed:
-            </Typography>
-            <Box
-              sx={{
-                marginTop: "5px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Typography
-                variant="caption"
-                sx={{
-                  color: "var(--light-blue)",
-                  border: "1.5px solid var(--light-grey)",
-                  borderRadius: "20px",
-                  padding: "4px 8px",
-                }}
-              >
-                {selectedTractateData.tractate === "total"
-                  ? `${goal?.user_total_completed_pages || 0} / ${
-                      goal?.user_total_selected_pages || 0
-                    }`
-                  : `${selectedTractateData.pages_completed} / ${selectedTractateData.pages_selected}`}
-              </Typography>
-            </Box>
-          </Card>
-        </Box>
-        <Paper
-          className="progressContainer"
-          elevation={0}
+          {first_name + " " + last_name}
+        </Button>
+        <Button
+          variant="contained"
           sx={{
-            border: "2px solid var(--light-grey)",
-            borderRadius: "16px",
+            borderRadius: "13px",
+            boxShadow: "none",
+            backgroundColor: "var(--black)",
+            fontWeight: "300",
+            fontSize: "0.7em",
+            width: "179px",
+            height: "35px",
+            textTransform: "none",
+          }}
+          onClick={() => navigate("/goal/settings")}
+        >
+          My Profile
+          <AccountCircleRoundedIcon
+            sx={{ fontSize: "1rem", marginLeft: ".4em" }}
+          />
+        </Button>
+      </Box>
+      <Box
+        className="pagesAndTractateDisplays"
+        sx={{
+          display: "flex",
+          gap: "1em",
+          alignItems: "stretch",
+          marginTop: "20px",
+        }}
+      >
+        <Card
+          elevation={0}
+          className="tractatesDisplay"
+          sx={{
+            height: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            width: "90%",
-            marginTop: "20px",
+            border: "2px solid var(--light-grey)",
+            borderRadius: "16px",
+            paddingTop: "30px",
+            paddingBottom: "10px",
+            position: "relative",
+            width: "175px",
           }}
         >
-          <Typography sx={{ marginTop: ".5em" }}>Your Progress </Typography>
-          <Box
-            className="progressDisplayContainer"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              margin: "10px",
-              width: "90%",
-            }}
+          <Typography
+            variant="subtitle2"
+            sx={{ position: "absolute", top: "10px" }}
           >
-            <Box className="progressBar" sx={{ width: "100%", mr: 1 }}>
-              <LinearProgress
-                variant="determinate"
-                value={Number(selectedTractateData.percentage_completed)}
-                sx={{
-                  margin: "10px",
-                  height: "20px",
-                  backgroundColor: "var(--light-grey)",
-                  borderRadius: "16px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  "& .MuiLinearProgress-bar": {
-                    borderRadius: "16px",
-                    height: "16px",
-                    margin: "auto",
-                    backgroundColor: "var(--light-blue)",
-                  },
-                }}
-              />
-            </Box>
-            <Box className="progressPercentage" sx={{ minWidth: 35 }}>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                style={{ color: "black" }}
-              >{`${selectedTractateData.percentage_completed}%`}</Typography>
-            </Box>
-          </Box>
+            Your Mesechtas:
+          </Typography>
           <Box
-            className="tractateGoalDropdown"
             sx={{
-              alignItems: "center",
-              marginBottom: "1em",
+              marginTop: "5px",
               display: "flex",
-              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
               width: "100%",
-              flexDirection: { xs: "column", md: "row" },
             }}
           >
-            {user?.goal?.goal_tractates?.length > 1 && (
-              <TextField
-                select
-                autowidth="true"
-                value={selectedTractateData.tractate}
-                onChange={handleTractateChange}
-                id="grouped-select"
-                label="View Tractate progress"
+            {user?.goal?.goal_tractates?.length > 1 ? (
+              <Box
                 sx={{
-                  marginRight: "1em",
-                  width: "15em",
-                  "& .MuiOutlinedInput-root": {
-                    color: "black",
-                    "& fieldset": {
-                      borderColor: "black",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "var(--orange-light)",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "var(--orange)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "black",
-                  },
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, 1fr)",
+                  gap: "4px",
+                  width: "100%",
+                  padding: "0 7px",
+                  placeItems: "center",
                 }}
               >
-                <MenuItem key="total" value="total">
-                  <em>Total</em>
-                </MenuItem>
                 {user.goal.goal_tractates.map((tractate) => (
-                  <MenuItem key={tractate.id} value={tractate.tractate}>
+                  <Typography
+                    key={tractate.tractate}
+                    variant="caption"
+                    sx={{
+                      border: "1.5px solid var(--light-grey)",
+                      borderRadius: "20px",
+                      padding: "3px 7px",
+                      textAlign: "center",
+                      overflow: "hidden",
+                      width: "60px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
                     {tractate.tractate}
-                  </MenuItem>
+                  </Typography>
                 ))}
-              </TextField>
+              </Box>
+            ) : (
+              <Typography
+                variant="caption"
+                sx={{
+                  border: "1.5px solid var(--light-grey)",
+                  borderRadius: "20px",
+                  padding: "3px 7px",
+                }}
+              >
+                {user?.goal?.goal_tractates?.[0]?.tractate ||
+                  "No tractate selected"}
+              </Typography>
             )}
           </Box>
-          <Button
-            variant="contained"
+        </Card>
+        <Card
+          elevation={0}
+          className="pagesDisplay"
+          sx={{
+            height: "auto",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            border: "2px solid var(--light-grey)",
+            borderRadius: "16px",
+            paddingTop: "30px",
+            paddingBottom: "10px",
+            position: "relative",
+            width: "175px",
+          }}
+        >
+          <Typography
+            variant="subtitle2"
+            sx={{ position: "absolute", top: "10px" }}
+          >
+            Pages completed:
+          </Typography>
+          <Box
             sx={{
-              borderRadius: "13px",
-              boxShadow: "none",
-              backgroundColor: "var(--black)",
-              fontWeight: "300",
-              fontSize: "0.7em",
-              minWidth: "160px",
-              height: "32px",
-              marginBottom: "2em",
-              textTransform: "none",
-            }}
-            onClick={() => {
-              setOpenGoal(true);
-              setGoalEditOption("update-goal");
+              marginTop: "5px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
-            Update Progress
-            <SpeedDialIcon sx={{ fontSize: "1.2rem", marginLeft: ".2em" }} />
-          </Button>
-        </Paper>
+            <Typography
+              variant="caption"
+              sx={{
+                color: "var(--light-blue)",
+                border: "1.5px solid var(--light-grey)",
+                borderRadius: "20px",
+                padding: "4px 8px",
+              }}
+            >
+              {selectedTractateData.tractate === "total"
+                ? `${goal?.user_total_completed_pages || 0} / ${
+                    goal?.user_total_selected_pages || 0
+                  }`
+                : `${selectedTractateData.pages_completed} / ${selectedTractateData.pages_selected}`}
+            </Typography>
+          </Box>
+        </Card>
+      </Box>
+      <Paper
+        className="progressContainer"
+        elevation={0}
+        sx={{
+          border: "2px solid var(--light-grey)",
+          borderRadius: "16px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "90%",
+          marginTop: "20px",
+        }}
+      >
+        <Typography sx={{ marginTop: ".5em" }}>Your Progress </Typography>
+        <Box
+          className="progressDisplayContainer"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            margin: "10px",
+            width: "90%",
+          }}
+        >
+          <Box className="progressBar" sx={{ width: "100%", mr: 1 }}>
+            <LinearProgress
+              variant="determinate"
+              value={Number(selectedTractateData.percentage_completed)}
+              sx={{
+                margin: "10px",
+                height: "20px",
+                backgroundColor: "var(--light-grey)",
+                borderRadius: "16px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                "& .MuiLinearProgress-bar": {
+                  borderRadius: "16px",
+                  height: "16px",
+                  margin: "auto",
+                  backgroundColor: "var(--light-blue)",
+                },
+              }}
+            />
+          </Box>
+          <Box className="progressPercentage" sx={{ minWidth: 35 }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              style={{ color: "black" }}
+            >{`${selectedTractateData.percentage_completed}%`}</Typography>
+          </Box>
+        </Box>
+        <Box
+          className="tractateGoalDropdown"
+          sx={{
+            alignItems: "center",
+            marginBottom: "1em",
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+            flexDirection: { xs: "column", md: "row" },
+          }}
+        >
+          {user?.goal?.goal_tractates?.length > 1 && (
+            <TextField
+              select
+              autowidth="true"
+              value={selectedTractateData.tractate}
+              onChange={handleTractateChange}
+              id="grouped-select"
+              label="View Tractate progress"
+              sx={{
+                marginRight: "1em",
+                width: "15em",
+                "& .MuiOutlinedInput-root": {
+                  color: "black",
+                  "& fieldset": {
+                    borderColor: "black",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "var(--orange-light)",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "var(--orange)",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "black",
+                },
+              }}
+            >
+              <MenuItem key="total" value="total">
+                <em>Total</em>
+              </MenuItem>
+              {user.goal.goal_tractates.map((tractate) => (
+                <MenuItem key={tractate.id} value={tractate.tractate}>
+                  {tractate.tractate}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+        </Box>
         <Button
           variant="contained"
           sx={{
-            marginTop: "3em",
             borderRadius: "13px",
             boxShadow: "none",
             backgroundColor: "var(--black)",
@@ -441,29 +411,51 @@ function Goal() {
             fontSize: "0.7em",
             minWidth: "160px",
             height: "32px",
+            marginBottom: "2em",
             textTransform: "none",
           }}
           onClick={() => {
             setOpenGoal(true);
-            setGoalEditOption("create-goal");
+            setGoalEditOption("update-goal");
           }}
         >
-          Select a Mesechta
+          Update Progress
           <SpeedDialIcon sx={{ fontSize: "1.2rem", marginLeft: ".2em" }} />
         </Button>
-        {openGoal && (
-          <GoalPopup
-            setOpenGoal={setOpenGoal}
-            goalEditOption={goalEditOption}
-            setGoalEditOption={setGoalEditOption}
-            tractates={tractates}
-            // goal={goal}
-            user={user}
-            setUser={setUser}
-            setSelectedTractateData={setSelectedTractateData}
-          />
-        )}
-      </div>
+      </Paper>
+      <Button
+        variant="contained"
+        sx={{
+          marginTop: "3em",
+          borderRadius: "13px",
+          boxShadow: "none",
+          backgroundColor: "var(--black)",
+          fontWeight: "300",
+          fontSize: "0.7em",
+          minWidth: "160px",
+          height: "32px",
+          textTransform: "none",
+        }}
+        onClick={() => {
+          setOpenGoal(true);
+          setGoalEditOption("create-goal");
+        }}
+      >
+        Select a Mesechta
+        <SpeedDialIcon sx={{ fontSize: "1.2rem", marginLeft: ".2em" }} />
+      </Button>
+      {openGoal && (
+        <GoalPopup
+          setOpenGoal={setOpenGoal}
+          goalEditOption={goalEditOption}
+          setGoalEditOption={setGoalEditOption}
+          tractates={tractates}
+          // goal={goal}
+          user={user}
+          setUser={setUser}
+          setSelectedTractateData={setSelectedTractateData}
+        />
+      )}
     </div>
   );
 }
