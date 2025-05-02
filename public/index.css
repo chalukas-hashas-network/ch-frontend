@@ -52,14 +52,40 @@
 }
 
 #body{
-  background-color: #f9fafb;
+  background-color: #F8F8F8;
+  font-family: 'Cerebri Sans', sans-serif;
 }
 
 :root {
-  --orange: #FBA62A;
+  --orange: #FBA628;
   --orange-light: #ffe3a8;
-  --light-blue: #38B6FE;
-  --light-grey: #e2e2e2; 
-  --brown: #785843; 
-  --black: #303030;
+  --light-blue: #38B6FF;
+  --light-grey: #F8F8F8; 
+  --grey: #EBEBEB;
+  --dark-grey: #DFDFDF;
+  --brown: #877061; 
+  --black: #292B2D;
 }
+
+  /* Main font across the site is Cerebri
+
+The hero section uses the Nexa font in italics, not bold. */
+
+@font-face {
+  font-family: 'Cerebri Sans';
+  src: url('/fonts/CerebriSans-Light.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Nexa';
+  src: url('/fonts/Nexa-Trial-LightItalic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* 
+fontFamily: "Cerebri Sans, sans-serif",
+fontFamily: "Nexa, sans-serif",
+    */
