@@ -41,8 +41,6 @@ function AdminDashPopup({
   setCurrentCommunity,
   currentCommunity,
 }) {
-  console.log("rows", rows);
-
   const {
     username,
     first_name,
@@ -160,21 +158,26 @@ function AdminDashPopup({
           alert("Error deleting community. Please try again.");
         }
         break;
-      case "addCommunityAdmin":
-        if(e.nativeEvent.submitter.value === "add"){
-          // await createAdmin(user_id, community_id)
-          const user = rows.find((user) => user.id === userData.id);
-          const firstName = user.name.split(" ")[0];
-          const lastName = user.name.split(" ").at(-1);
-  
-          setCommunityAdmins([
-            ...communityAdmins,
-            { first_name: firstName, last_name: lastName, id: user.id },
-          ]);
-        } else {
-          // TODO: update state and trigger fetch
-          // ! atm need admin id so till then we wait for updated endpoint
-        }
+      case "editCommunityAdmin":
+        // TODO: trigger fetch
+        // ! atm need admin id so till then we wait for updated endpoint
+
+        setCommunityAdmins((prevAdmins) =>
+          prevAdmins.filter((admin) => admin.id !== userData.id)
+        );
+
+        resetData();
+        break;
+      case "addAdmin":
+        // await createAdmin(user_id, community_id)
+        const user = rows.find((user) => user.id === userData.id);
+        const firstName = user.name.split(" ")[0];
+        const lastName = user.name.split(" ").at(-1);
+
+        setCommunityAdmins([
+          ...communityAdmins,
+          { first_name: firstName, last_name: lastName, id: user.id },
+        ]);
 
         resetData();
         break;
@@ -609,21 +612,20 @@ function AdminDashPopup({
             </Button>
           </Box>
         )}
-        {popupStatus === "addCommunityAdmin" && (
+        {popupStatus === "addAdmin" && (
           <div>
             <Typography variant="h5" sx={{ marginTop: "1em" }}>
-              Add Community Admin
+              Add a new Admin
             </Typography>
             <form onSubmit={handleSubmit}>
               <TextField
                 id="outlined-select-state"
                 select
-                label="Member"
+                label="Select Member"
                 value={userData.id || ""}
                 onChange={(e) => {
                   setUserData({ ...userData, id: e.target.value });
                 }}
-                defaultValue="Select Member"
                 sx={{
                   width: "100%",
                   marginBottom: "1em",
@@ -647,7 +649,7 @@ function AdminDashPopup({
                   },
                 }}
               >
-                <MenuItem disabled value="">
+                <MenuItem value="">
                   <em>Select member</em>
                 </MenuItem>
                 {rows.map((member, index) => (
@@ -670,8 +672,94 @@ function AdminDashPopup({
                 }}
               >
                 <Button
+                  variant="contained"
+                  onClick={() => setPopupStatus("editCommunityAdmin")}
+                  sx={{
+                    textTransform: "none",
+                    boxShadow: "none",
+                    backgroundColor: "var(--orange)",
+                    width: "35%",
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
                   type="submit"
-                  value="add"
+                  variant="contained"
+                  disabled={userData.id === ""}
+                  sx={{
+                    textTransform: "none",
+                    boxShadow: "none",
+                    backgroundColor: "var(--brown)",
+                    width: "40%",
+                  }}
+                >
+                  Add Admin
+                </Button>
+              </Box>
+            </form>
+          </div>
+        )}
+        {popupStatus === "editCommunityAdmin" && (
+          <div>
+            <Typography variant="h5" sx={{ marginTop: "1em" }}>
+              Edit Community Admin
+            </Typography>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                id="outlined-select-state"
+                select
+                label="Select Admin"
+                value={userData.id || ""}
+                onChange={(e) => {
+                  setUserData({ ...userData, id: e.target.value });
+                }}
+                sx={{
+                  width: "100%",
+                  marginBottom: "1em",
+                  marginTop: "2em",
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "black",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "var(--orange-light)",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "var(--orange)",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "black",
+                  },
+                  "& .MuiSelect-select": {
+                    color: "black",
+                  },
+                }}
+              >
+                <MenuItem value="">
+                  <em>Select admin</em>
+                </MenuItem>
+                {communityAdmins.map((admin, index) => (
+                  <MenuItem key={index} value={admin.id}>
+                    {admin.first_name + " " + admin.last_name}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Box
+                sx={{
+                  position: "absolute",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  bottom: "3em",
+                  gap: 1,
+                  width: "100%",
+                }}
+              >
+                <Button
                   variant="contained"
                   sx={{
                     textTransform: "none",
@@ -679,17 +767,18 @@ function AdminDashPopup({
                     backgroundColor: "var(--orange)",
                     width: "40%",
                   }}
+                  onClick={() => setPopupStatus("addAdmin")}
                 >
-                  Make Admin
+                  Add Admins
                 </Button>
                 <Button
                   type="submit"
-                  value="remove"
                   variant="contained"
+                  disabled={userData.id === ""}
                   sx={{
                     textTransform: "none",
                     boxShadow: "none",
-                    backgroundColor: "var(--black)",
+                    backgroundColor: "var(--brown)",
                     width: "40%",
                   }}
                 >
