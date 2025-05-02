@@ -6,7 +6,11 @@ import { useUser, useLogin } from "../utils/Context";
 import { createUser } from "../utils/API/UserAPI";
 import { getCommunities } from "../utils/API/CommunityAPI";
 import { getAllTractates } from "../utils/API/GoalAPI";
-import { Button, CloseRoundedIcon } from "../utils/dataExports/muiExports";
+import {
+  Box,
+  Button,
+  CloseRoundedIcon,
+} from "../utils/dataExports/muiExports";
 import LoginPopup from "./LoginPopup";
 
 // TODO: make sure username and email are unique on signup. create logic for inviting admin
@@ -183,6 +187,7 @@ function Login() {
     width: "90%",
     marginBottom: "1em",
     "& .MuiOutlinedInput-root": {
+      borderRadius: "10px",
       color: "black",
       "& fieldset": {
         borderColor: "black",
@@ -195,12 +200,12 @@ function Login() {
       },
     },
     "& .MuiInputLabel-root": {
-      color: "black",
+      color: "var(--brown)",
     },
   };
 
   return (
-    <div
+    <Box
       className="container"
       style={{
         position: "fixed",
@@ -208,49 +213,40 @@ function Login() {
         left: 0,
         right: 0,
         bottom: 0,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
         backgroundColor: "white",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
-      <div
-        className="loginAndSignupCard"
+      <Button
+        onClick={() => {
+          setLoginOpen(false);
+          setUserStatus("Login");
+        }}
         style={{
-          textAlign: "center",
-          width: "100%",
-          maxWidth: "400px",
+          position: "absolute",
+          top: "30px",
+          right: "10px",
+          boxShadow: "none",
         }}
       >
-        <Button
-          onClick={() => {
-            setLoginOpen(false);
-            setUserStatus("Login");
-          }}
-          style={{
-            position: "absolute",
-            top: "30px",
-            right: "10px",
-            boxShadow: "none",
-          }}
-        >
-          <CloseRoundedIcon style={{ color: "black" }} />
-        </Button>
-        <LoginPopup
-          handleSignupFields={handleSignupFields}
-          handleSubmit={handleSubmit}
-          userData={userData}
-          handleChange={handleChange}
-          handleFormToggle={handleFormToggle}
-          cardStyle={cardStyle}
-          onboardingStatus={onboardingStatus}
-          setOnboardingStatus={setOnboardingStatus}
-          allCommunities={allCommunities}
-          optionalUserData={optionalUserData}
-          allTractates={allTractates}
-        />
-      </div>
-    </div>
+        <CloseRoundedIcon style={{ color: "black" }} />
+      </Button>
+      <LoginPopup
+        handleSignupFields={handleSignupFields}
+        handleSubmit={handleSubmit}
+        userData={userData}
+        handleChange={handleChange}
+        handleFormToggle={handleFormToggle}
+        cardStyle={cardStyle}
+        onboardingStatus={onboardingStatus}
+        setOnboardingStatus={setOnboardingStatus}
+        allCommunities={allCommunities}
+        optionalUserData={optionalUserData}
+        allTractates={allTractates}
+      />
+    </Box>
   );
 }
 
