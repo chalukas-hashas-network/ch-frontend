@@ -400,7 +400,7 @@ function AdminDash() {
               }}
               onClick={() => {
                 setPopup(true);
-                setPopupStatus("addCommunityAdmin");
+                setPopupStatus("editCommunityAdmin");
                 setUserData({ ...userData, community_id: currentCommunity.id });
               }}
             >
