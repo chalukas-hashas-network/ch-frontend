@@ -3,6 +3,7 @@ import {
   TextField,
   Typography,
   MenuItem,
+  Box,
 } from "../utils/dataExports/muiExports";
 import states from "../utils/dataExports/StatesExports";
 import { useLogin } from "../utils/Context";
@@ -23,15 +24,36 @@ function LoginPopup({
   const { userStatus, setUserStatus } = useLogin();
 
   return (
-    <article className="input" style={{ marginTop: "7dvw" }}>
+    <Box
+      className="loginPopup"
+      style={{
+        marginTop: "7dvw",
+        width: "90dvw",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       {userStatus === "Login" && (
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleSubmit("Login");
           }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+            maxWidth: "23rem",
+          }}
         >
-          <Typography variant="h5">Login</Typography>
+          <Typography
+            variant="h5"
+            sx={{ fontFamily: "Nexa, sans-serif", color: "var(--brown)" }}
+          >
+            Login
+          </Typography>
           <TextField
             required
             id="username"
@@ -59,18 +81,35 @@ function LoginPopup({
               ...cardStyle,
             }}
           />
-          <Button
-            type="submit"
-            variant="contained"
+          <Box
             sx={{
-              backgroundColor: "var(--black)",
               width: "90%",
-              textTransform: "none",
-              boxShadow: "none",
+              display: "flex",
+              justifyContent: "space-between",
             }}
           >
-            Login
-          </Button>
+            <Button
+              sx={{
+                textTransform: "none",
+                textDecoration: "underline",
+                marginRight: "2em",
+              }}
+            >
+              *forgot password
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                backgroundColor: "var(--brown)",
+                width: "40%",
+                textTransform: "none",
+                boxShadow: "none",
+              }}
+            >
+              Login
+            </Button>
+          </Box>
         </form>
       )}
       {userStatus === "Signup" && (
@@ -90,7 +129,12 @@ function LoginPopup({
           >
             {onboardingStatus === "Register" && (
               <div>
-                <Typography variant="h5">Register</Typography>
+                <Typography
+                  variant="h5"
+                  sx={{ fontFamily: "Nexa, sans-serif", color: "var(--brown)" }}
+                >
+                  Register
+                </Typography>
                 <TextField
                   required
                   id="email"
@@ -204,7 +248,7 @@ function LoginPopup({
                   onClick={() => handleSignupFields()}
                   variant="contained"
                   sx={{
-                    backgroundColor: "var(--black)",
+                    backgroundColor: "var(--brown)",
                     boxShadow: "none",
                     textTransform: "none",
                     width: "40%",
@@ -217,7 +261,12 @@ function LoginPopup({
             )}
             {onboardingStatus === "selectCommunity" && (
               <div>
-                <Typography variant="h5">Choose your Community</Typography>
+                <Typography
+                  variant="h5"
+                  sx={{ fontFamily: "Nexa, sans-serif", color: "var(--brown)" }}
+                >
+                  Choose your Community
+                </Typography>
                 <TextField
                   id="outlined-select-community"
                   select
@@ -246,7 +295,7 @@ function LoginPopup({
                   onClick={() => setOnboardingStatus("Register")}
                   variant="contained"
                   sx={{
-                    backgroundColor: "var(--black)",
+                    backgroundColor: "var(--brown)",
                     boxShadow: "none",
                     width: "40%",
                     right: "10px",
@@ -260,7 +309,7 @@ function LoginPopup({
                   onClick={() => setOnboardingStatus("selectTractate")}
                   variant="contained"
                   sx={{
-                    backgroundColor: "var(--black)",
+                    backgroundColor: "var(--brown)",
                     boxShadow: "none",
                     width: "40%",
                     right: "10px",
@@ -273,7 +322,12 @@ function LoginPopup({
             )}
             {onboardingStatus === "selectTractate" && (
               <div>
-                <Typography variant="h5">Choose your Tractate</Typography>
+                <Typography
+                  variant="h5"
+                  sx={{ fontFamily: "Nexa, sans-serif", color: "var(--brown)" }}
+                >
+                  Choose your Tractate
+                </Typography>
                 <TextField
                   id="outlined-select-community"
                   select
@@ -302,7 +356,7 @@ function LoginPopup({
                   onClick={() => setOnboardingStatus("selectCommunity")}
                   variant="contained"
                   style={{
-                    backgroundColor: "var(--black)",
+                    backgroundColor: "var(--brown)",
                     boxShadow: "none",
                     width: "40%",
                     right: "10px",
@@ -316,7 +370,7 @@ function LoginPopup({
                   onClick={() => setOnboardingStatus("finalize")}
                   variant="contained"
                   sx={{
-                    backgroundColor: "var(--black)",
+                    backgroundColor: "var(--brown)",
                     boxShadow: "none",
                     width: "40%",
                     right: "10px",
@@ -329,13 +383,18 @@ function LoginPopup({
             )}
             {onboardingStatus === "finalize" && (
               <div>
-                <Typography variant="h5">Review & Submit</Typography>
+                <Typography
+                  variant="h5"
+                  sx={{ fontFamily: "Nexa, sans-serif", color: "var(--brown)" }}
+                >
+                  Review & Submit
+                </Typography>
 
                 <Button
                   type="submit"
                   variant="contained"
                   sx={{
-                    backgroundColor: "var(--black)",
+                    backgroundColor: "var(--brown)",
                     boxShadow: "none",
                     width: "40%",
                     right: "10px",
@@ -349,21 +408,28 @@ function LoginPopup({
           </form>
         </div>
       )}
-
-      <Button
-        type="button"
-        onClick={handleFormToggle}
+      <Box
         sx={{
-          color: "var(--black)",
-          position: "absolute",
-          marginTop: { md: "1em" },
-          right: { xs: "30px", md: "35dvw" },
-          textTransform: "none",
+          display: "flex",
+          justifyContent: "flex-end",
+          width: "100%",
+          maxWidth: "23rem",
         }}
       >
-        {userStatus === "Login" ? "Sign up" : "Log in"}
-      </Button>
-    </article>
+        <Button
+          type="button"
+          onClick={handleFormToggle}
+          sx={{
+            color: "var(--black)",
+            marginTop: { md: "1em" },
+            right: "10px",
+            textTransform: "none",
+          }}
+        >
+          {userStatus === "Login" ? "Sign up" : "Log in"}
+        </Button>
+      </Box>
+    </Box>
   );
 }
 
