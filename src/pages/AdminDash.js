@@ -21,7 +21,7 @@ import {
 } from "../utils/dataExports/muiExports";
 import { Link } from "react-router-dom";
 import { useState, useEffect, Fragment } from "react";
-import { useUser } from "../utils/Context";
+import { useUser } from "../utils/context/UserContext";
 import AdminDashPopup from "../components/AdminDashPopup";
 import {
   queryCommunities,

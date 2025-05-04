@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GoalPopup from "../components/GoalPopup";
-import { useUser } from "../utils/Context";
+import { useUser } from "../utils/context/UserContext";
 import { createAnnualGoal, getAllTractates } from "../utils/API/GoalAPI";
 import {
   Box,
@@ -30,7 +30,7 @@ function Goal() {
   const [openGoal, setOpenGoal] = useState(false);
   const [goalEditOption, setGoalEditOption] = useState("");
   const [tractates, setTractates] = useState([]);
-  const { user, setUser } = useUser();
+  const { user, setUser, logout } = useUser();
   const { goal, first_name, last_name } = user;
 
   const navigate = useNavigate();
@@ -111,6 +111,11 @@ function Goal() {
         pages_selected: goal?.user_total_selected_pages || 0,
       });
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/home");
   };
 
   return (
@@ -444,6 +449,7 @@ function Goal() {
         Select a Mesechta
         <SpeedDialIcon sx={{ fontSize: "1.2rem", marginLeft: ".2em" }} />
       </Button>
+      <Button onClick={() => handleLogout()}>Log out</Button>
       {openGoal && (
         <GoalPopup
           setOpenGoal={setOpenGoal}

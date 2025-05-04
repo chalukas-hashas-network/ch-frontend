@@ -2,7 +2,8 @@
 // need to check if user is already signed up
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useUser, useLogin } from "../utils/Context";
+import {  useLogin } from "../utils/context/LoginContext";
+import { useUser, } from "../utils/context/UserContext";
 import { createUser } from "../utils/API/UserAPI";
 import { getCommunities } from "../utils/API/CommunityAPI";
 import { getAllTractates } from "../utils/API/GoalAPI";

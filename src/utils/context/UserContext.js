@@ -1,10 +1,9 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { getUser, createUser } from "./API/UserAPI";
-import { getAccessToken } from "./API/AuthAPI";
-import { checkAuth } from "./Authorization";
+import { getUser, createUser } from "../API/UserAPI";
+import { getAccessToken } from "../API/AuthAPI";
+import { checkAuth } from "../Authorization";
 
 const UserContext = createContext();
-const LoginContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [isAuth, setIsAuth] = useState(false);
@@ -77,6 +76,7 @@ export const UserProvider = ({ children }) => {
   };
 
   const logout = () => {
+    localStorage.clear();
     setIsAuth(false);
     setIsAdmin(false);
     setIsSuperAdmin(false);
@@ -118,26 +118,4 @@ export const UserProvider = ({ children }) => {
 
 export const useUser = () => {
   return useContext(UserContext);
-};
-
-export const LoginProvider = ({ children }) => {
-  const [userStatus, setUserStatus] = useState("Login");
-  const [loginOpen, setLoginOpen] = useState(false);
-
-  return (
-    <LoginContext.Provider
-      value={{
-        userStatus,
-        setUserStatus,
-        loginOpen,
-        setLoginOpen,
-      }}
-    >
-      {children}
-    </LoginContext.Provider>
-  );
-};
-
-export const useLogin = () => {
-  return useContext(LoginContext);
 };

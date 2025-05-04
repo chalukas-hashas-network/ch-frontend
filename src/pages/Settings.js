@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { updateUser } from "../utils/API/UserAPI";
-import { useUser } from "../utils/Context";
+import { useUser } from "../utils/context/UserContext";
 import states from "../utils/dataExports/StatesExports";
 import {
   Button,

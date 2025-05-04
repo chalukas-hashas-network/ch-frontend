@@ -1,5 +1,5 @@
 import { Box, CircularProgress } from "../utils/dataExports/muiExports";
-import { useUser } from "../utils/Context";
+import { useUser } from "../utils/context/UserContext";
 
 export default function Loading() {
   const { isLoading } = useUser();

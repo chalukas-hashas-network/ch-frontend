@@ -4,7 +4,7 @@ import Settings from "../pages/Settings.js";
 import AdminDash from "../pages/AdminDash.js";
 import Community from "../pages/Community.js";
 import Goal from "../pages/Goal.js";
-import { useUser } from "./Context.js";
+import { useUser } from "./context/UserContext";
 import NotFound from "../pages/NotFound.js";
 
 export default function Routing() {

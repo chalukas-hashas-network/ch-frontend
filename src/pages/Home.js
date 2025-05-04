@@ -4,7 +4,8 @@ import {
   Button,
 } from "../utils/dataExports/muiExports";
 import { useNavigate } from "react-router-dom";
-import { useUser, useLogin } from "../utils/Context";
+import {  useLogin } from "../utils/context/LoginContext";
+import { useUser } from "../utils/context/UserContext";
 import Logo from "../components/Logo";
 import Nav from "../components/Nav";
 import LiveUpdates from "../components/LiveUpdates";

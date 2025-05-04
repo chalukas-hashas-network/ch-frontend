@@ -6,7 +6,8 @@ import {
   CloseRoundedIcon,
   Typography,
 } from "../utils/dataExports/muiExports";
-import { useUser, useLogin } from "../utils/Context";
+import { useLogin } from "../utils/context/LoginContext";
+import { useUser } from "../utils/context/UserContext";
 import { updateUser } from "../utils/API/UserAPI";
 
 function JoinCommunityPopup({ setJoinPopup, joinPopup }) {
