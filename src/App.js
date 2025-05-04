@@ -2,7 +2,8 @@
 // TODO: input validations, error handling, update user state upon any edits
 
 import Routing from "./utils/Routing";
-import { useUser, useLogin } from "./utils/Context";
+import { useUser } from "./utils/context/UserContext";
+import { useLogin } from "./utils/context/LoginContext";
 import { useLocation } from "react-router-dom";
 import Login from "./components/Login";
 import Loading from "./components/Loading";
