@@ -114,6 +114,21 @@ function AdminDashPopup({
           alert("Error updating community. Please try again.");
         }
         break;
+      case "deleteCommunity":
+        try {
+          await deleteCommunity(communityData.id);
+          setAllCommunities((prevCommunities) =>
+            prevCommunities.filter(
+              (community) => community.id !== communityData.id
+            )
+          );
+          resetData();
+          setAdminStatus("super");
+        } catch (err) {
+          console.log("Error deleting community: ", err);
+          alert("Error deleting community. Please try again.");
+        }
+        break;
       case "createMember":
         // createUser(userData)
         //? should admin create all fields or at least have option?
@@ -141,21 +156,6 @@ function AdminDashPopup({
         } catch (e) {
           console.error("Error updating user:", e);
           alert("Error updating user. Please try again.");
-        }
-        break;
-      case "deleteCommunity":
-        try {
-          await deleteCommunity(communityData.id);
-          setAllCommunities((prevCommunities) =>
-            prevCommunities.filter(
-              (community) => community.id !== communityData.id
-            )
-          );
-          resetData();
-          setAdminStatus("super");
-        } catch (err) {
-          console.log("Error deleting community: ", err);
-          alert("Error deleting community. Please try again.");
         }
         break;
       case "editCommunityAdmin":
@@ -391,7 +391,8 @@ function AdminDashPopup({
             <Button
               sx={{
                 position: "absolute",
-                bottom: "1px",
+                bottom: "1em",
+                right: "2em",
                 textTransform: "none",
               }}
               color="error"
@@ -401,6 +402,50 @@ function AdminDashPopup({
             >
               Delete Community
             </Button>
+          </Box>
+        )}
+        {popupStatus === "deleteCommunity" && (
+          <Box
+            sx={{
+              height: "80%",
+              display: "flex",
+              flexDirection: "column",
+              width: "90%",
+              marginTop: "2em",
+              position: "relative",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h5">
+              Are you sure you want to delete this community?
+            </Typography>
+            <Box sx={{ position: "absolute", bottom: "1px" }}>
+              <Button
+                sx={{
+                  bgcolor: "var(--dark-grey)",
+                  color: "var(--black)",
+                  textTransform: "none",
+                  boxShadow: "none",
+                  marginRight: "2em",
+                }}
+                variant="contained"
+                onClick={() => setPopupStatus("editCommunity")}
+              >
+                Cancel
+              </Button>
+              <Button
+                color="error"
+                sx={{
+                  textTransform: "none",
+                  boxShadow: "none",
+                }}
+                variant="contained"
+                startIcon={<DeleteIcon />}
+                onClick={(e) => handleSubmit(e)}
+              >
+                Delete
+              </Button>
+            </Box>
           </Box>
         )}
         {popupStatus === "editMember" && (
@@ -578,37 +623,6 @@ function AdminDashPopup({
               }}
             >
               Edit User
-            </Button>
-          </Box>
-        )}
-        {popupStatus === "deleteCommunity" && (
-          <Box
-            sx={{
-              height: "80%",
-              display: "flex",
-              flexDirection: "column",
-              width: "90%",
-              marginTop: "2em",
-              position: "relative",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h5">
-              Are you sure you want to delete this community?
-            </Typography>
-            <Button
-              color="error"
-              sx={{
-                position: "absolute",
-                bottom: "1px",
-                textTransform: "none",
-                boxShadow: "none",
-              }}
-              variant="contained"
-              startIcon={<DeleteIcon />}
-              onClick={(e) => handleSubmit(e)}
-            >
-              Delete
             </Button>
           </Box>
         )}
