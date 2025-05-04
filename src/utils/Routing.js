@@ -6,6 +6,7 @@ import Community from "../pages/Community.js";
 import Goal from "../pages/Goal.js";
 import { useUser } from "./context/UserContext";
 import NotFound from "../pages/NotFound.js";
+import CommunityMembers from "../pages/CommunityMembers.js";
 
 export default function Routing() {
   const { isAdmin, isAuth } = useUser();
@@ -13,6 +14,7 @@ export default function Routing() {
   return (
     <Routes>
       <Route exact path="/community" element={<Community />} />
+      <Route exact path="/community/:community_id" element={<CommunityMembers />} />
       <Route path="/home/*" element={<Home />} />
       {isAuth && (
         <>
