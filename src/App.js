@@ -3,9 +3,7 @@
 
 import Routing from "./utils/Routing";
 import { useUser } from "./utils/context/UserContext";
-import { useLogin } from "./utils/context/LoginContext";
 import { useLocation } from "react-router-dom";
-import Login from "./components/Login";
 import Loading from "./components/Loading";
 import { useEffect } from "react";
 import Nav from "./components/Nav";
@@ -13,7 +11,6 @@ import Nav from "./components/Nav";
 function App() {
   const location = useLocation();
   const { isLoading, triggerLoading } = useUser();
-  const { loginOpen, setLoginOpen } = useLogin();
 
   useEffect(() => {
     const timeoutId = triggerLoading(1000);
@@ -23,19 +20,12 @@ function App() {
     };
   }, []);
 
-  useEffect(
-    function closeLoginIfPageChange() {
-      setLoginOpen(false);
-    },
-    [location.pathname]
-  );
 
   return (
     <div className="App">
-      {location.pathname !== "/home" && <Nav />}
+      {location.pathname !== "/home" && location.pathname !== "/login" && <Nav />}
       <Loading />
       <Routing />
-      {loginOpen && <Login />}
     </div>
   );
 }
