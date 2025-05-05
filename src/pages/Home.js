@@ -14,7 +14,7 @@ import check from "../assets/images/Check icon Chalukas .png";
 function Home() {
   const navigate = useNavigate();
   const { isAuth } = useUser();
-  const { setLoginOpen, setUserStatus } = useLogin();
+  const { setUserStatus } = useLogin();
 
   return (
     <Box style={{ marginTop: "3em" }}>
@@ -111,7 +111,7 @@ function Home() {
                   textTransform: "none",
                 }}
                 onClick={() => {
-                  setLoginOpen(true);
+                  navigate("/login")
                   setUserStatus("Signup");
                 }}
               >
@@ -132,7 +132,7 @@ function Home() {
                   marginLeft: "15px",
                 }}
                 onClick={() => {
-                  setLoginOpen(true);
+                  navigate("/login")
                   setUserStatus("Login");
                 }}
               >
