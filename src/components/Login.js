@@ -2,25 +2,21 @@
 // need to check if user is already signed up
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {  useLogin } from "../utils/context/LoginContext";
-import { useUser, } from "../utils/context/UserContext";
+import { useLogin } from "../utils/context/LoginContext";
+import { useUser } from "../utils/context/UserContext";
 import { createUser } from "../utils/API/UserAPI";
 import { getCommunities } from "../utils/API/CommunityAPI";
 import { getAllTractates } from "../utils/API/GoalAPI";
-import {
-  Box,
-  Button,
-  CloseRoundedIcon,
-} from "../utils/dataExports/muiExports";
+import { Box, Button, CloseRoundedIcon } from "../utils/dataExports/muiExports";
 import LoginPopup from "./LoginPopup";
+import zIndex from "@mui/material/styles/zIndex";
 
 // TODO: make sure username and email are unique on signup. create logic for inviting admin
-// TODO: make signup one page, make fields "required" if needed
 
 function Login() {
   const location = useLocation();
   const { login, triggerLoading } = useUser();
-  const { setLoginOpen, userStatus, setUserStatus } = useLogin();
+  const { userStatus, setUserStatus } = useLogin();
   const navigate = useNavigate();
 
   const [onboardingStatus, setOnboardingStatus] = useState("Register");
@@ -37,8 +33,8 @@ function Login() {
     location: "",
   });
   const [optionalUserData, setOptionalUserData] = useState({
-    community: null,
-    tractate: null,
+    community: { name: "", id: "" },
+    tractate: { name: "", id: "" },
   });
 
   useEffect(
@@ -91,8 +87,24 @@ function Login() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "community" || name === "tractate") {
-      setOptionalUserData({ ...optionalUserData, [name]: value });
+    if (name === "community") {
+      const selectedCommunity = allCommunities.find(
+        (community) => community.id === value
+      );
+
+      setOptionalUserData({
+        ...optionalUserData,
+        community: { name: selectedCommunity?.name || "", id: value || "" },
+      });
+    } else if (name === "tractate") {
+      const selectedTractate = allTractates.find(
+        (tractate) => tractate.id === value
+      );
+
+      setOptionalUserData({
+        ...optionalUserData,
+        tractate: { name: selectedTractate?.name || "", id: value || "" },
+      });
     } else {
       setUserData({ ...userData, [name]: value });
     }
@@ -151,8 +163,7 @@ function Login() {
         try {
           await login(userData.username, userData.password);
           triggerLoading();
-          setLoginOpen(false);
-          navigate(location.pathname);
+          navigate(-1);
         } catch (err) {
           alert("Invalid credentials");
           return;
@@ -160,6 +171,7 @@ function Login() {
       }
     } else if (e === "Register user") {
       // TODO: need a way to check if username or email exist (before user can click next)
+      // onClick "next" make fetch req, if successful change onboardingstatus, else show error message
       // ? fetch that checks if username or email exist in DB?
       // TODO: need to create user, then set their community if one was selected, then create goal if it was selected
       try {
@@ -184,27 +196,6 @@ function Login() {
     }
   };
 
-  const cardStyle = {
-    width: "90%",
-    marginBottom: "1em",
-    "& .MuiOutlinedInput-root": {
-      borderRadius: "10px",
-      color: "black",
-      "& fieldset": {
-        borderColor: "black",
-      },
-      "&:hover fieldset": {
-        borderColor: "var(--light-grey)",
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: "var(--black)",
-      },
-    },
-    "& .MuiInputLabel-root": {
-      color: "var(--brown)",
-    },
-  };
-
   return (
     <Box
       className="container"
@@ -218,21 +209,22 @@ function Login() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        overflow: "auto",
       }}
     >
       <Button
         onClick={() => {
-          setLoginOpen(false);
+          navigate(-1);
           setUserStatus("Login");
         }}
-        style={{
+        sx={{
           position: "absolute",
-          top: "30px",
-          right: "10px",
+          top: { xs: "1.5em", md: "2em" },
+          right: { xs: "1em", md: "3em" },
           boxShadow: "none",
         }}
       >
-        <CloseRoundedIcon style={{ color: "black" }} />
+        <CloseRoundedIcon style={{ color: "var(--black)" }} />
       </Button>
       <LoginPopup
         handleSignupFields={handleSignupFields}
@@ -240,7 +232,6 @@ function Login() {
         userData={userData}
         handleChange={handleChange}
         handleFormToggle={handleFormToggle}
-        cardStyle={cardStyle}
         onboardingStatus={onboardingStatus}
         setOnboardingStatus={setOnboardingStatus}
         allCommunities={allCommunities}
