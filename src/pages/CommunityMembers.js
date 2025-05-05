@@ -280,7 +280,7 @@ function CommunityMembers() {
             <Typography sx={{ color: "var(--light-blue)", fontSize: "1em" }}>
               {community_total_completed_pages}
             </Typography>
-            <Typography sx={{ color: "black", fontSize: ".8em" }}>
+            <Typography sx={{ color: "var(--black)", fontSize: ".8em" }}>
               Pages Learned
             </Typography>
           </Paper>

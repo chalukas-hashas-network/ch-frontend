@@ -352,7 +352,7 @@ function Goal() {
             <Typography
               variant="body2"
               color="text.secondary"
-              style={{ color: "black" }}
+              style={{ color: "var(--black)" }}
             >{`${selectedTractateData.percentage_completed}%`}</Typography>
           </Box>
         </Box>
@@ -376,23 +376,7 @@ function Goal() {
               id="grouped-select"
               label="View Tractate progress"
               sx={{
-                marginRight: "1em",
                 width: "15em",
-                "& .MuiOutlinedInput-root": {
-                  color: "black",
-                  "& fieldset": {
-                    borderColor: "black",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "var(--orange-light)",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "var(--orange)",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  color: "black",
-                },
               }}
             >
               <MenuItem key="total" value="total">
@@ -456,7 +440,6 @@ function Goal() {
           goalEditOption={goalEditOption}
           setGoalEditOption={setGoalEditOption}
           tractates={tractates}
-          // goal={goal}
           user={user}
           setUser={setUser}
           setSelectedTractateData={setSelectedTractateData}

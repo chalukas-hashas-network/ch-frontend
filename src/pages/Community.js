@@ -100,7 +100,7 @@ function Community() {
     <div
       style={{
         marginTop: "3em",
-        color: "black",
+        color: "var(--black)",
         alignItems: "center",
         display: "flex",
         alignContent: "center",
@@ -131,7 +131,7 @@ function Community() {
                 borderRadius: "50px",
               },
               "&:hover fieldset": {
-                borderColor: "black",
+                borderColor: "var(--black)",
               },
               "&.Mui-focused fieldset": {
                 borderColor: "var(--light-grey)",
@@ -177,13 +177,13 @@ function Community() {
               sm: "300px",
             },
             "& .MuiOutlinedInput-root": {
-              color: "black",
+              color: "var(--black)",
               height: "50px",
             },
             "& .MuiInputLabel-root": {
-              color: "black",
+              color: "var(--black)",
               "&.Mui-focused": {
-                color: "black",
+                color: "var(--black)",
               },
             },
             "& .MuiSelect-select": {
@@ -218,7 +218,7 @@ function Community() {
                     borderRadius: "50px",
                   },
                   "&:hover fieldset": {
-                    borderColor: "black",
+                    borderColor: "var(--black)",
                   },
                   "&.Mui-focused fieldset": {
                     borderColor: "var(--light-grey)",
@@ -388,7 +388,7 @@ function Community() {
                     onClick={() => navigate(`/community/${community.id}`)}
                     sx={{
                       boxShadow: "none",
-                      color: "black",
+                      color: "var(--black)",
                       textDecoration: "underline",
                       fontSize: { xs: "10px", sm: "15px" },
                     }}
