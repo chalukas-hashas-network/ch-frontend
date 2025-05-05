@@ -6,18 +6,18 @@ import {
   CloseRoundedIcon,
   Typography,
 } from "../utils/dataExports/muiExports";
-import { useLogin } from "../utils/context/LoginContext";
 import { useUser } from "../utils/context/UserContext";
 import { updateUser } from "../utils/API/UserAPI";
+import { useNavigate } from "react-router-dom";
 
 function JoinCommunityPopup({ setJoinPopup, joinPopup }) {
   const { user, setUser } = useUser();
-  const { setLoginOpen } = useLogin();
+  const navigate = useNavigate()
   const { community } = joinPopup;
 
   useEffect(function checkIfUserIsLoggedIn() {
     if (!user.id) {
-      setLoginOpen(true);
+      navigate("/login")
       setJoinPopup({ isOpen: false, community: null });
     }
   }, []);
