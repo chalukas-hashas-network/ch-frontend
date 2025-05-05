@@ -83,58 +83,42 @@ function Settings() {
     }
   };
 
-  const textFieldStyle = {
-    width: { xs: "75%", md: "50%" },
-    marginBottom: "1em",
-    "& .MuiOutlinedInput-root": {
-      color: "black",
-      "& fieldset": {
-        borderColor: "black",
-      },
-      "&:hover fieldset": {
-        borderColor: "var(--orange-light)",
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: "var(--orange)",
-      },
-    },
-    "& .MuiInputLabel-root": {
-      color: "black",
-    },
-    "& .MuiSelect-select": {
-      color: "var(--orange)",
-    },
-  };
-
   return (
-    <div style={{ paddingTop: "1em" }}>
-      <Link
-        style={{ textDecoration: "none", color: "black", marginLeft: "2em" }}
+    <div
+      style={{
+        paddingTop: "1em",
+        display: "flex",
+        position: "relative",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Button
+        sx={{
+          textDecoration: "none",
+          color: "var(--black)",
+          position: "absolute",
+          top: "1em",
+          left: {xs: "1em", md: "20rem"},
+
+        }}
         onClick={() => navigate(-1)}
       >
         <ArrowBackIcon />
-      </Link>
-      <div
+      </Button>
+      <form
+        onSubmit={submitUpdatedProfile}
         style={{
-          marginTop: "20px",
+          width: "90%",
+          marginTop: "3em",
+          maxWidth: "400px",
+          color: "var(--black)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
         }}
       >
-        <form
-          onSubmit={submitUpdatedProfile}
-          style={{
-            color: "black",
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          {/* <TextField
+        {/* <TextField
             id="username"
             label="Username"
             variant="outlined"
@@ -147,135 +131,88 @@ function Settings() {
               ...textFieldStyle,
             }}
           /> */}
-          <TextField
-            required
-            id="first-name"
-            label="First Name"
-            variant="outlined"
-            type="text"
-            name="first_name"
-            value={userData.first_name}
-            onChange={handleDataChange}
-            sx={{
-              ...textFieldStyle,
-            }}
-          />
-          <TextField
-            required
-            id="last-name"
-            label="Last Name"
-            variant="outlined"
-            type="text"
-            name="last_name"
-            value={userData.last_name}
-            onChange={handleDataChange}
-            sx={{
-              ...textFieldStyle,
-            }}
-          />
-          <TextField
-            required
-            id="email"
-            label="Email"
-            variant="outlined"
-            type="text"
-            name="email"
-            value={userData.email}
-            onChange={handleDataChange}
-            sx={{
-              ...textFieldStyle,
-            }}
-          />
-          <TextField
-            id="phone-number"
-            label="Phone Number"
-            variant="outlined"
-            type="tel"
-            name="phone_number"
-            value={userData.phone_number}
-            onChange={handleDataChange}
-            sx={{
-              ...textFieldStyle,
-            }}
-          />
-          <TextField
-            id="outlined-select-state"
-            select
-            label="State"
-            name="location"
-            value={
-              userData.location === ""
-                ? "Selected state"
-                : capitalizeWord(userData.location)
-            }
-            onChange={handleDataChange}
-            defaultValue={
-              userData.location === ""
-                ? "Selected state"
-                : capitalizeWord(userData.location)
-            }
-            sx={{
-              width: { xs: "75%", md: "50%" },
-              marginBottom: "1em",
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "black",
-                },
-                "&:hover fieldset": {
-                  borderColor: "var(--orange-light)",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "var(--orange)",
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: "black",
-              },
-              "& .MuiSelect-select": {
-                color: "black",
-              },
-            }}
-          >
-            <MenuItem value="">
-              <em>Select State</em>
+        <TextField
+          required
+          id="first-name"
+          label="First Name"
+          variant="outlined"
+          type="text"
+          name="first_name"
+          value={userData.first_name}
+          onChange={handleDataChange}
+        />
+        <TextField
+          required
+          id="last-name"
+          label="Last Name"
+          variant="outlined"
+          type="text"
+          name="last_name"
+          value={userData.last_name}
+          onChange={handleDataChange}
+        />
+        <TextField
+          required
+          id="email"
+          label="Email"
+          variant="outlined"
+          type="text"
+          name="email"
+          value={userData.email}
+          onChange={handleDataChange}
+        />
+        <TextField
+          id="phone-number"
+          label="Phone Number"
+          variant="outlined"
+          type="tel"
+          name="phone_number"
+          value={userData.phone_number}
+          onChange={handleDataChange}
+        />
+        <TextField
+          id="outlined-select-state"
+          select
+          label="State"
+          name="location"
+          value={
+            userData.location === ""
+              ? "Selected state"
+              : capitalizeWord(userData.location)
+          }
+          onChange={handleDataChange}
+          defaultValue={
+            userData.location === ""
+              ? "Selected state"
+              : capitalizeWord(userData.location)
+          }
+        >
+          <MenuItem value="">
+            <em>Select State</em>
+          </MenuItem>
+          {states.map((state, index) => (
+            <MenuItem key={index} value={state}>
+              {state}
             </MenuItem>
-            {states.map((state, index) => (
-              <MenuItem key={index} value={state}>
-                {state}
-              </MenuItem>
-            ))}
-          </TextField>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              boxShadow: "none",
-              backgroundColor: "var(--orange)",
-              width: { xs: "50%", md: "25%" },
-              color: "black",
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "black",
-                },
-                "&:hover fieldset": {
-                  borderColor: "var(--orange-light)",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "var(--orange)",
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: "black",
-              },
-              "& .MuiSelect-select": {
-                color: "var(--orange)",
-              },
-            }}
-          >
-            Update Profile
-          </Button>
-        </form>
-      </div>
+          ))}
+        </TextField>
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{
+            boxShadow: "none",
+            backgroundColor: "var(--brown)",
+            textTransform: "none",
+            borderRadius: "10px",
+            height:"3rem",
+            fontSize:".8em",
+            width:"9rem",
+            marginTop:"3em"
+          }}
+        >
+          Update Profile
+        </Button>
+      </form>
     </div>
   );
 }
