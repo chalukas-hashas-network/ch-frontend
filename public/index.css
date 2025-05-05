@@ -47,13 +47,41 @@
   font-size: 16px;
 }
 
+.custom-textfield {
+  width: 90%;
+  margin-bottom: 1em;
+}
+
+.custom-textfield .MuiOutlinedInput-root {
+  border-radius: 10px;
+}
+
+.custom-textfield .MuiOutlinedInput-root fieldset {
+  border-color: var(--black);
+}
+
+.custom-textfield .MuiOutlinedInput-root:hover fieldset {
+  border-color: var(--dark-grey);
+}
+
+.custom-textfield .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: var(--black);
+}
+
+.custom-textfield .MuiInputLabel-root {
+  color: var(--brown);
+}
+
+.custom-textfield .MuiSelect-select {
+  color: var(--black);
+}
+
 .close-popup:hover {
   background-color: #d32f2f;
 }
 
 #body{
   background-color: #F8F8F8;
-  font-family: 'Cerebri Sans', sans-serif;
 }
 
 :root {
