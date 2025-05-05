@@ -255,7 +255,7 @@ function AdminDashPopup({
                     name: e.target.value,
                   })
                 }
-                style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}
+                sx={{ marginTop: "2em" }}
               />
               <TextField
                 id="outlined-select-state"
@@ -270,27 +270,6 @@ function AdminDashPopup({
                   })
                 }
                 defaultValue="Select state"
-                sx={{
-                  width: "90%",
-                  marginBottom: "1em",
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "black",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "var(--orange-light)",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "var(--orange)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "black",
-                  },
-                  "& .MuiSelect-select": {
-                    color: "black",
-                  },
-                }}
               >
                 {states.map((state, index) => (
                   <MenuItem key={index} value={state}>
@@ -301,7 +280,8 @@ function AdminDashPopup({
               <Button
                 type="submit"
                 variant="contained"
-                style={{
+                sx={{
+                  borderRadius: "10px",
                   backgroundColor: "var(--orange)",
                   width: "90%",
                   textTransform: "none",
@@ -332,7 +312,7 @@ function AdminDashPopup({
                     name: e.target.value,
                   })
                 }
-                style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}
+                sx={{ marginTop: "2em" }}
               />
               <TextField
                 id="outlined-select-state"
@@ -347,27 +327,6 @@ function AdminDashPopup({
                   })
                 }
                 defaultValue="Select state"
-                sx={{
-                  width: "90%",
-                  marginBottom: "1em",
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "black",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "var(--orange-light)",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "var(--orange)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "black",
-                  },
-                  "& .MuiSelect-select": {
-                    color: "black",
-                  },
-                }}
               >
                 {states.map((state, index) => (
                   <MenuItem key={index} value={state}>
@@ -378,7 +337,8 @@ function AdminDashPopup({
               <Button
                 type="submit"
                 variant="contained"
-                style={{
+                sx={{
+                  borderRadius: "10px",
                   backgroundColor: "var(--orange)",
                   width: "90%",
                   textTransform: "none",
@@ -462,7 +422,7 @@ function AdminDashPopup({
               name="first_name"
               value={first_name}
               onChange={handleUserDataChange}
-              style={{ width: "90%", marginBottom: "1em", marginTop: "2em" }}
+              style={{ marginTop: "2em" }}
             />
             <TextField
               id="last-name"
@@ -472,7 +432,6 @@ function AdminDashPopup({
               name="last_name"
               value={last_name}
               onChange={handleUserDataChange}
-              style={{ width: "90%", marginBottom: "1em" }}
             />
             {/* <Typography style={{ marginRight: "1em" }}>Admin Status</Typography>
             <FormControlLabel
@@ -627,180 +586,138 @@ function AdminDashPopup({
           </Box>
         )}
         {popupStatus === "addAdmin" && (
-          <div>
+          <form onSubmit={handleSubmit} style={{ minWidth: "90%" }}>
             <Typography variant="h5" sx={{ marginTop: "1em" }}>
               Add a new Admin
             </Typography>
-            <form onSubmit={handleSubmit}>
-              <TextField
-                id="outlined-select-state"
-                select
-                label="Select Member"
-                value={userData.id || ""}
-                onChange={(e) => {
-                  setUserData({ ...userData, id: e.target.value });
-                }}
-                sx={{
-                  width: "100%",
-                  marginBottom: "1em",
-                  marginTop: "2em",
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "black",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "var(--orange-light)",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "var(--orange)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "black",
-                  },
-                  "& .MuiSelect-select": {
-                    color: "black",
-                  },
-                }}
-              >
-                <MenuItem value="">
-                  <em>Select member</em>
+            <TextField
+              id="outlined-select-member"
+              select
+              label="Select Member"
+              value={userData.id || ""}
+              onChange={(e) => {
+                setUserData({ ...userData, id: e.target.value });
+              }}
+              sx={{
+                marginTop: "2em",
+              }}
+            >
+              <MenuItem value="">
+                <em>Select member</em>
+              </MenuItem>
+              {rows.map((member, index) => (
+                <MenuItem key={index} value={member.id}>
+                  {member.name}
                 </MenuItem>
-                {rows.map((member, index) => (
-                  <MenuItem key={index} value={member.id}>
-                    {member.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <Box
+              ))}
+            </TextField>
+            <Box
+              sx={{
+                position: "absolute",
+                left: "50%",
+                transform: "translateX(-50%)",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                bottom: "3em",
+                gap: 1,
+                width: "100%",
+              }}
+            >
+              <Button
+                variant="contained"
+                onClick={() => setPopupStatus("editCommunityAdmin")}
                 sx={{
-                  position: "absolute",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  bottom: "3em",
-                  gap: 1,
-                  width: "100%",
+                  textTransform: "none",
+                  boxShadow: "none",
+                  backgroundColor: "var(--orange)",
+                  width: "35%",
                 }}
               >
-                <Button
-                  variant="contained"
-                  onClick={() => setPopupStatus("editCommunityAdmin")}
-                  sx={{
-                    textTransform: "none",
-                    boxShadow: "none",
-                    backgroundColor: "var(--orange)",
-                    width: "35%",
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={userData.id === ""}
-                  sx={{
-                    textTransform: "none",
-                    boxShadow: "none",
-                    backgroundColor: "var(--brown)",
-                    width: "40%",
-                  }}
-                >
-                  Add Admin
-                </Button>
-              </Box>
-            </form>
-          </div>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={userData.id === ""}
+                sx={{
+                  textTransform: "none",
+                  boxShadow: "none",
+                  backgroundColor: "var(--brown)",
+                  width: "40%",
+                }}
+              >
+                Add Admin
+              </Button>
+            </Box>
+          </form>
         )}
         {popupStatus === "editCommunityAdmin" && (
-          <div>
+          <form onSubmit={handleSubmit} style={{ minWidth: "90%" }}>
             <Typography variant="h5" sx={{ marginTop: "1em" }}>
               Edit Community Admin
             </Typography>
-            <form onSubmit={handleSubmit}>
-              <TextField
-                id="outlined-select-state"
-                select
-                label="Select Admin"
-                value={userData.id || ""}
-                onChange={(e) => {
-                  setUserData({ ...userData, id: e.target.value });
-                }}
-                sx={{
-                  width: "100%",
-                  marginBottom: "1em",
-                  marginTop: "2em",
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "black",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "var(--orange-light)",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "var(--orange)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "black",
-                  },
-                  "& .MuiSelect-select": {
-                    color: "black",
-                  },
-                }}
-              >
-                <MenuItem value="">
-                  <em>Select admin</em>
+            <TextField
+              id="outlined-select-admin"
+              select
+              label="Select Admin"
+              value={userData.id || ""}
+              onChange={(e) => {
+                setUserData({ ...userData, id: e.target.value });
+              }}
+              sx={{
+                marginTop: "2em",
+              }}
+            >
+              <MenuItem value="">
+                <em>Select admin</em>
+              </MenuItem>
+              {communityAdmins.map((admin, index) => (
+                <MenuItem key={index} value={admin.id}>
+                  {admin.first_name + " " + admin.last_name}
                 </MenuItem>
-                {communityAdmins.map((admin, index) => (
-                  <MenuItem key={index} value={admin.id}>
-                    {admin.first_name + " " + admin.last_name}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <Box
+              ))}
+            </TextField>
+            <Box
+              sx={{
+                position: "absolute",
+                left: "50%",
+                transform: "translateX(-50%)",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                bottom: "3em",
+                gap: 1,
+                width: "100%",
+              }}
+            >
+              <Button
+                variant="contained"
                 sx={{
-                  position: "absolute",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  bottom: "3em",
-                  gap: 1,
-                  width: "100%",
+                  textTransform: "none",
+                  boxShadow: "none",
+                  backgroundColor: "var(--orange)",
+                  width: "40%",
+                }}
+                onClick={() => setPopupStatus("addAdmin")}
+              >
+                Add Admins
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={userData.id === ""}
+                sx={{
+                  textTransform: "none",
+                  boxShadow: "none",
+                  backgroundColor: "var(--brown)",
+                  width: "40%",
                 }}
               >
-                <Button
-                  variant="contained"
-                  sx={{
-                    textTransform: "none",
-                    boxShadow: "none",
-                    backgroundColor: "var(--orange)",
-                    width: "40%",
-                  }}
-                  onClick={() => setPopupStatus("addAdmin")}
-                >
-                  Add Admins
-                </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={userData.id === ""}
-                  sx={{
-                    textTransform: "none",
-                    boxShadow: "none",
-                    backgroundColor: "var(--brown)",
-                    width: "40%",
-                  }}
-                >
-                  Remove Admin
-                </Button>
-              </Box>
-            </form>
-          </div>
+                Remove Admin
+              </Button>
+            </Box>
+          </form>
         )}
       </div>
     </Dialog>
