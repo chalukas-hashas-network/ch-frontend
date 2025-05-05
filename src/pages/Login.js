@@ -8,7 +8,7 @@ import { createUser } from "../utils/API/UserAPI";
 import { getCommunities } from "../utils/API/CommunityAPI";
 import { getAllTractates } from "../utils/API/GoalAPI";
 import { Box, Button, CloseRoundedIcon } from "../utils/dataExports/muiExports";
-import LoginPopup from "./LoginPopup";
+import LoginPopup from "../components/LoginPopup";
 import zIndex from "@mui/material/styles/zIndex";
 
 // TODO: make sure username and email are unique on signup. create logic for inviting admin

@@ -7,7 +7,7 @@ import Goal from "../pages/Goal.js";
 import { useUser } from "./context/UserContext";
 import NotFound from "../pages/NotFound.js";
 import CommunityMembers from "../pages/CommunityMembers.js";
-import Login from "../components/Login.js";
+import Login from "../pages/Login.js";
 
 export default function Routing() {
   const { isAdmin, isAuth } = useUser();
