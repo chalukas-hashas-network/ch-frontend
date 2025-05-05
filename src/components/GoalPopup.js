@@ -258,24 +258,6 @@ function GoalPopup({
                 label="Select Tractate"
                 value={selectedTractate.id || ""}
                 onChange={handleTractateCreateChange}
-                sx={{
-                  width: "90%",
-                  "& .MuiOutlinedInput-root": {
-                    color: "black",
-                    "& fieldset": {
-                      borderColor: "black",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "var(--orange-light)",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "var(--orange)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "black",
-                  },
-                }}
               >
                 <MenuItem disabled key="default" value="">
                   <em>Select a tractate</em>
@@ -300,24 +282,6 @@ function GoalPopup({
                     label="Select Tractate"
                     value={selectedTractate.id || ""}
                     onChange={handleTractateChange}
-                    sx={{
-                      width: "90%",
-                      "& .MuiOutlinedInput-root": {
-                        color: "black",
-                        "& fieldset": {
-                          borderColor: "black",
-                        },
-                        "&:hover fieldset": {
-                          borderColor: "var(--orange-light)",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "var(--orange)",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        color: "black",
-                      },
-                    }}
                   >
                     <MenuItem disabled key="default" value="">
                       <em>Select a tractate</em>
@@ -340,24 +304,6 @@ function GoalPopup({
                         label="Select Page"
                         value={selectedPage}
                         onChange={handlePageChange}
-                        sx={{
-                          width: "90%",
-                          "& .MuiOutlinedInput-root": {
-                            color: "black",
-                            "& fieldset": {
-                              borderColor: "black",
-                            },
-                            "&:hover fieldset": {
-                              borderColor: "var(--orange-light)",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "var(--orange)",
-                            },
-                          },
-                          "& .MuiInputLabel-root": {
-                            color: "black",
-                          },
-                        }}
                       >
                         <MenuItem disabled value="">
                           <em>Select a page</em>
@@ -395,24 +341,6 @@ function GoalPopup({
                     label="Select Page"
                     value={selectedPage}
                     onChange={handlePageChange}
-                    sx={{
-                      width: "90%",
-                      "& .MuiOutlinedInput-root": {
-                        color: "black",
-                        "& fieldset": {
-                          borderColor: "black",
-                        },
-                        "&:hover fieldset": {
-                          borderColor: "var(--orange-light)",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "var(--orange)",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        color: "black",
-                      },
-                    }}
                   >
                     {Array.from(
                       {
