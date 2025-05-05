@@ -287,7 +287,7 @@ function AdminDash() {
         <Link
           style={{
             textDecoration: "none",
-            color: "black",
+            color: "var(--black)",
             marginLeft: "2em",
             position: "relative",
           }}
@@ -536,7 +536,7 @@ function AdminDash() {
                   />
                 </Box>
                 <Box sx={{ minWidth: 35, paddingTop: "12px" }}>
-                  <Typography variant="body2" sx={{ color: "black" }}>
+                  <Typography variant="body2" sx={{ color: "var(--black)" }}>
                     {currentCommunity?.goal}
                   </Typography>
                 </Box>
