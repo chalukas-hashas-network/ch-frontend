@@ -13,7 +13,6 @@ function LoginPopup({
   handleSubmit,
   userData,
   handleChange,
-  cardStyle,
   handleFormToggle,
   onboardingStatus,
   setOnboardingStatus,
@@ -23,159 +22,229 @@ function LoginPopup({
 }) {
   const { userStatus, setUserStatus } = useLogin();
 
+  const reviewFieldStyle = {
+    color: "var(--brown)",
+    backgroundColor: "var(--light-grey)",
+    borderRadius: "15px",
+    padding: "0.5em 1em",
+    minWidth: "11em",
+    maxWidth: "12em",
+    overflow: "auto",
+    whiteSpace: "nowrap",
+  };
+
   return (
     <Box
       className="loginPopup"
       style={{
-        marginTop: "7dvw",
+        marginTop: "1.5rem",
         width: "90dvw",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
       }}
     >
-      {userStatus === "Login" && (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit("Login");
-          }}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "100%",
-            maxWidth: "23rem",
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{ fontFamily: "Nexa, sans-serif", color: "var(--brown)" }}
-          >
-            Login
-          </Typography>
-          <TextField
-            required
-            id="username"
-            label="Username"
-            variant="outlined"
-            type="text"
-            name="username"
-            value={userData.username}
-            onChange={handleChange}
-            sx={{
-              marginTop: "2em",
-              ...cardStyle,
-            }}
-          />
-          <TextField
-            required
-            id="password"
-            label="Password"
-            variant="outlined"
-            type="password"
-            name="password"
-            value={userData.password}
-            onChange={handleChange}
-            sx={{
-              ...cardStyle,
-            }}
-          />
-          <Box
-            sx={{
-              width: "90%",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Button
-              sx={{
-                textTransform: "none",
-                textDecoration: "underline",
-                marginRight: "2em",
-              }}
-            >
-              *forgot password
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{
-                backgroundColor: "var(--brown)",
-                width: "40%",
-                textTransform: "none",
-                boxShadow: "none",
-              }}
-            >
-              Login
-            </Button>
-          </Box>
-        </form>
-      )}
-      {userStatus === "Signup" && (
-        <div
-          className="registerCard"
-          style={{
-            textAlign: "center",
-            width: "100%",
-            maxWidth: "400px",
-          }}
-        >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+          maxWidth: "23rem",
+        }}
+      >
+        {userStatus === "Login" && (
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              handleSubmit("Register user");
+              handleSubmit("Login");
             }}
+            style={{ display: "contents" }}
           >
-            {onboardingStatus === "Register" && (
-              <div>
-                <Typography
-                  variant="h5"
-                  sx={{ fontFamily: "Nexa, sans-serif", color: "var(--brown)" }}
-                >
-                  Register
-                </Typography>
-                <TextField
-                  required
-                  id="email"
-                  label="Email"
-                  variant="outlined"
-                  type="text"
-                  name="email"
-                  value={userData.email}
-                  onChange={handleChange}
-                  sx={{
-                    marginTop: "2em",
-                    ...cardStyle,
-                  }}
-                />
-                <TextField
-                  required
-                  id="password"
-                  label="Password"
-                  variant="outlined"
-                  type="password"
-                  name="password"
-                  value={userData.password}
-                  onChange={handleChange}
-                  sx={{
-                    ...cardStyle,
-                  }}
-                />
-                <TextField
-                  required
-                  id="confirm-password"
-                  label="Confirm Password"
-                  variant="outlined"
-                  type="password"
-                  name="password_confirmation"
-                  value={userData.password_confirmation}
-                  onChange={handleChange}
-                  sx={{
-                    ...cardStyle,
-                  }}
-                />
-                {/* <TextField
+            <Typography
+              variant="h5"
+              sx={{
+                fontFamily: "Nexa, sans-serif",
+                color: "var(--brown)",
+                marginTop: ".7em",
+              }}
+            >
+              Login
+            </Typography>
+            <TextField
+              id="username"
+              label="*Username"
+              variant="outlined"
+              type="text"
+              name="username"
+              value={userData.username}
+              onChange={handleChange}
+              sx={{
+                marginTop: "2em",
+              }}
+            />
+            <TextField
+              id="password"
+              label="*Password"
+              variant="outlined"
+              type="password"
+              name="password"
+              value={userData.password}
+              onChange={handleChange}
+              sx={{ color: "var(--brown)" }}
+            />
+            <Box
+              sx={{
+                width: "90%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button
+                sx={{
+                  textTransform: "none",
+                  textDecoration: "underline",
+                  marginLeft: ".7em",
+                  fontSize: "1em",
+                  color: "var(--light-blue)",
+                  height: "2em",
+                }}
+              >
+                *Forgot Password
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  backgroundColor: "var(--brown)",
+                  boxShadow: "none",
+                  textTransform: "none",
+                  borderRadius: "10px",
+                  height: "3rem",
+                  width: "7rem",
+                  fontSize: ".9em",
+                  marginTop: ".5em",
+                }}
+              >
+                Login
+              </Button>
+            </Box>
+            <Button
+              type="button"
+              onClick={handleFormToggle}
+              sx={{
+                color: "var(--black)",
+                marginTop: "1em",
+                left: "10em",
+                textTransform: "none",
+                textDecoration: "underline",
+              }}
+            >
+              Sign up
+            </Button>
+          </form>
+        )}
+        {userStatus === "Signup" && (
+          <div className="registerCard" style={{ display: "contents" }}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit("Register user");
+              }}
+              style={{ display: "contents" }}
+            >
+              {onboardingStatus === "Register" && (
+                <div style={{ display: "contents" }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontFamily: "Nexa, sans-serif",
+                      color: "var(--brown)",
+                      marginTop: ".7em",
+                    }}
+                  >
+                    Sign Up
+                  </Typography>
+                  <TextField
+                    id="first-name"
+                    label="*First Name"
+                    variant="outlined"
+                    type="text"
+                    name="first_name"
+                    value={userData.first_name}
+                    onChange={handleChange}
+                    sx={{
+                      marginTop: "1em",
+                      marginBottom: ".7em",
+                    }}
+                  />
+                  <TextField
+                    id="last-name"
+                    label="*Last Name"
+                    variant="outlined"
+                    type="text"
+                    name="last_name"
+                    value={userData.last_name}
+                    onChange={handleChange}
+                  />
+                  <TextField
+                    id="phone-number"
+                    label="Contact Number"
+                    variant="outlined"
+                    type="tel"
+                    name="phone_number"
+                    value={userData.phone_number}
+                    onChange={handleChange}
+                    sx={{
+                      marginTop: "1em",
+                      marginBottom: ".2em",
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      color: "var(--brown)",
+                      width: "90%",
+                      fontFamily: "Nexa, sans-serif",
+                      fontSize: ".9rem",
+                    }}
+                  >
+                    *If you would like to use the platform to find a Chavrusa we
+                    highly suggest a Contact Number
+                  </Typography>
+                  <TextField
+                    id="email"
+                    label="*Contact Email"
+                    variant="outlined"
+                    type="text"
+                    name="email"
+                    value={userData.email}
+                    onChange={handleChange}
+                    sx={{
+                      marginTop: "1em",
+                      marginBottom: ".7em",
+                    }}
+                  />
+                  <TextField
+                    id="password"
+                    label="*Password"
+                    variant="outlined"
+                    type="password"
+                    name="password"
+                    value={userData.password}
+                    onChange={handleChange}
+                    sx={{ marginBottom: ".7em" }}
+                  />
+                  <TextField
+                    id="confirm-password"
+                    label="*Confirm Password"
+                    variant="outlined"
+                    type="password"
+                    name="password_confirmation"
+                    value={userData.password_confirmation}
+                    onChange={handleChange}
+                    sx={{}}
+                  />
+                  {/* <TextField
                   id="username"
                   label="Username"
                   variant="outlined"
@@ -188,247 +257,439 @@ function LoginPopup({
                     ...cardStyle,
                   }}
                 /> */}
-                <TextField
-                  required
-                  id="first-name"
-                  label="First Name"
-                  variant="outlined"
-                  type="text"
-                  name="first_name"
-                  value={userData.first_name}
-                  onChange={handleChange}
-                  sx={{
-                    ...cardStyle,
-                  }}
-                />
-                <TextField
-                  required
-                  id="last-name"
-                  label="Last Name"
-                  variant="outlined"
-                  type="text"
-                  name="last_name"
-                  value={userData.last_name}
-                  onChange={handleChange}
-                  sx={{
-                    ...cardStyle,
-                  }}
-                />
-                <TextField
-                  id="phone-number"
-                  label="Phone Number"
-                  variant="outlined"
-                  type="tel"
-                  name="phone_number"
-                  value={userData.phone_number}
-                  onChange={handleChange}
-                  sx={{
-                    ...cardStyle,
-                  }}
-                />
-                <TextField
-                  id="outlined-select-state"
-                  select
-                  label="State"
-                  name="location"
-                  value={userData.location}
-                  onChange={handleChange}
-                  defaultValue="Select state"
-                  sx={{
-                    ...cardStyle,
-                  }}
-                >
-                  {states.map((state, index) => (
-                    <MenuItem key={index} value={state}>
-                      {state}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <Button
-                  onClick={() => handleSignupFields()}
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "var(--brown)",
-                    boxShadow: "none",
-                    textTransform: "none",
-                    width: "40%",
-                    right: "10px",
-                  }}
-                >
-                  Next
-                </Button>
-              </div>
-            )}
-            {onboardingStatus === "selectCommunity" && (
-              <div>
-                <Typography
-                  variant="h5"
-                  sx={{ fontFamily: "Nexa, sans-serif", color: "var(--brown)" }}
-                >
-                  Choose your Community
-                </Typography>
-                <TextField
-                  id="outlined-select-community"
-                  select
-                  label="Community"
-                  name="community"
-                  value={optionalUserData.community || ""}
-                  onChange={handleChange}
-                  defaultValue="Select Community"
-                  sx={{
-                    ...cardStyle,
-                  }}
-                >
-                  <MenuItem disabled key="default" value="">
-                    <em>Select Community</em>
-                  </MenuItem>
-                  {allCommunities.map((community, index) => (
-                    <MenuItem key={index} value={community.id}>
-                      {community.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <Typography variant="body2">
-                  *A community can be selected later
-                </Typography>
-                <Button
-                  onClick={() => setOnboardingStatus("Register")}
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "var(--brown)",
-                    boxShadow: "none",
-                    width: "40%",
-                    right: "10px",
-                    marginRight: "1em",
-                    textTransform: "none",
-                  }}
-                >
-                  Back
-                </Button>
-                <Button
-                  onClick={() => setOnboardingStatus("selectTractate")}
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "var(--brown)",
-                    boxShadow: "none",
-                    width: "40%",
-                    right: "10px",
-                    textTransform: "none",
-                  }}
-                >
-                  Next
-                </Button>
-              </div>
-            )}
-            {onboardingStatus === "selectTractate" && (
-              <div>
-                <Typography
-                  variant="h5"
-                  sx={{ fontFamily: "Nexa, sans-serif", color: "var(--brown)" }}
-                >
-                  Choose your Tractate
-                </Typography>
-                <TextField
-                  id="outlined-select-community"
-                  select
-                  label="Tractate"
-                  name="tractate"
-                  value={optionalUserData.tractate || ""}
-                  onChange={handleChange}
-                  defaultValue="Select Community"
-                  sx={{
-                    ...cardStyle,
-                  }}
-                >
-                  <MenuItem disabled key="default" value="">
-                    <em>Choose a Mesechta</em>
-                  </MenuItem>
-                  {allTractates.map((tractate) => (
-                    <MenuItem key={tractate.id} value={tractate.id}>
-                      {tractate.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <Typography variant="body2">
-                  *A Mesechta can be selected later
-                </Typography>
-                <Button
-                  onClick={() => setOnboardingStatus("selectCommunity")}
-                  variant="contained"
-                  style={{
-                    backgroundColor: "var(--brown)",
-                    boxShadow: "none",
-                    width: "40%",
-                    right: "10px",
-                    marginRight: "1em",
-                    textTransform: "none",
-                  }}
-                >
-                  Back
-                </Button>
-                <Button
-                  onClick={() => setOnboardingStatus("finalize")}
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "var(--brown)",
-                    boxShadow: "none",
-                    width: "40%",
-                    right: "10px",
-                    textTransform: "none",
-                  }}
-                >
-                  Next
-                </Button>
-              </div>
-            )}
-            {onboardingStatus === "finalize" && (
-              <div>
-                <Typography
-                  variant="h5"
-                  sx={{ fontFamily: "Nexa, sans-serif", color: "var(--brown)" }}
-                >
-                  Review & Submit
-                </Typography>
 
-                <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "var(--brown)",
-                    boxShadow: "none",
-                    width: "40%",
-                    right: "10px",
-                    textTransform: "none",
-                  }}
-                >
-                  Finish Up
-                </Button>
-              </div>
-            )}
-          </form>
-        </div>
-      )}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          width: "100%",
-          maxWidth: "23rem",
-        }}
-      >
-        <Button
-          type="button"
-          onClick={handleFormToggle}
-          sx={{
-            color: "var(--black)",
-            marginTop: { md: "1em" },
-            right: "10px",
-            textTransform: "none",
-          }}
-        >
-          {userStatus === "Login" ? "Sign up" : "Log in"}
-        </Button>
-      </Box>
+                  <TextField
+                    id="outlined-select-state"
+                    select
+                    label="State"
+                    name="location"
+                    value={userData.location}
+                    onChange={handleChange}
+                    defaultValue="Select state"
+                    sx={{ marginTop: "1em" }}
+                  >
+                    <MenuItem key="default" value="">
+                      <em>Select State</em>
+                    </MenuItem>
+                    {states.map((state, index) => (
+                      <MenuItem key={index} value={state}>
+                        {state}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <Box
+                    sx={{
+                      width: "90%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Button
+                      type="button"
+                      onClick={handleFormToggle}
+                      sx={{
+                        color: "var(--black)",
+                        textTransform: "none",
+                        marginRight: "2em",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      Already have an account
+                    </Button>
+                    <Button
+                      onClick={() => handleSignupFields()}
+                      variant="contained"
+                      sx={{
+                        backgroundColor: "var(--brown)",
+                        boxShadow: "none",
+                        textTransform: "none",
+                        borderRadius: "10px",
+                        height: "3rem",
+                        width: "7rem",
+                        fontSize: ".8em",
+                        marginTop: ".5em",
+                      }}
+                    >
+                      Next
+                    </Button>
+                  </Box>
+                </div>
+              )}
+              {onboardingStatus === "selectCommunity" && (
+                <div style={{ display: "contents" }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontFamily: "Nexa, sans-serif",
+                      color: "var(--brown)",
+                      marginTop: ".7em",
+                    }}
+                  >
+                    Choose your Community
+                  </Typography>
+                  <TextField
+                    id="outlined-select-community"
+                    select
+                    label="Community List"
+                    name="community"
+                    value={optionalUserData.community.id || ""}
+                    onChange={handleChange}
+                    defaultValue="Select Community"
+                    sx={{ marginTop: "2em" }}
+                  >
+                    <MenuItem key="default" value="">
+                      <em>Select Community</em>
+                    </MenuItem>
+                    {allCommunities.map((community, index) => (
+                      <MenuItem key={index} value={community.id}>
+                        {community.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <Box
+                    sx={{
+                      width: "90%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: "1em",
+                    }}
+                  >
+                    <Button
+                      onClick={() => setOnboardingStatus("Register")}
+                      variant="contained"
+                      sx={{
+                        backgroundColor: "var(--dark-grey)",
+                        color: "var(--brown)",
+                        boxShadow: "none",
+                        textTransform: "none",
+                        borderRadius: "10px",
+                        height: "3rem",
+                        width: "7rem",
+                        fontSize: ".8em",
+                      }}
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      onClick={() => setOnboardingStatus("selectTractate")}
+                      variant="contained"
+                      sx={{
+                        backgroundColor: "var(--brown)",
+                        boxShadow: "none",
+                        textTransform: "none",
+                        borderRadius: "10px",
+                        height: "3rem",
+                        width: "7rem",
+                        fontSize: ".8em",
+                      }}
+                    >
+                      {optionalUserData.community === "" ? "Skip" : "Next"}
+                    </Button>
+                  </Box>
+                </div>
+              )}
+              {onboardingStatus === "selectTractate" && (
+                <div style={{ display: "contents" }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontFamily: "Nexa, sans-serif",
+                      color: "var(--brown)",
+                      marginTop: ".7em",
+                    }}
+                  >
+                    Choose your Tractate
+                  </Typography>
+                  <TextField
+                    id="outlined-select-community"
+                    select
+                    label="Tractate"
+                    name="tractate"
+                    value={optionalUserData.tractate.id || ""}
+                    onChange={handleChange}
+                    defaultValue="Select Community"
+                    sx={{ marginTop: "2em" }}
+                  >
+                    <MenuItem key="default" value="">
+                      <em>Choose a Mesechta</em>
+                    </MenuItem>
+                    {allTractates.map((tractate) => (
+                      <MenuItem key={tractate.id} value={tractate.id}>
+                        {tractate.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <Box
+                    sx={{
+                      width: "90%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: "1em",
+                    }}
+                  >
+                    <Button
+                      onClick={() => setOnboardingStatus("selectCommunity")}
+                      variant="contained"
+                      style={{
+                        backgroundColor: "var(--dark-grey)",
+                        color: "var(--brown)",
+                        boxShadow: "none",
+                        textTransform: "none",
+                        borderRadius: "10px",
+                        height: "3rem",
+                        width: "7rem",
+                        fontSize: ".8em",
+                      }}
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      onClick={() => setOnboardingStatus("finalize")}
+                      variant="contained"
+                      sx={{
+                        backgroundColor: "var(--brown)",
+                        boxShadow: "none",
+                        textTransform: "none",
+                        borderRadius: "10px",
+                        height: "3rem",
+                        width: "7rem",
+                        fontSize: ".8em",
+                      }}
+                    >
+                      {optionalUserData.tractate === "" ? "Skip" : "Next"}
+                    </Button>
+                  </Box>
+                </div>
+              )}
+              {onboardingStatus === "finalize" && (
+                <div style={{ display: "contents" }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontFamily: "Nexa, sans-serif",
+                      color: "var(--brown)",
+                      marginTop: ".7em",
+                    }}
+                  >
+                    Review your Information
+                  </Typography>
+                  <Box
+                    sx={{
+                      marginTop: "3em",
+                      border: "1px solid var(--brown)",
+                      borderRadius: "15px",
+                      padding: "2em",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "1em",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box sx={{ display: "flex" }}>
+                        <Box sx={{ width: "120px" }}>
+                          <Typography
+                            sx={{
+                              color: "var(--brown)",
+                              fontSize: "1.1em",
+                              fontWeight: "500",
+                            }}
+                          >
+                            Name
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography
+                            sx={{
+                              ...reviewFieldStyle,
+                            }}
+                          >
+                            {userData.first_name + " " + userData.last_name}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box sx={{ display: "flex" }}>
+                        <Box sx={{ width: "120px" }}>
+                          <Typography
+                            sx={{
+                              color: "var(--brown)",
+                              fontSize: "1.1em",
+                              fontWeight: "500",
+                            }}
+                          >
+                            Number
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography
+                            sx={{
+                              ...reviewFieldStyle,
+                            }}
+                          >
+                            {userData.phone_number || "—"}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box sx={{ display: "flex" }}>
+                        <Box sx={{ width: "120px" }}>
+                          <Typography
+                            sx={{
+                              color: "var(--brown)",
+                              fontSize: "1.1em",
+                              fontWeight: "500",
+                            }}
+                          >
+                            Email
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography
+                            sx={{
+                              ...reviewFieldStyle,
+                            }}
+                          >
+                            {userData.email}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box sx={{ display: "flex" }}>
+                        <Box sx={{ width: "120px" }}>
+                          <Typography
+                            sx={{
+                              color: "var(--brown)",
+                              fontSize: "1.1em",
+                              fontWeight: "500",
+                            }}
+                          >
+                            State
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography
+                            sx={{
+                              ...reviewFieldStyle,
+                            }}
+                          >
+                            {userData.location || "—"}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box sx={{ display: "flex" }}>
+                        <Box sx={{ width: "120px" }}>
+                          <Typography
+                            sx={{
+                              color: "var(--brown)",
+                              fontSize: "1.1em",
+                              fontWeight: "500",
+                            }}
+                          >
+                            Masechta
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography
+                            sx={{
+                              ...reviewFieldStyle,
+                            }}
+                          >
+                            {optionalUserData.tractate.name || "—"}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box sx={{ display: "flex" }}>
+                        <Box sx={{ width: "120px" }}>
+                          <Typography
+                            sx={{
+                              color: "var(--brown)",
+                              fontSize: "1.1em",
+                              fontWeight: "500",
+                            }}
+                          >
+                            Community
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography
+                            sx={{
+                              ...reviewFieldStyle,
+                            }}
+                          >
+                            {optionalUserData.community.name || "—"}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                    {userData.profileImage && (
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          bottom: "1.5em",
+                          right: "2em",
+                        }}
+                      >
+                        <Box
+                          component="img"
+                          src={userData.profileImage}
+                          alt="Profile"
+                          sx={{
+                            width: 70,
+                            height: 70,
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </Box>
+                    )}
+                  </Box>
+                  <Box
+                    sx={{
+                      width: "90%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: "2em",
+                    }}
+                  >
+                    <Button
+                      onClick={() => setOnboardingStatus("selectTractate")}
+                      variant="contained"
+                      style={{
+                        backgroundColor: "var(--dark-grey)",
+                        color: "var(--brown)",
+                        boxShadow: "none",
+                        textTransform: "none",
+                        borderRadius: "15px",
+                        height: "3rem",
+                        width: "7rem",
+                        fontSize: ".8em",
+                      }}
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      sx={{
+                        backgroundColor: "var(--brown)",
+                        boxShadow: "none",
+                        textTransform: "none",
+                        borderRadius: "10px",
+                        height: "3rem",
+                        width: "7rem",
+                        fontSize: ".8em",
+                      }}
+                    >
+                      Confirm
+                    </Button>
+                  </Box>
+                </div>
+              )}
+            </form>
+          </div>
+        )}
+      </div>
     </Box>
   );
 }
