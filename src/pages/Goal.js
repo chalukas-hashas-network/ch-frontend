@@ -1,13 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GoalPopup from "../components/GoalPopup";
 import { useUser } from "../utils/context/UserContext";
 import { createAnnualGoal, getAllTractates } from "../utils/API/GoalAPI";
 import {
   Box,
-  LinearProgress,
   Typography,
-  ArrowBackIcon,
   Paper,
   MenuItem,
   TextField,
@@ -15,6 +13,7 @@ import {
   SpeedDialIcon,
   Button,
   AccountCircleRoundedIcon,
+  KeyboardArrowDownRoundedIcon,
 } from "../utils/dataExports/muiExports";
 
 /*
@@ -119,15 +118,24 @@ function Goal() {
   };
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         marginTop: "2em",
+        width: "100%",
       }}
     >
-      <Box className="profileDisplays" sx={{ display: "flex", gap: "1em" }}>
+      <Box
+        className="profileDisplays"
+        sx={{
+          display: "flex",
+          gap: "1em",
+          width: "100%",
+          justifyContent: "center",
+        }}
+      >
         <Button
           variant="contained"
           disabled
@@ -136,12 +144,11 @@ function Goal() {
               backgroundColor: "var(--orange)",
               color: "white",
             },
-            borderRadius: "13px",
+            borderRadius: "15px",
             boxShadow: "none",
             fontSize: "0.7em",
-            fontWeight: "300",
-            width: "179px",
-            height: "35px",
+            height: "2.5rem",
+            width: "11rem",
             textTransform: "none",
           }}
         >
@@ -150,13 +157,12 @@ function Goal() {
         <Button
           variant="contained"
           sx={{
-            borderRadius: "13px",
+            borderRadius: "15px",
             boxShadow: "none",
             backgroundColor: "var(--black)",
-            fontWeight: "300",
             fontSize: "0.7em",
-            width: "179px",
-            height: "35px",
+            height: "2.5rem",
+            width: "11rem",
             textTransform: "none",
           }}
           onClick={() => navigate("/goal/settings")}
@@ -171,9 +177,11 @@ function Goal() {
         className="pagesAndTractateDisplays"
         sx={{
           display: "flex",
+          justifyContent: "center",
           gap: "1em",
           alignItems: "stretch",
           marginTop: "20px",
+          width: "100%",
         }}
       >
         <Card
@@ -185,19 +193,18 @@ function Goal() {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            border: "2px solid var(--light-grey)",
-            borderRadius: "16px",
-            paddingTop: "30px",
-            paddingBottom: "10px",
+            borderRadius: "15px",
+            paddingTop: "2em",
+            paddingBottom: "1em",
             position: "relative",
-            width: "175px",
+            width: "11rem",
           }}
         >
           <Typography
             variant="subtitle2"
-            sx={{ position: "absolute", top: "10px" }}
+            sx={{ position: "absolute", top: "10px", fontSize: ".9em" }}
           >
-            Your Mesechtas:
+            Your Mesechtas
           </Typography>
           <Box
             sx={{
@@ -213,10 +220,10 @@ function Goal() {
                 sx={{
                   display: "grid",
                   gridTemplateColumns: "repeat(2, 1fr)",
-                  gap: "4px",
-                  width: "100%",
-                  padding: "0 7px",
-                  placeItems: "center",
+                  gap: ".4em",
+                  width: "95%",
+                  // padding: "0 7px",
+                  // placeItems: "center",
                 }}
               >
                 {user.goal.goal_tractates.map((tractate) => (
@@ -226,13 +233,16 @@ function Goal() {
                     sx={{
                       border: "1.5px solid var(--light-grey)",
                       borderRadius: "20px",
-                      padding: "3px 7px",
                       textAlign: "center",
                       overflow: "hidden",
-                      width: "60px",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      padding: ".2rem .2rem",
+                      minWidth: "6em",
+                      maxWidth: "8em",
+                      height: "2.2em",
+                      fontSize: ".6em",
                     }}
                   >
                     {tractate.tractate}
@@ -245,7 +255,16 @@ function Goal() {
                 sx={{
                   border: "1.5px solid var(--light-grey)",
                   borderRadius: "20px",
-                  padding: "3px 7px",
+                  textAlign: "center",
+                  overflow: "hidden",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: ".2rem .2rem",
+                  minWidth: "6em",
+                  maxWidth: "8em",
+                  height: "2.2em",
+                  fontSize: ".6em",
                 }}
               >
                 {user?.goal?.goal_tractates?.[0]?.tractate ||
@@ -263,19 +282,18 @@ function Goal() {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            border: "2px solid var(--light-grey)",
-            borderRadius: "16px",
-            paddingTop: "30px",
-            paddingBottom: "10px",
+            borderRadius: "15px",
+            paddingTop: "2em",
+            paddingBottom: "1em",
             position: "relative",
-            width: "175px",
+            width: "11rem",
           }}
         >
           <Typography
             variant="subtitle2"
-            sx={{ position: "absolute", top: "10px" }}
+            sx={{ position: "absolute", top: "10px", fontSize: ".9em" }}
           >
-            Pages completed:
+            Pages completed
           </Typography>
           <Box
             sx={{
@@ -291,7 +309,8 @@ function Goal() {
                 color: "var(--light-blue)",
                 border: "1.5px solid var(--light-grey)",
                 borderRadius: "20px",
-                padding: "4px 8px",
+                padding: ".2em 3.5em",
+                fontSize: ".65em",
               }}
             >
               {selectedTractateData.tractate === "total"
@@ -313,57 +332,74 @@ function Goal() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          width: "90%",
+          width: "95%",
+          maxWidth: "23rem",
           marginTop: "20px",
         }}
       >
-        <Typography sx={{ marginTop: ".5em" }}>Your Progress </Typography>
+        <Typography sx={{ marginTop: "1em" }}>Your Progress Bar</Typography>
         <Box
           className="progressDisplayContainer"
           sx={{
             display: "flex",
             alignItems: "center",
-            margin: "10px",
+            marginTop: "1em",
             width: "90%",
+            justifyContent: "center",
           }}
         >
-          <Box className="progressBar" sx={{ width: "100%", mr: 1 }}>
-            <LinearProgress
-              variant="determinate"
-              value={Number(selectedTractateData.percentage_completed)}
+          <Box
+            className="progressBar"
+            sx={{
+              width: "90%",
+              bgcolor: "var(--light-grey)",
+              borderRadius: "20px",
+              height: "2em",
+              display: "flex",
+              alignItems: "center",
+              overflow: "visible",
+            }}
+          >
+            <Box
               sx={{
-                margin: "10px",
-                height: "20px",
-                backgroundColor: "var(--light-grey)",
-                borderRadius: "16px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                "& .MuiLinearProgress-bar": {
-                  borderRadius: "16px",
-                  height: "16px",
-                  margin: "auto",
-                  backgroundColor: "var(--light-blue)",
-                },
+                height: "1.3em",
+                width: `${Number(selectedTractateData.percentage_completed)}%`,
+                bgcolor: "var(--light-blue)",
+                borderRadius: "20px",
+                marginLeft: "15px",
               }}
             />
-          </Box>
-          <Box className="progressPercentage" sx={{ minWidth: 35 }}>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              style={{ color: "var(--black)" }}
-            >{`${selectedTractateData.percentage_completed}%`}</Typography>
+            <Box
+              sx={{
+                left: `${Number(selectedTractateData.percentage_completed)}%`,
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                marginRight: "15px",
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "var(--light-blue)",
+                  fontSize: ".8em",
+                  paddingLeft: "5px",
+                }}
+              >
+                {`${selectedTractateData.percentage_completed}%`}
+              </Typography>
+            </Box>
           </Box>
         </Box>
         <Box
           className="tractateGoalDropdown"
           sx={{
             alignItems: "center",
-            marginBottom: "1em",
+            marginBottom: ".5em",
+            marginTop: ".8em",
             display: "flex",
             justifyContent: "center",
-            width: "100%",
+            width: "17.5em",
             flexDirection: { xs: "column", md: "row" },
           }}
         >
@@ -376,7 +412,9 @@ function Goal() {
               id="grouped-select"
               label="View Tractate progress"
               sx={{
-                width: "15em",
+                "& .MuiInputBase-root": {
+                  height: "3em",
+                },
               }}
             >
               <MenuItem key="total" value="total">
@@ -397,10 +435,10 @@ function Goal() {
             boxShadow: "none",
             backgroundColor: "var(--black)",
             fontWeight: "300",
-            fontSize: "0.7em",
-            minWidth: "160px",
-            height: "32px",
-            marginBottom: "2em",
+            fontSize: "0.8em",
+            width: "20em",
+            height: "3em",
+            marginBottom: ".5em",
             textTransform: "none",
           }}
           onClick={() => {
@@ -411,28 +449,67 @@ function Goal() {
           Update Progress
           <SpeedDialIcon sx={{ fontSize: "1.2rem", marginLeft: ".2em" }} />
         </Button>
+        <Typography
+          sx={{ fontSize: ".7em", marginBottom: "2em", width: "23em" }}
+        >
+          *Updating your progress helps the community and yourself track where
+          you're holding.
+        </Typography>
       </Paper>
-      <Button
-        variant="contained"
+      <Box
         sx={{
-          marginTop: "3em",
-          borderRadius: "13px",
-          boxShadow: "none",
-          backgroundColor: "var(--black)",
-          fontWeight: "300",
-          fontSize: "0.7em",
-          minWidth: "160px",
-          height: "32px",
-          textTransform: "none",
-        }}
-        onClick={() => {
-          setOpenGoal(true);
-          setGoalEditOption("create-goal");
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          alignItems: "center",
+          marginTop: "1em",
         }}
       >
-        Select a Mesechta
-        <SpeedDialIcon sx={{ fontSize: "1.2rem", marginLeft: ".2em" }} />
-      </Button>
+        <Button
+          variant="contained"
+          sx={{
+            borderRadius: "13px",
+            boxShadow: "none",
+            backgroundColor: "white",
+            color: "var(--black)",
+            fontWeight: "300",
+            fontSize: "0.8em",
+            width: "95%",
+            maxWidth: "23rem",
+            height: "3em",
+            textTransform: "none",
+            justifyContent: "space-between",
+          }}
+          onClick={() => {
+            setOpenGoal(true);
+            setGoalEditOption("create-goal");
+          }}
+        >
+          Select {user?.goal?.goal_tractates?.length > 1 ? "another" : "a"}{" "}
+          Mesechta
+          <KeyboardArrowDownRoundedIcon
+            sx={{ fontSize: "2rem", marginLeft: ".2em" }}
+          />
+        </Button>
+        <Button
+          variant="contained"
+          sx={{
+            marginTop: "1em",
+            borderRadius: "13px",
+            boxShadow: "none",
+            backgroundColor: "var(--black)",
+            fontWeight: "300",
+            fontSize: "0.8em",
+            width: "95%",
+            maxWidth: "23rem",
+            height: "3em",
+            textTransform: "none",
+          }}
+          onClick={() => navigate("/goal/settings")}
+        >
+          My Profile Settings
+        </Button>
+      </Box>
       <Button onClick={() => handleLogout()}>Log out</Button>
       {openGoal && (
         <GoalPopup
@@ -445,7 +522,7 @@ function Goal() {
           setSelectedTractateData={setSelectedTractateData}
         />
       )}
-    </div>
+    </Box>
   );
 }
 
