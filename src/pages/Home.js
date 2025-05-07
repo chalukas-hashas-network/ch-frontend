@@ -1,10 +1,6 @@
-import {
-  Box,
-  Typography,
-  Button,
-} from "../utils/dataExports/muiExports";
+import { Box, Typography, Button } from "../utils/dataExports/muiExports";
 import { useNavigate } from "react-router-dom";
-import {  useLogin } from "../utils/context/LoginContext";
+import { useLogin } from "../utils/context/LoginContext";
 import { useUser } from "../utils/context/UserContext";
 import Logo from "../components/Logo";
 import Nav from "../components/Nav";
@@ -34,16 +30,22 @@ function Home() {
       >
         <Box sx={{ color: "var(--brown)", marginBottom: "2rem" }}>
           <Typography
+            noWrap
             sx={{
-              fontFamily: "Nexa, sans-serif",
               fontSize: "2rem",
-              height: "35px",
+              fontFamily: "Nexa, sans-serif",
+              whiteSpace: "nowrap",
             }}
           >
             United through learning
           </Typography>
           <Typography
-            sx={{ fontFamily: "Nexa, sans-serif", fontSize: "2.1rem" }}
+            noWrap
+            sx={{
+              fontSize: "2rem",
+              fontFamily: "Nexa, sans-serif",
+              whiteSpace: "nowrap",
+            }}
           >
             Chalukas Hashas
           </Typography>
@@ -111,7 +113,7 @@ function Home() {
                   textTransform: "none",
                 }}
                 onClick={() => {
-                  navigate("/login")
+                  navigate("/login");
                   setUserStatus("Signup");
                 }}
               >
@@ -132,7 +134,7 @@ function Home() {
                   marginLeft: "15px",
                 }}
                 onClick={() => {
-                  navigate("/login")
+                  navigate("/login");
                   setUserStatus("Login");
                 }}
               >
