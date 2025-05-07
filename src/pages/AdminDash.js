@@ -11,7 +11,6 @@ import {
   Button,
   TextField,
   Box,
-  LinearProgress,
   Typography,
   ArrowBackIcon,
   ListItemButton,
@@ -282,7 +281,7 @@ function AdminDash() {
   };
 
   return (
-    <div style={{ marginTop: "2em"}}>
+    <div style={{ marginTop: "2em" }}>
       {isSuperAdmin && adminStatus === "admin" && (
         <Link
           style={{
@@ -508,37 +507,60 @@ function AdminDash() {
                   justifyContent: "center",
                   margin: "10px",
                   alignItems: "center",
+                  width: "90%",
                 }}
               >
-                <Box sx={{ width: { xs: "30dvw", md: "20dvw" }, mr: 1 }}>
+                <Box sx={{ width: "90%" }}>
                   <Typography variant="subtitle2" sx={{ paddingLeft: "14px" }}>
                     Goal Progress
                   </Typography>
-                  <LinearProgress
-                    variant="determinate"
-                    value={parseFloat(currentCommunity?.goal?.replace("%", ""))}
+
+                  <Box
+                    className="progressBar"
                     sx={{
-                      margin: "10px",
-                      marginTop: "0px",
-                      height: "20px",
-                      backgroundColor: "var(--light-grey)",
-                      borderRadius: "16px",
+                      width: "100%",
+                      bgcolor: "var(--light-grey)",
+                      borderRadius: "20px",
+                      height: "40px",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center",
-                      "& .MuiLinearProgress-bar": {
-                        borderRadius: "16px",
-                        height: "16px",
-                        margin: "auto",
-                        backgroundColor: "var(--light-blue)",
-                      },
+                      overflow: "visible",
                     }}
-                  />
-                </Box>
-                <Box sx={{ minWidth: 35, paddingTop: "12px" }}>
-                  <Typography variant="body2" sx={{ color: "var(--black)" }}>
-                    {currentCommunity?.goal}
-                  </Typography>
+                  >
+                    <Box
+                      sx={{
+                        height: "20px",
+                        width: `${parseFloat(
+                          currentCommunity?.goal?.replace("%", "")
+                        )}%`,
+                        bgcolor: "var(--light-blue)",
+                        borderRadius: "20px",
+                        marginLeft: "15px",
+                      }}
+                    />
+                    <Box
+                      sx={{
+                        left: `${parseFloat(
+                          currentCommunity?.goal?.replace("%", "")
+                        )}%`,
+                        height: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        marginRight: "15px",
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "var(--light-blue)",
+                          fontSize: ".8em",
+                          paddingLeft: "5px",
+                        }}
+                      >
+                        {currentCommunity?.goal}
+                      </Typography>
+                    </Box>
+                  </Box>
                 </Box>
               </Box>
             </Box>
