@@ -13,6 +13,7 @@ import { useEffect, useState, Fragment } from "react";
 import { getCommunities } from "../utils/API/CommunityAPI";
 import JoinCommunityPopup from "../components/JoinCommunityPopup";
 import { useParams, useNavigate } from "react-router-dom";
+import DataBoxesDisplay from "../components/DataBoxesDisplay";
 
 function CommunityMembers() {
   const [joinPopup, setJoinPopup] = useState({
@@ -71,12 +72,20 @@ function CommunityMembers() {
   }
 
   return (
-    <div style={{ marginTop: "2em" }}>
+    <Box
+      sx={{
+        paddingTop: "1em",
+        display: "flex",
+        position: "relative",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <Button
         sx={{
           color: "var(--black)",
           position: "absolute",
-          left: "2em",
+          left: { xs: "2em", md: "15em" },
         }}
         onClick={() => {
           navigate("/community");
@@ -84,28 +93,17 @@ function CommunityMembers() {
       >
         <ArrowBackIcon />
       </Button>
-      <div
+      <Box
         style={{
+          width: "90%",
+          marginTop: "2em",
+          maxWidth: "400px",
+          color: "var(--black)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <Button
-          variant="contained"
-          sx={{
-            boxShadow: "none",
-            textTransform: "none",
-            backgroundColor: "var(--orange)",
-            borderRadius: "20px",
-            width: { xs: "40dvw", md: "200px" },
-          }}
-          onClick={() =>
-            setJoinPopup({ isOpen: true, community: communityData })
-          }
-        >
-          Join
-        </Button>
         <Paper
           elevation={0}
           sx={{
@@ -113,122 +111,185 @@ function CommunityMembers() {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            width: "90%",
+            width: "95%",
             maxWidth: 450,
             marginTop: "10px",
-            border: "2px solid lightgrey",
+            bgcolor: "white",
             borderRadius: "16px",
-            padding: "15px",
           }}
         >
           <Typography
             variant="h6"
             sx={{ paddingTop: "1em", color: "var(--brown)" }}
           >
-            {name} Community
+            {capitalizeWord(name)} Community
           </Typography>
-          <Typography variant="body2" sx={{ color: "var(--orange)" }}>
+          <Button
+            sx={{
+              color: "var(--light-blue)",
+              textDecoration: "underline",
+              textTransform: "none",
+              fontSize: ".7em",
+              paddingTop: "0px",
+            }}
+          >
             {members.length > 0
               ? `${members.length} Community Members`
               : "No Members Yet"}{" "}
-          </Typography>
+          </Button>
           <Slider
             disabled
             value={percentageCompleted}
             aria-label="Disabled slider"
             sx={{
-              width: "90%",
+              width: "75%",
               "& .MuiSlider-thumb": {
                 color: "var(--light-blue)",
-                height: "12px",
-                width: "12px",
+                height: ".9em",
+                width: ".9em",
               },
               "& .MuiSlider-track": {
                 color: "var(--light-blue)",
+                height: ".4em",
               },
               "& .MuiSlider-rail": {
-                color: "var(--light-grey)",
+                color: "var(--dark-grey)",
+                height: ".5em",
               },
             }}
           />
           <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ color: "var(--light-blue)", marginBottom: "1em" }}
+            sx={{
+              color: "var(--light-blue)",
+              fontSize: ".9em",
+              marginBottom: "1em",
+            }}
           >
             {percentageCompleted ? `${percentageCompleted.toFixed(2)}%` : "0%"}
           </Typography>
         </Paper>
         <Box
+          sx={{
+            marginTop: "1em",
+            marginBottom: "1em",
+            width: "95%",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "var(--orange)",
+              boxShadow: "none",
+              textTransform: "none",
+              borderRadius: "15px",
+              height: "2.5rem",
+              width: "7rem",
+              fontSize: ".85em",
+            }}
+            onClick={() =>
+              setJoinPopup({ isOpen: true, community: communityData })
+            }
+          >
+            Join
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "var(--brown)",
+              boxShadow: "none",
+              textTransform: "none",
+              borderRadius: "15px",
+              height: "2.5rem",
+              width: "14rem",
+              fontSize: ".85em",
+            }}
+            onClick={() =>
+              // TODO: set up logic
+              alert("This feature isn't set up yet")
+            }
+          >
+            View Community Chart
+          </Button>
+        </Box>
+        <Box
           className="members"
           sx={{
-            marginTop: "3em",
-            backgroundColor: "var(--light-grey)",
-            borderRadius: "16px",
+            backgroundColor: "var(--dark-grey)",
+            borderRadius: "20px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-start",
             alignItems: "center",
-            width: "90%",
+            width: "100%",
             maxWidth: 450,
             maxHeight: 400,
-            padding: "15px",
+            minHeight: 100,
+            paddingTop: "15px",
+            paddingBottom: "15px",
             position: "relative",
           }}
         >
-          <Box
-            sx={{
-              position: "absolute",
-              bgcolor: "var(--light-grey)",
-              height: "100px",
-              width: "200px",
-              top: "-35px",
-              borderRadius: "15px",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Typography variant="body1" sx={{ lineHeight: 3 }}>
-              Members
-            </Typography>
-          </Box>
           <List
             sx={{
-              width: "100%",
+              width: "95%",
               overflowY: "auto",
-              maxHeight: "100%",
               gap: 1,
               bgcolor: "white",
-              borderRadius: "16px",
+              borderRadius: "20px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
             }}
           >
+            <Button
+              sx={{
+                color: "var(--light-blue)",
+                textDecoration: "underline",
+                textTransform: "none",
+                fontSize: ".7em",
+                paddingTop: "0px",
+              }}
+            >
+              {members.length > 0
+                ? `${members.length} Community Members`
+                : "No Members Yet"}{" "}
+            </Button>
             {members?.length > 0 ? (
               members?.map((member, index) => (
                 <ListItem
                   alignItems="flex-start"
                   key={index}
                   sx={{
-                    backgroundColor: "#f5f5f5",
-                    borderRadius: "55px",
-                    marginBottom: "5px",
+                    backgroundColor: "var(--light-grey)",
+                    borderRadius: "20px",
                     maxWidth: "95%",
-                    height: "60px",
+                    height: "3.5rem",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
                   }}
                 >
                   <ListItemText
+                    slotProps={{
+                      primary: {
+                        sx: {
+                          fontSize: ".9rem",
+                        },
+                      },
+                    }}
                     primary={`${capitalizeWord(
                       member.first_name
                     )} ${capitalizeWord(member.last_name)}`}
                     secondary={
                       <Fragment>
-                        <Typography variant="caption">
-                          With {capitalizeWord(member.community)}
+                        <Typography sx={{fontSize: ".45rem", color: "var(--light-blue)"}}>
+                          {/* //TODO: set up logic for time {postedTime} */}
+                          26 Minutes ago
+                        </Typography>
+                        <Typography sx={{fontSize: ".55rem", color: "var(--black)"}}>
+                          With {capitalizeWord(name)}
                         </Typography>
                       </Fragment>
                     }
@@ -239,60 +300,82 @@ function CommunityMembers() {
               <ListItem
                 alignItems="flex-start"
                 sx={{
-                  backgroundColor: "white",
-                  borderRadius: "16px",
-                  marginBottom: "5px",
+                  backgroundColor: "var(--light-grey)",
+                  borderRadius: "20px",
+                  maxWidth: "95%",
+                  height: "3.5rem",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
                 }}
               >
-                <ListItemText primary="No members in this community yet" />
+                <ListItemText
+                  slotProps={{
+                    primary: {
+                      sx: {
+                        fontSize: "1rem",
+                      },
+                    },
+                  }}
+                  primary="No members to display yet"
+                />
               </ListItem>
             )}
           </List>
         </Box>
-        <Paper
-          elevation={0}
-          className="outerContainer"
+        <Box
           sx={{
-            backgroundColor: "var(--light-grey)",
-            width: "150px",
-            height: "100px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
             marginTop: "1em",
-            borderRadius: "16px",
+            marginBottom: "1em",
+            width: "95%",
+            display: "flex",
+            justifyContent: "space-between",
           }}
         >
-          <Paper
-            elevation={0}
-            className="innerContainer"
+          <Button
+          onClick={() => navigate("/events")}
+            variant="contained"
             sx={{
-              backgroundColor: "white",
-              width: "90%",
-              height: "90%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-              borderRadius: "16px",
+              backgroundColor: "var(--orange)",
+              boxShadow: "none",
+              textTransform: "none",
+              borderRadius: "15px",
+              height: "2.5rem",
+              width: "7rem",
+              fontSize: ".8em",
             }}
           >
-            <Typography sx={{ color: "var(--light-blue)", fontSize: "1em" }}>
-              {community_total_completed_pages}
-            </Typography>
-            <Typography sx={{ color: "var(--black)", fontSize: ".8em" }}>
-              Pages Learned
-            </Typography>
-          </Paper>
-        </Paper>
+            View events
+          </Button>
+          <Button
+          onClick={() => 
+            // TODO: set up logic
+            // ? only for users logged in? trigger login?
+            navigate("/chavrusas")
+          }
+            variant="contained"
+            sx={{
+              backgroundColor: "var(--brown)",
+              boxShadow: "none",
+              textTransform: "none",
+              borderRadius: "15px",
+              height: "2.5rem",
+              width: "14rem",
+              fontSize: ".8em",
+            }}
+          >
+            Scout Chavrusas
+          </Button>
+        </Box>
+        <DataBoxesDisplay pages={community_total_completed_pages} members={members.length}/>
         {joinPopup.isOpen && (
           <JoinCommunityPopup
             setJoinPopup={setJoinPopup}
             joinPopup={joinPopup}
           />
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 
