@@ -101,6 +101,7 @@ function LoginPopup({
               }}
             >
               <Button
+              onClick={() => setUserStatus("ForgotPass")}
                 sx={{
                   textTransform: "none",
                   textDecoration: "underline",
@@ -142,6 +143,87 @@ function LoginPopup({
             >
               Sign up
             </Button>
+          </form>
+        )}
+        {userStatus === "ForgotPass" && (
+          // TODO: create forgot password logic
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit("ForgotPass");
+            }}
+            style={{ display: "contents" }}
+          >
+            <Typography
+              variant="h5"
+              sx={{
+                fontFamily: "Nexa, sans-serif",
+                color: "var(--brown)",
+                marginTop: ".7em",
+              }}
+            >
+              Forgot Password
+            </Typography>
+            <TextField
+              id="email"
+              label="*Email"
+              variant="outlined"
+              type="text"
+              name="email"
+              value={userData.email}
+              onChange={handleChange}
+              sx={{
+                marginTop: "2em",
+              }}
+            />
+            <TextField
+              id="password"
+              label="*Password"
+              variant="outlined"
+              type="password"
+              name="password"
+              value={userData.password}
+              onChange={handleChange}
+              sx={{ color: "var(--brown)" }}
+            />
+            <Box
+              sx={{
+                width: "90%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button
+                type="submit"
+                variant="contained"
+                onClick={() => setUserStatus("Login")}
+                sx={{
+                  backgroundColor: "var(--dark-grey)",
+                  color: "var(--brown)",
+                  boxShadow: "none",
+                  textTransform: "none",
+                  borderRadius: "10px",
+                  height: "3rem",
+                  width: "7rem",
+                  fontSize: ".9em",
+                  marginTop: ".5em",
+                }}
+              >
+                Back
+              </Button>
+              <Button
+                sx={{
+                  textTransform: "none",
+                  textDecoration: "underline",
+                  marginRight: ".7em",
+                  fontSize: "1em",
+                  color: "var(--light-blue)",
+                  height: "2em",
+                }}
+              >
+                *Resend
+              </Button>
+            </Box>
           </form>
         )}
         {userStatus === "Signup" && (
@@ -346,6 +428,10 @@ function LoginPopup({
                       </MenuItem>
                     ))}
                   </TextField>
+                  <Typography>
+                    *Choose your community to connect with local events and
+                    members. You can skip for now and join later.
+                  </Typography>
                   <Box
                     sx={{
                       width: "90%",
@@ -419,6 +505,10 @@ function LoginPopup({
                       </MenuItem>
                     ))}
                   </TextField>
+                  <Typography>
+                    *Select the Masechta you’re learning this year. You can skip
+                    for now and choose or change it later in your profile.
+                  </Typography>
                   <Box
                     sx={{
                       width: "90%",
