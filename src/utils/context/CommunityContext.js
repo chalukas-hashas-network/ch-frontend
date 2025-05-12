@@ -30,16 +30,22 @@ export const CommunityProvider = ({ children }) => {
 
   useEffect(() => {
     const shouldFetch =
-      location.pathname.includes("/community") && allCommunities.length === 0;
+      (location.pathname.includes("/community") ||
+      location.pathname.includes("/dashboard")) &&
+      allCommunities.length === 0;
 
     if (shouldFetch) {
       getAllCommunityData();
     }
   }, [location.pathname]);
 
-  const value = useMemo(() => {
-    return allCommunities;
-  }, [allCommunities]);
+  const value = useMemo(
+    () => ({
+      allCommunities,
+      setAllCommunities,
+    }),
+    [allCommunities, setAllCommunities]
+  );
 
   return (
     <CommunityContext.Provider value={value}>
