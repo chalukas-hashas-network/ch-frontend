@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import states from "../utils/dataExports/StatesExports";
 import JoinCommunityPopup from "../components/JoinCommunityPopup";
-import { getCommunities } from "../utils/API/CommunityAPI";
+import { useCommunity } from "../utils/context/CommunityContext";
 
 // TODO: make Join button logic
 
@@ -28,21 +28,22 @@ function Community() {
     name: "",
     firstLetter: "",
   });
-  const [communities, setCommunities] = useState([]);
   const [communityData, setCommunityData] = useState([]);
+
+  const allCommunities = useCommunity();
 
   const navigate = useNavigate();
 
-  useEffect(function getAllCommunities() {
-    getCommunities({}, ["community_goal", "members"]).then((data) => {
-      setCommunities(data);
-      setCommunityData(data);
-    });
-  }, []);
+  useEffect(
+    function getAllCommunities() {
+      setCommunityData(allCommunities);
+    },
+    [allCommunities]
+  );
 
   const dropdownOptions =
     toggleDropdown === "name"
-      ? communities?.map((community) => {
+      ? allCommunities?.map((community) => {
           const firstLetter = community.name[0].toUpperCase();
           return {
             firstLetter: /[0-9]/.test(firstLetter) ? "0-9" : firstLetter,
@@ -69,7 +70,7 @@ function Community() {
       if (selectedDropdown.name !== "") {
         if (toggleDropdown === "name") {
           setCommunityData(
-            communities.filter(
+            allCommunities.filter(
               (community) =>
                 community.name.toLowerCase() ===
                 selectedDropdown.name.toLowerCase()
@@ -77,7 +78,7 @@ function Community() {
           );
         } else {
           setCommunityData(
-            communities.filter(
+            allCommunities.filter(
               (community) =>
                 community.location.toLowerCase() ===
                 selectedDropdown.name.toLowerCase()
@@ -85,7 +86,7 @@ function Community() {
           );
         }
       } else {
-        setCommunityData(communities);
+        setCommunityData(allCommunities);
       }
     },
     [selectedDropdown, toggleDropdown]
@@ -390,28 +391,28 @@ function Community() {
           </Grid>
         ) : (
           <Card
-          elevation={0}
-          key="eventId"
-          sx={{
-            borderRadius: "16px",
-            width: "11rem",
-            height: "13rem",
-            position: "relative",
-          }}
-        >
-          <CardContent
+            elevation={0}
+            key="eventId"
             sx={{
+              borderRadius: "16px",
+              width: "11rem",
+              height: "13rem",
               position: "relative",
-              top: "2em",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              textAlign: "center",
             }}
           >
-            <Typography>No Communities Found</Typography>
-          </CardContent>
-        </Card>
+            <CardContent
+              sx={{
+                position: "relative",
+                top: "2em",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+            >
+              <Typography>No Communities Found</Typography>
+            </CardContent>
+          </Card>
         )}
       </Box>
       {joinPopup.isOpen && (
