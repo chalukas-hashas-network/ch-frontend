@@ -13,15 +13,15 @@ const root = createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <CommunityProvider>
-        <UserProvider>
-          <LoginProvider>
-            <BrowserRouter>
+      <UserProvider>
+        <BrowserRouter>
+          <CommunityProvider>
+            <LoginProvider>
               <App />
-            </BrowserRouter>
-          </LoginProvider>
-        </UserProvider>
-      </CommunityProvider>
+            </LoginProvider>
+          </CommunityProvider>
+        </BrowserRouter>
+      </UserProvider>
     </ThemeProvider>
   </React.StrictMode>
 );
