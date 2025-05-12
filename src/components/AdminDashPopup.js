@@ -18,6 +18,7 @@ import {
   Card,
   Divider,
 } from "../utils/dataExports/muiExports";
+import { useCommunity } from "../utils/context/CommunityContext";
 
 // TODO: add ability to remove admin
 
@@ -30,8 +31,6 @@ function AdminDashPopup({
   setCommunityData,
   popupStatus,
   capitalizeWord,
-  allCommunities,
-  setAllCommunities,
   rows,
   setRows,
   createSuperData,
@@ -51,6 +50,8 @@ function AdminDashPopup({
     goal,
     is_community_admin,
   } = userData;
+
+  const { allCommunities, setAllCommunities } = useCommunity();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,28 +87,28 @@ function AdminDashPopup({
         }
         try {
           await updateCommunity(communityData);
-          debugger;
           setAllCommunities(
-            allCommunities.map((community) => {
-              console.log("community: ", community);
-              if (community.id === communityData.id) {
-                // debugger;
-                setCurrentCommunity({
-                  ...currentCommunity,
+            allCommunities.map((community) =>
+              community.id === communityData.id
+                ? {
+                    ...community,
+                    name: communityData.name,
+                    location: communityData.location,
+                  }
+                : community
+            )
+          );
+
+          setCurrentCommunity((prev) =>
+            prev?.id === communityData.id
+              ? {
+                  ...prev,
                   name: communityData.name,
                   location: communityData.location,
-                });
-                // * the issue is with how the data is being sent up
-                return createSuperData(
-                  communityData.id,
-                  communityData.name,
-                  communityData.location,
-                  communityData.members
-                );
-              }
-              return { ...community };
-            })
+                }
+              : prev
           );
+          
           resetData();
         } catch (error) {
           console.error("Error updating community:", error);
