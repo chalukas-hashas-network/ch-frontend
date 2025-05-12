@@ -28,6 +28,7 @@ import {
   updateCommunity,
 } from "../utils/API/CommunityAPI";
 import { findUserById, queryUsers } from "../utils/API/UserAPI";
+import { useCommunity } from "../utils/context/CommunityContext";
 
 // for super, in community have a delete community button and add admin
 // ! all edits and deletes should have a confirmation popup
@@ -93,7 +94,6 @@ function AdminDash() {
     location: "location",
     goal: "0%",
   });
-  const [allCommunities, setAllCommunities] = useState([]);
   const [rows, setRows] = useState([]);
   const [popup, setPopup] = useState(false);
   const [popupStatus, setPopupStatus] = useState("");
@@ -117,6 +117,7 @@ function AdminDash() {
   });
 
   const { isSuperAdmin, user } = useUser();
+  const { allCommunities } = useCommunity();
 
   const columns = adminStatus === "super" ? superColumns : adminColumns;
 
@@ -142,44 +143,18 @@ function AdminDash() {
       let admins = [];
       const fetchData = async () => {
         if (adminStatus === "super") {
-          if (allCommunities.length === 0) {
-            // If allCommunities is empty, fetch the communities
-            try {
-              const communities = await queryCommunities({}, [
-                "include_members",
-                "include_community_goal",
-              ]);
-              setAllCommunities(communities);
-              communities.map((community) => {
-                updatedRows.push(
-                  createSuperData(
-                    community?.id,
-                    community?.name,
-                    capitalizeWord(community?.location),
-                    community?.members?.length,
-                    community?.community_goal?.[0]
-                  )
-                );
-              });
-              setRows(updatedRows);
-            } catch (e) {
-              console.log(e);
-            }
-          } else {
-            // If allCommunities is already populated, use it directly
-            allCommunities.map((community) => {
-              updatedRows.push(
-                createSuperData(
-                  community?.id,
-                  community?.name,
-                  capitalizeWord(community?.location),
-                  community?.members?.length,
-                  community?.community_goal?.[0]
-                )
-              );
-            });
-            setRows(updatedRows);
-          }
+          allCommunities.map((community) => {
+            updatedRows.push(
+              createSuperData(
+                community?.id,
+                community?.name,
+                capitalizeWord(community?.location),
+                community?.members?.length,
+                community?.community_goal?.[0]
+              )
+            );
+          });
+          setRows(updatedRows);
         } else if (adminStatus === "admin") {
           // Fetch a specific community if the adminStatus is admin
           const communityId = isSuperAdmin
@@ -218,7 +193,6 @@ function AdminDash() {
                 )
               );
 
-              // TODO: get endpoint to fetch all admins from community
               // check if member is an admin
               if (
                 selected_community[0].community_admins.includes(
@@ -235,7 +209,7 @@ function AdminDash() {
       };
       fetchData();
     },
-    [adminStatus]
+    [adminStatus, allCommunities]
   );
 
   function capitalizeWord(str) {
@@ -445,29 +419,41 @@ function AdminDash() {
                   marginTop: "7px",
                 }}
               >
-                {communityAdmins.map((admin, index) => {
-                  return (
-                    <ListItem alignItems="flex-start" key={index}>
-                      <ListItemButton
-                        onClick={() => {
-                          console.log(admin.first_name, " clicked");
-                          handleOpenRow(admin);
-                        }}
-                        sx={{
-                          bgcolor: "#F5F5F5",
-                          borderRadius: "16px",
-                          height: "30px",
-                        }}
-                      >
-                        <ListItemText
-                          primary={`${capitalizeWord(
-                            admin.first_name
-                          )} ${capitalizeWord(admin.last_name)}`}
-                        />
-                      </ListItemButton>
-                    </ListItem>
-                  );
-                })}
+                {communityAdmins.length > 0 ? (
+                  communityAdmins.map((admin, index) => {
+                    return (
+                      <ListItem alignItems="flex-start" key={index}>
+                        <ListItemButton
+                          onClick={() => {
+                            console.log(admin.first_name, " clicked");
+                            handleOpenRow(admin);
+                          }}
+                          sx={{
+                            bgcolor: "#F5F5F5",
+                            borderRadius: "16px",
+                            height: "30px",
+                          }}
+                        >
+                          <ListItemText
+                            primary={`${capitalizeWord(
+                              admin.first_name
+                            )} ${capitalizeWord(admin.last_name)}`}
+                          />
+                        </ListItemButton>
+                      </ListItem>
+                    );
+                  })
+                ) : (
+                  <ListItem
+                    sx={{
+                      bgcolor: "#F5F5F5",
+                      borderRadius: "16px",
+                      height: "35px",
+                    }}
+                  >
+                    <ListItemText primary="No Admins yet" />
+                  </ListItem>
+                )}
               </List>
             </Box>
             <Box
@@ -528,6 +514,7 @@ function AdminDash() {
                     }}
                   >
                     <Box
+                      className="innerBar"
                       sx={{
                         height: "20px",
                         width: `${parseFloat(
@@ -539,6 +526,7 @@ function AdminDash() {
                       }}
                     />
                     <Box
+                      className="progressNumber"
                       sx={{
                         left: `${parseFloat(
                           currentCommunity?.goal?.replace("%", "")
@@ -637,8 +625,6 @@ function AdminDash() {
           createCommunity={createCommunity}
           rows={rows}
           setRows={setRows}
-          setAllCommunities={setAllCommunities}
-          allCommunities={allCommunities}
           createSuperData={createSuperData}
           setAdminStatus={setAdminStatus}
           setCommunityAdmins={setCommunityAdmins}
