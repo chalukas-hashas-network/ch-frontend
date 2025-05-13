@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GoalPopup from "../components/GoalPopup";
 import { useUser } from "../utils/context/UserContext";
-import { createAnnualGoal, getAllTractates } from "../utils/API/GoalAPI";
+import { createAnnualGoal } from "../utils/API/GoalAPI";
+import { useTractate } from "../utils/context/TractateContext";
 import {
   Box,
   Typography,
@@ -28,10 +29,10 @@ TODO: if goal is empty, show "no goal"
 function Goal() {
   const [openGoal, setOpenGoal] = useState(false);
   const [goalEditOption, setGoalEditOption] = useState("");
-  const [tractates, setTractates] = useState([]);
   const { user, setUser, logout } = useUser();
   const { goal, first_name, last_name } = user;
 
+  const {allTractates, getAllTractateData} = useTractate();
   const navigate = useNavigate();
 
   const [selectedTractateData, setSelectedTractateData] = useState({
@@ -43,19 +44,11 @@ function Goal() {
 
   useEffect(
     function getTractates() {
-      const fetchTractates = async () => {
-        try {
-          const allTractates = await getAllTractates();
-          setTractates(allTractates);
-        } catch (e) {
-          console.error("Error fetching tractates:", e);
-        }
-      };
-      if (goalEditOption === "create-goal" && tractates.length === 0) {
-        fetchTractates();
+      if (goalEditOption === "create-goal") {
+        getAllTractateData();
       }
     },
-    [goalEditOption]
+    [goalEditOption, getAllTractateData]
   );
 
   // const currentYear = new Date().getFullYear();
@@ -120,11 +113,11 @@ function Goal() {
   return (
     <Box
       sx={{
+        paddingTop: "2em",
         display: "flex",
+        position: "relative",
         flexDirection: "column",
         alignItems: "center",
-        marginTop: "2em",
-        width: "100%",
       }}
     >
       <Box
@@ -516,7 +509,7 @@ function Goal() {
           setOpenGoal={setOpenGoal}
           goalEditOption={goalEditOption}
           setGoalEditOption={setGoalEditOption}
-          tractates={tractates}
+          tractates={allTractates}
           user={user}
           setUser={setUser}
           setSelectedTractateData={setSelectedTractateData}
