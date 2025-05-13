@@ -101,7 +101,7 @@ function LoginPopup({
               }}
             >
               <Button
-              onClick={() => setUserStatus("ForgotPass")}
+                onClick={() => setUserStatus("ForgotPass")}
                 sx={{
                   textTransform: "none",
                   textDecoration: "underline",
@@ -428,7 +428,16 @@ function LoginPopup({
                       </MenuItem>
                     ))}
                   </TextField>
-                  <Typography>
+                  <Typography
+                    sx={{
+                      color: "var(--brown)",
+                      width: "90%",
+                      fontFamily: "Nexa, sans-serif",
+                      fontSize: ".8rem",
+                      marginTop: "-10px",
+                      marginBottom: "3.5em",
+                    }}
+                  >
                     *Choose your community to connect with local events and
                     members. You can skip for now and join later.
                   </Typography>
@@ -469,7 +478,7 @@ function LoginPopup({
                         fontSize: ".8em",
                       }}
                     >
-                      {optionalUserData.community === "" ? "Skip" : "Next"}
+                      {optionalUserData.community.name === "" ? "Skip" : "Next"}
                     </Button>
                   </Box>
                 </div>
@@ -505,7 +514,16 @@ function LoginPopup({
                       </MenuItem>
                     ))}
                   </TextField>
-                  <Typography>
+                  <Typography
+                    sx={{
+                      color: "var(--brown)",
+                      width: "90%",
+                      fontFamily: "Nexa, sans-serif",
+                      fontSize: ".8rem",
+                      marginTop: "-10px",
+                      marginBottom: "2em",
+                    }}
+                  >
                     *Select the Masechta you’re learning this year. You can skip
                     for now and choose or change it later in your profile.
                   </Typography>
@@ -546,7 +564,7 @@ function LoginPopup({
                         fontSize: ".8em",
                       }}
                     >
-                      {optionalUserData.tractate === "" ? "Skip" : "Next"}
+                      {optionalUserData.tractate.name === "" ? "Skip" : "Next"}
                     </Button>
                   </Box>
                 </div>
