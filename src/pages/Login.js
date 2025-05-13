@@ -1,27 +1,26 @@
-// forgot password
-// need to check if user is already signed up
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLogin } from "../utils/context/LoginContext";
 import { useUser } from "../utils/context/UserContext";
 import { createUser } from "../utils/API/UserAPI";
-import { getCommunities } from "../utils/API/CommunityAPI";
-import { getAllTractates } from "../utils/API/GoalAPI";
 import { Box, Button, CloseRoundedIcon } from "../utils/dataExports/muiExports";
 import LoginPopup from "../components/LoginPopup";
-import zIndex from "@mui/material/styles/zIndex";
+import { useTractate } from "../utils/context/TractateContext";
+import { useCommunity } from "../utils/context/CommunityContext";
 
 // TODO: make sure username and email are unique on signup. create logic for inviting admin
+// forgot password
+// need to check if user is already signed up
 
 function Login() {
   const location = useLocation();
   const { login, triggerLoading } = useUser();
   const { userStatus, setUserStatus } = useLogin();
+  const {allTractates, getAllTractateData} = useTractate();
+  const {allCommunities, getAllCommunityData} = useCommunity();
   const navigate = useNavigate();
 
   const [onboardingStatus, setOnboardingStatus] = useState("Register");
-  const [allCommunities, setAllCommunities] = useState([]);
-  const [allTractates, setAllTractates] = useState([]);
   const [userData, setUserData] = useState({
     email: "",
     // username: "",
@@ -52,38 +51,12 @@ function Login() {
     [location.pathname]
   );
 
-  useEffect(
-    function getAllDataForOnboarding() {
-      if (
-        onboardingStatus === "selectCommunity" &&
-        allCommunities.length <= 0
-      ) {
-        const fetchCommunities = async () => {
-          try {
-            const communities = await getCommunities();
-            setAllCommunities(communities);
-          } catch (err) {
-            console.log(err);
-            alert("Failed to load communities");
-          }
-        };
-        fetchCommunities();
-      }
-
-      if (onboardingStatus === "selectTractate" && allTractates.length <= 0) {
-        const fetchTractates = async () => {
-          try {
-            const tractates = await getAllTractates();
-            setAllTractates(tractates);
-          } catch (err) {
-            alert("Failed to load tractates");
-          }
-        };
-        fetchTractates();
-      }
-    },
-    [onboardingStatus]
-  );
+  useEffect(() => {
+    if (onboardingStatus === "selectCommunity") {
+      getAllCommunityData();
+      getAllTractateData();
+    }
+  }, [onboardingStatus, getAllCommunityData, getAllTractateData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -193,7 +166,27 @@ function Login() {
         alert("Error creating user");
         return;
       }
+    } else if (e === "ForgotPass") {
+      // TODO: create logic
     }
+  };
+
+  const reset = () => {
+    setUserStatus("Login");
+    setOptionalUserData({
+      community: { name: "", id: "" },
+      tractate: { name: "", id: "" },
+    });
+    setUserData({
+      email: "",
+      // username: "",
+      password: "",
+      password_confirmation: "",
+      phone_number: "",
+      first_name: "",
+      last_name: "",
+      location: "",
+    });
   };
 
   return (
@@ -215,7 +208,7 @@ function Login() {
       <Button
         onClick={() => {
           navigate(-1);
-          setUserStatus("Login");
+          reset();
         }}
         sx={{
           position: "absolute",
