@@ -8,19 +8,10 @@ import {
 } from "../utils/dataExports/muiExports";
 import { useUser } from "../utils/context/UserContext";
 import { updateUser } from "../utils/API/UserAPI";
-import { useNavigate } from "react-router-dom";
 
 function JoinCommunityPopup({ setJoinPopup, joinPopup }) {
   const { user, setUser } = useUser();
-  const navigate = useNavigate()
   const { community } = joinPopup;
-
-  useEffect(function checkIfUserIsLoggedIn() {
-    if (!user.id) {
-      navigate("/login")
-      setJoinPopup({ isOpen: false, community: null });
-    }
-  }, []);
 
   const JoinCommunity = async (e) => {
     if (e === "join") {
@@ -116,14 +107,6 @@ function JoinCommunityPopup({ setJoinPopup, joinPopup }) {
                   >
                     Join
                   </Button>
-                </div>
-              )}
-              {user?.community?.id === community.id && (
-                // if the user is already a part of the community
-                <div>
-                  <Typography>
-                    You are already a part of this community
-                  </Typography>
                 </div>
               )}
             </div>
