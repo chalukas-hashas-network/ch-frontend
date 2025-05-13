@@ -14,6 +14,7 @@ import { getCommunities } from "../utils/API/CommunityAPI";
 import JoinCommunityPopup from "../components/JoinCommunityPopup";
 import { useParams, useNavigate } from "react-router-dom";
 import DataBoxesDisplay from "../components/DataBoxesDisplay";
+import { useUser } from "../utils/context/UserContext";
 
 function CommunityMembers() {
   const [joinPopup, setJoinPopup] = useState({
@@ -31,6 +32,7 @@ function CommunityMembers() {
   });
   const { community_goal, members, name } = communityData;
   const { community_id } = useParams();
+  const { user } = useUser();
   const navigate = useNavigate();
 
   useEffect(function getCommunityData() {
@@ -179,6 +181,7 @@ function CommunityMembers() {
         >
           <Button
             variant="contained"
+            disabled={user?.community?.id == community_id}
             sx={{
               backgroundColor: "var(--orange)",
               boxShadow: "none",
@@ -188,9 +191,13 @@ function CommunityMembers() {
               width: "7rem",
               fontSize: ".85em",
             }}
-            onClick={() =>
-              setJoinPopup({ isOpen: true, community: communityData })
-            }
+            onClick={() => {
+              if (!user.id) {
+                navigate("/login");
+                return;
+              }
+              setJoinPopup({ isOpen: true, community: communityData });
+            }}
           >
             Join
           </Button>
@@ -284,11 +291,18 @@ function CommunityMembers() {
                     )} ${capitalizeWord(member.last_name)}`}
                     secondary={
                       <Fragment>
-                        <Typography sx={{fontSize: ".45rem", color: "var(--light-blue)"}}>
+                        <Typography
+                          sx={{
+                            fontSize: ".45rem",
+                            color: "var(--light-blue)",
+                          }}
+                        >
                           {/* //TODO: set up logic for time {postedTime} */}
                           26 Minutes ago
                         </Typography>
-                        <Typography sx={{fontSize: ".55rem", color: "var(--black)"}}>
+                        <Typography
+                          sx={{ fontSize: ".55rem", color: "var(--black)" }}
+                        >
                           With {capitalizeWord(name)}
                         </Typography>
                       </Fragment>
@@ -333,7 +347,7 @@ function CommunityMembers() {
           }}
         >
           <Button
-          onClick={() => navigate("/events")}
+            onClick={() => navigate("/events")}
             variant="contained"
             sx={{
               backgroundColor: "var(--orange)",
@@ -348,11 +362,11 @@ function CommunityMembers() {
             View events
           </Button>
           <Button
-          onClick={() => 
-            // TODO: set up logic
-            // ? only for users logged in? trigger login?
-            navigate("/chavrusas")
-          }
+            onClick={() =>
+              // TODO: set up logic
+              // ? only for users logged in? trigger login?
+              navigate("/chavrusas")
+            }
             variant="contained"
             sx={{
               backgroundColor: "var(--brown)",
@@ -367,7 +381,10 @@ function CommunityMembers() {
             Scout Chavrusas
           </Button>
         </Box>
-        <DataBoxesDisplay pages={community_total_completed_pages} members={members.length}/>
+        <DataBoxesDisplay
+          pages={community_total_completed_pages}
+          members={members.length}
+        />
         {joinPopup.isOpen && (
           <JoinCommunityPopup
             setJoinPopup={setJoinPopup}

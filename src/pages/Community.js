@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import states from "../utils/dataExports/StatesExports";
 import JoinCommunityPopup from "../components/JoinCommunityPopup";
 import { useCommunity } from "../utils/context/CommunityContext";
+import { useUser } from "../utils/context/UserContext";
 
 // TODO: make Join button logic
 
@@ -30,9 +31,10 @@ function Community() {
   });
   const [communityData, setCommunityData] = useState([]);
 
-  const allCommunities = useCommunity();
+  const { allCommunities } = useCommunity();
 
   const navigate = useNavigate();
+  const { user } = useUser();
 
   useEffect(
     function getAllCommunities() {
@@ -260,6 +262,7 @@ function Community() {
               >
                 <Button
                   variant="contained"
+                  disabled={user?.community?.id === community.id}
                   sx={{
                     boxShadow: "none",
                     textTransform: "none",
@@ -272,6 +275,10 @@ function Community() {
                     fontSize: ".8em",
                   }}
                   onClick={() => {
+                    if (!user.id) {
+                      navigate("/login");
+                      return;
+                    }
                     setJoinPopup({ isOpen: true, community: community });
                   }}
                 >
