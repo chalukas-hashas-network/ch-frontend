@@ -8,6 +8,7 @@ import { CommunityProvider } from "./utils/context/CommunityContext.js";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./utils/context/ThemeContext.js";
 import React from "react";
+import { TractateProvider } from "./utils/context/TractateContext.js";
 
 const root = createRoot(document.getElementById("root"));
 root.render(
@@ -16,9 +17,11 @@ root.render(
       <UserProvider>
         <BrowserRouter>
           <CommunityProvider>
-            <LoginProvider>
-              <App />
-            </LoginProvider>
+            <TractateProvider>
+              <LoginProvider>
+                <App />
+              </LoginProvider>
+            </TractateProvider>
           </CommunityProvider>
         </BrowserRouter>
       </UserProvider>
