@@ -14,6 +14,16 @@ import states from "../utils/dataExports/StatesExports";
 import LiveUpdates from "../components/LiveUpdates";
 
 import { CardHeader, CardMedia } from "@mui/material";
+import AddEventPopup from "../components/AddEventPopup";
+
+// ? if events are a separate fetch from communities, set up event context
+/* 
+main page card display: 
+Title, image (optional), host, view more button
+
+on view- popup of card
+
+*/
 
 function Events() {
   const [selectedDropDown, setSelectedDropdown] = useState({
@@ -21,6 +31,7 @@ function Events() {
     firstLetter: "",
   });
   const [events, setEvents] = useState([]);
+  const [addEventPopup, setAddEventPopup] = useState(false);
 
   const dropdownOptions = states?.map((state) => {
     const firstLetter = state[0].toUpperCase();
@@ -134,6 +145,7 @@ function Events() {
         />
         <Button
           variant="contained"
+          onClick={() => setAddEventPopup(true)}
           sx={{
             borderRadius: "15px",
             boxShadow: "none",
@@ -220,6 +232,9 @@ function Events() {
         </Grid>
       </Box>
       <LiveUpdates />
+      {addEventPopup && (
+        <AddEventPopup setAddEventPopup={setAddEventPopup}/>
+      )}
     </Box>
   );
 }
