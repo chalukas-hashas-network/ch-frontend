@@ -13,7 +13,7 @@ export const CommunityProvider = ({ children }) => {
     if (allCommunities.length === 0) {
       try {
         setIsLoading(true);
-        const communities = await getCommunities({}, ["community_goal", "members"]);
+        const communities = await getCommunities({}, ["community_goal", "members", "admins"]);
         setAllCommunities(communities);
       } catch (err) {
         console.log("Error: ", err);

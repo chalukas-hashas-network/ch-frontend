@@ -31,13 +31,14 @@ function Community() {
   });
   const [communityData, setCommunityData] = useState([]);
 
-  const { allCommunities } = useCommunity();
+  const { allCommunities, getAllCommunityData } = useCommunity();
 
   const navigate = useNavigate();
   const { user } = useUser();
 
   useEffect(
     function getAllCommunities() {
+      getAllCommunityData();
       setCommunityData(allCommunities);
     },
     [allCommunities]
