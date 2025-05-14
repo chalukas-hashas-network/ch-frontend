@@ -117,7 +117,7 @@ function AdminDash() {
   });
 
   const { isSuperAdmin, user } = useUser();
-  const { allCommunities } = useCommunity();
+  const { allCommunities, getAllCommunityData } = useCommunity();
 
   const columns = adminStatus === "super" ? superColumns : adminColumns;
 
@@ -141,73 +141,77 @@ function AdminDash() {
     function setDataBasedOffStatus() {
       let updatedRows = [];
       let admins = [];
-      const fetchData = async () => {
-        if (adminStatus === "super") {
-          allCommunities.map((community) => {
+
+      const fetchAdminData = async () => {
+        const communityId = isSuperAdmin
+          ? currentCommunity?.id
+          : user?.community?.id;
+
+        const selected_community = await queryCommunities({ id: communityId }, [
+          "include_members",
+          "include_admins",
+          "include_community_goal",
+        ]);
+
+        // set community goal
+        const communityGoal = selected_community[0]?.community_goal?.[0];
+        const communityGoalPercentage = communityGoal
+          ? parseFloat(
+              (communityGoal?.community_total_completed_pages /
+                communityGoal?.community_total_selected_pages) *
+                100
+            ).toFixed(2)
+          : "0";
+
+        setCurrentCommunity({
+          ...currentCommunity,
+          goal: `${communityGoalPercentage}%`,
+        });
+
+        const members = selected_community[0].members;
+        if (members?.length > 0) {
+          members.map((member) => {
             updatedRows.push(
-              createSuperData(
-                community?.id,
-                community?.name,
-                capitalizeWord(community?.location),
-                community?.members?.length,
-                community?.community_goal?.[0]
+              createData(
+                member?.id,
+                member?.first_name,
+                member?.last_name,
+                member?.email
               )
             );
+
+            // check if member is an admin
+            if (
+              selected_community[0].community_admins.includes(
+                member.first_name + " " + member.last_name
+              )
+            ) {
+              admins.push(member);
+            }
           });
-          setRows(updatedRows);
-        } else if (adminStatus === "admin") {
-          // Fetch a specific community if the adminStatus is admin
-          const communityId = isSuperAdmin
-            ? currentCommunity?.id
-            : user?.community?.id;
-
-          const selected_community = await queryCommunities(
-            { id: communityId },
-            ["include_members", "include_admins", "include_community_goal"]
-          );
-
-          // set community goal
-          const communityGoal = selected_community[0]?.community_goal?.[0];
-          const communityGoalPercentage = communityGoal
-            ? parseFloat(
-                (communityGoal?.community_total_completed_pages /
-                  communityGoal?.community_total_selected_pages) *
-                  100
-              ).toFixed(2)
-            : "0";
-
-          setCurrentCommunity({
-            ...currentCommunity,
-            goal: `${communityGoalPercentage}%`,
-          });
-
-          const members = selected_community[0].members;
-          if (members?.length > 0) {
-            members.map((member) => {
-              updatedRows.push(
-                createData(
-                  member?.id,
-                  member?.first_name,
-                  member?.last_name,
-                  member?.email
-                )
-              );
-
-              // check if member is an admin
-              if (
-                selected_community[0].community_admins.includes(
-                  member.first_name + " " + member.last_name
-                )
-              ) {
-                admins.push(member);
-              }
-            });
-          }
-          setCommunityAdmins(admins); // Update the state with the communities admins
-          setRows(updatedRows); // Update the state with the new rows
         }
+        setCommunityAdmins(admins); // Update the state with the communities admins
+        setRows(updatedRows); // Update the state with the new rows
       };
-      fetchData();
+
+      if (adminStatus === "super") {
+        getAllCommunityData();
+        allCommunities.map((community) => {
+          updatedRows.push(
+            createSuperData(
+              community?.id,
+              community?.name,
+              capitalizeWord(community?.location),
+              community?.members?.length,
+              community?.community_goal?.[0]
+            )
+          );
+        });
+      } else if (adminStatus === "admin") {
+        fetchAdminData();
+      }
+
+      setRows(updatedRows);
     },
     [adminStatus, allCommunities]
   );
