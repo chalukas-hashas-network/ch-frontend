@@ -1,71 +1,87 @@
-# Getting Started with Create React App
+# Chalukas Hashas ✡️
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Chalukas Hashas** is a web application designed to help Jewish communities collaboratively complete the Talmud within a year. Rooted in the meaningful tradition of *chalukas hashas*, the app brings people together to divide and conquer the Talmud’s 2,711 pages, allowing each individual to contribute and track their progress toward a shared goal.
 
-## Available Scripts
+> _This project was commissioned and is showcased as part of my development portfolio._
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## What is Chalukas Hashas?
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3009) to view it in your browser.
+*Chalukas hashas* is a beautiful custom where a community divides the entire Talmud among its members. Each participant commits to studying one or more tractates, and together, they complete the entire Talmud as a group.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+This app provides the structure and tools needed to facilitate this collaboration in a digital format.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features
 
-### `npm run build`
+### Community Creation & Management
+- Users can **create** and **join** communities.
+- Each community has a **shared goal** of completing the entire Talmud within the year.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Personal Progress Tracking
+- Members can:
+  - Select a specific or multiple **tractates** to study.
+  - **Log pages** learned.
+  - View their **personal progress**, including:
+    - Tractates selected
+    - Pages completed
+    - Contribution to the community’s overall goal
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Find a Learning Partner
+- Users can browse and **connect with others studying the same tractate**.
+- Encourages **chevrusa-style learning** and community building.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Community Events
+- Members can post **learning events** and gatherings.
+- Users can **browse upcoming events**, RSVP, and participate.
 
-### `npm run eject`
+###  Live Member Progress Updates _(Coming Soon)_
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- There will be a live page display for **real-time updates** whenever a member logs progress toward their goal.
+- Each time a user updates their pages learned, a **live activity feed** shows:
+  - Who updated
+  - What tractate they made progress on
+  - How many pages they learned
+- This promotes **transparency**, **motivation**, and a sense of **shared achievement** within the community.
+- Members and visiters can stay engaged with the overall progress toward completing the Talmud.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Tech Stack
 
-## Learn More
+- **Frontend:** React / MUI
+- **Backend:** Django
+- **Authentication:** JWT
+- **Database:** SQLite (for development)
+- **Hosting:** (Not currently hosted)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Purpose & Impact
 
-### Code Splitting
+This project was commissioned with the goal of blending tradition and technology—making it easier for communities around the world to come together in Torah learning. It’s more than just an app; it’s a platform for **spiritual growth**, **accountability**, and **unity**.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## Live Demo & Screenshots
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- [Live App](Coming Soon)
+- [Demo walk through]()
+- [UI/UX Concept Video]()
+- [Screenshots]()
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Contact
 
-### Advanced Configuration
+For questions, collaboration, or feedback:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+**Developer:** Benny Sufrin  
+**Email:** [bennysuf@gmail.com]  
+**Portfolio:** [My portfolio](https://my-portfolio-b4e37.web.app/)
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# ch-frontend
