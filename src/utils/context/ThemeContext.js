@@ -28,6 +28,9 @@ const theme = createTheme({
           '& .MuiSelect-select': {
             color: 'var(--black)',
           },
+          '& label.Mui-focused': {
+            color: "var(--brown)"
+          }
         },
       },
     },

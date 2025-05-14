@@ -99,7 +99,7 @@ function Settings() {
           color: "var(--black)",
           position: "absolute",
           top: "1em",
-          left: {xs: "1em", md: "20rem"},
+          left: {xs: "2em", md: "15em"},
 
         }}
         onClick={() => navigate(-1)}

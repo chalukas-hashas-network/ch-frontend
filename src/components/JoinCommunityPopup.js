@@ -36,18 +36,11 @@ function JoinCommunityPopup({ setJoinPopup, joinPopup }) {
       {user.id && (
         <Dialog
           open={true}
-          className="popup-overlay"
           onClose={() => setJoinPopup({ isOpen: false, community: null })}
           PaperComponent={Card}
+          sx={{ backdropFilter: "blur(5px)" }}
         >
-          <div
-            className="popup-card"
-            style={{
-              position: "relative",
-              height: "23em",
-              width: "20em",
-            }}
-          >
+          <div className="popup-card">
             <Button
               onClick={() => {
                 setJoinPopup({ isOpen: false, community: null });

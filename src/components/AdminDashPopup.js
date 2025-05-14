@@ -137,7 +137,6 @@ function AdminDashPopup({
         const user = communityData.members?.find(
           (user) => user.id === userData.id
         );
-        debugger;
         setCommunityAdmins([
           ...communityAdmins,
           {
