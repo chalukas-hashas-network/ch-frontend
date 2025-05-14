@@ -103,37 +103,38 @@ function GoalPopup({
               user.id,
               `${currentYear - 1}-${currentYear}`
             );
-            debugger;
             // setUser(user.goal = {id: newGoal.id})
             console.log("created new goal for " + currentYear);
           }
 
           // ! wont work if user is creating goal for first time
-          const response = await createTractateGoal(
+          await createTractateGoal(
             goal.id,
             selectedTractate.id
           );
 
-
-          /*
-          update user object with updated response
-          update data: 
           
-          goal.
-          user_percentage_completed:
-          user_total_completed_pages: 
-          user_total_selected_pages: 
-          goal_tractates.
-          tractate: selectedTractate.name
-          tractate_pages_completed: 0.0
-          tractate_pages_selected: selectedTractate.number_of_pages
-          */
+          const totalSelected =
+          goal?.user_total_selected_pages + selectedTractate.number_of_pages;
+          
+          const percentageCompleted =
+            parseFloat((goal.user_total_completed_pages / totalSelected) * 100).toFixed(2);
+          const newGoal = {
+            tractate: selectedTractate.name,
+            tractate_pages_completed: 0,
+            tractate_pages_selected: selectedTractate.number_of_pages,
+          };
 
-          // console.log(response);
-          // TODO: update state
+          setUser({
+            ...user,
+            goal: {
+              ...goal,
+              user_total_selected_pages: totalSelected,
+              user_percentage_completed: percentageCompleted,
+              goal_tractates: [...goal.goal_tractates, newGoal],
+            },
+          });
           alert("Goal created");
-          // setSelectedTractate("Select tractate");
-          // setOpenGoal(false);
           resetData();
         } catch (error) {
           console.error("Error updating user goal:", error);
@@ -224,18 +225,11 @@ function GoalPopup({
   return (
     <Dialog
       open={true}
-      className="popup-overlay"
       onClose={() => resetData()}
       PaperComponent={Card}
+      sx={{ backdropFilter: "blur(5px)" }}
     >
-      <div
-        className="popup-card"
-        style={{
-          position: "relative",
-          height: "20em",
-          width: "20em",
-        }}
-      >
+      <div className="popup-card">
         <Button
           onClick={() => resetData()}
           style={{ position: "absolute", top: "10px", right: "10px" }}
@@ -384,7 +378,7 @@ function GoalPopup({
             type="submit"
             variant="contained"
             sx={{
-              textTransform: "none", 
+              textTransform: "none",
               boxShadow: "none",
               backgroundColor: "var(--orange)",
               marginTop: "1em",
