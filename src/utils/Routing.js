@@ -9,9 +9,10 @@ import NotFound from "../pages/NotFound.js";
 import CommunityMembers from "../pages/CommunityMembers.js";
 import Login from "../pages/Login.js";
 import Events from "../pages/Events.js";
+import SuperAdminDash from "../pages/SuperAdminDash.js";
 
 export default function Routing() {
-  const { isAdmin, isAuth } = useUser();
+  const { isAdmin, isAuth, isSuperAdmin } = useUser();
 
   return (
     <Routes>
@@ -26,7 +27,8 @@ export default function Routing() {
           <Route exact path="/goal/settings" element={<Settings />} />
         </>
       )}
-      {isAdmin && <Route exact path="/dashboard" element={<AdminDash />} />}
+      {isAdmin && <Route exact path="/dashboard/:community_id" element={<AdminDash />} />}
+      {isSuperAdmin && <Route exact path="/dashboard" element={<SuperAdminDash />} />}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

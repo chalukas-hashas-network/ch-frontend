@@ -9,7 +9,8 @@ import { useUser } from "../utils/context/UserContext";
 import { useLogin } from "../utils/context/LoginContext";
 
 function Nav() {
-  const { logout, isAuth, isAdmin, triggerLoading } = useUser();
+  const { logout, isAuth, isAdmin, triggerLoading, isSuperAdmin, user } =
+    useUser();
   // const { setUserStatus } = useLogin();
 
   const navigate = useNavigate();
@@ -25,8 +26,14 @@ function Nav() {
     tabRoutes.push({ label: "My Progress", path: "/goal" });
   }
 
-  if (isAdmin) {
+  if (isSuperAdmin) {
     tabRoutes.push({ label: "Admin Dashboard", path: "/dashboard" });
+  }
+  if (isAdmin && !isSuperAdmin) {
+    tabRoutes.push({
+      label: "Admin Dashboard",
+      path: `/dashboard/${user?.community?.id}`,
+    });
   }
 
   // Get selected tab index based on current route
