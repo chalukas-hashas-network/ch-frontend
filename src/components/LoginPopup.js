@@ -19,6 +19,7 @@ function LoginPopup({
   allCommunities,
   allTractates,
   optionalUserData,
+  userDataErrors,
 }) {
   const { userStatus, setUserStatus } = useLogin();
 
@@ -72,6 +73,10 @@ function LoginPopup({
               Login
             </Typography>
             <TextField
+              error={userDataErrors.username !== ""}
+              helperText={
+                userDataErrors.username !== "" && userDataErrors.username
+              }
               id="username"
               label="*Username"
               variant="outlined"
@@ -84,6 +89,10 @@ function LoginPopup({
               }}
             />
             <TextField
+              error={userDataErrors.username !== ""}
+              helperText={
+                userDataErrors.username !== "" && userDataErrors.username
+              }
               id="password"
               label="*Password"
               variant="outlined"
@@ -248,6 +257,11 @@ function LoginPopup({
                     Sign Up
                   </Typography>
                   <TextField
+                    error={userDataErrors.first_name !== ""}
+                    helperText={
+                      userDataErrors.first_name !== "" &&
+                      userDataErrors.first_name
+                    }
                     id="first-name"
                     label="*First Name"
                     variant="outlined"
@@ -261,6 +275,11 @@ function LoginPopup({
                     }}
                   />
                   <TextField
+                    error={userDataErrors.last_name !== ""}
+                    helperText={
+                      userDataErrors.last_name !== "" &&
+                      userDataErrors.last_name
+                    }
                     id="last-name"
                     label="*Last Name"
                     variant="outlined"
@@ -270,6 +289,11 @@ function LoginPopup({
                     onChange={handleChange}
                   />
                   <TextField
+                    error={userDataErrors.phone_number !== ""}
+                    helperText={
+                      userDataErrors.phone_number !== "" &&
+                      userDataErrors.phone_number
+                    }
                     id="phone-number"
                     label="Contact Number"
                     variant="outlined"
@@ -294,6 +318,10 @@ function LoginPopup({
                     highly suggest a Contact Number
                   </Typography>
                   <TextField
+                    error={userDataErrors.email !== ""}
+                    helperText={
+                      userDataErrors.email !== "" && userDataErrors.email
+                    }
                     id="email"
                     label="*Contact Email"
                     variant="outlined"
@@ -307,6 +335,10 @@ function LoginPopup({
                     }}
                   />
                   <TextField
+                    error={userDataErrors.password !== ""}
+                    helperText={
+                      userDataErrors.password !== "" && userDataErrors.password
+                    }
                     id="password"
                     label="*Password"
                     variant="outlined"
@@ -317,6 +349,11 @@ function LoginPopup({
                     sx={{ marginBottom: ".7em" }}
                   />
                   <TextField
+                    error={userDataErrors.password_confirmation !== ""}
+                    helperText={
+                      userDataErrors.password_confirmation !== "" &&
+                      userDataErrors.password_confirmation
+                    }
                     id="confirm-password"
                     label="*Confirm Password"
                     variant="outlined"

@@ -16,12 +16,22 @@ function Login() {
   const location = useLocation();
   const { login, triggerLoading } = useUser();
   const { userStatus, setUserStatus } = useLogin();
-  const {allTractates, getAllTractateData} = useTractate();
-  const {allCommunities, getAllCommunityData} = useCommunity();
+  const { allTractates, getAllTractateData } = useTractate();
+  const { allCommunities, getAllCommunityData } = useCommunity();
   const navigate = useNavigate();
 
   const [onboardingStatus, setOnboardingStatus] = useState("Register");
   const [userData, setUserData] = useState({
+    email: "",
+    // username: "",
+    password: "",
+    password_confirmation: "",
+    phone_number: "",
+    first_name: "",
+    last_name: "",
+    location: "",
+  });
+  const [userDataErrors, setUserDataErrors] = useState({
     email: "",
     // username: "",
     password: "",
@@ -79,19 +89,23 @@ function Login() {
         tractate: { name: selectedTractate?.name || "", id: value || "" },
       });
     } else {
+      setUserDataErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
       setUserData({ ...userData, [name]: value });
     }
   };
 
   const handleSignupFields = () => {
+    const errors = {};
+
     // ! username was taken out but needs to be added until backend is updated
     if (userStatus === "Signup") {
       if (userData.password !== userData.password_confirmation) {
-        alert("Passwords do not match");
+        errors.password_confirmation = "Passwords do not match";
         return;
       }
-
-      let missingFields = [];
 
       // Collect all the missing fields
       for (let key in userData) {
@@ -100,16 +114,8 @@ function Login() {
           key !== "location" &&
           key !== "phone_number"
         ) {
-          missingFields.push(key.replace("_", " "));
+          errors[key] = `Please fill out your ${key.replace("_", " ")}`;
         }
-      }
-
-      // If any fields are missing, alert them
-      if (missingFields.length > 0) {
-        alert(
-          `Please fill out the following fields: ${missingFields.join(", ")}`
-        );
-        return; // Exit the function early
       }
 
       if (
@@ -117,9 +123,19 @@ function Login() {
         userData.phone_number.length !== 10 &&
         !/^\d{10}$/.test(userData.phone_number)
       ) {
-        alert("Please enter a valid phone number");
+        errors.phone_number = "Please enter a valid phone number";
+      }
+
+      setUserDataErrors((prev) => ({
+        ...prev,
+        ...errors,
+      }));
+
+      // If any fields are missing, exit the function early
+      if (Object.keys(errors).length > 0) {
         return;
       }
+
       setOnboardingStatus("selectCommunity");
     }
   };
@@ -131,7 +147,9 @@ function Login() {
   const handleSubmit = async (e) => {
     if (e === "Login") {
       if (userData.username === "" || userData.password === "") {
-        alert("Fields cannot be empty");
+        setUserDataErrors({
+          username: "Please enter the correct username or password",
+        });
       } else {
         try {
           await login(userData.username, userData.password);
@@ -230,6 +248,7 @@ function Login() {
         allCommunities={allCommunities}
         optionalUserData={optionalUserData}
         allTractates={allTractates}
+        userDataErrors={userDataErrors}
       />
     </Box>
   );
