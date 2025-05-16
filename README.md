@@ -17,34 +17,34 @@ This app provides the structure and tools needed to facilitate this collaboratio
 ## Features
 
 ### Community Creation & Management
-- Users can **create** and **join** communities.
-- Each community has a **shared goal** of completing the entire Talmud within the year.
+- Users can create and join communities.
+- Each community has a shared goal of completing the entire Talmud within the year.
 
 ### Personal Progress Tracking
 - Members can:
-  - Select a specific or multiple **tractates** to study.
-  - **Log pages** learned.
-  - View their **personal progress**, including:
+  - Select a specific or multiple tractates to study.
+  - Log pages learned.
+  - View their personal progress, including:
     - Tractates selected
     - Pages completed
     - Contribution to the community’s overall goal
 
 ### Find a Learning Partner
-- Users can browse and **connect with others studying the same tractate**.
-- Encourages **chevrusa-style learning** and community building.
+- Users can browse and connect with others studying the same tractate.
+- Encourages chevrusa-style learning and community building.
 
 ### Community Events _(In Development)_
-- Members can post **learning events** and gatherings.
-- Users can **browse upcoming events**, RSVP, and participate.
+- Members can post learning events and gatherings.
+- Users can browse upcoming events, RSVP, and participate.
 
 ###  Live Member Progress Updates _(Coming Soon)_
 
-- There will be a live page display for **real-time updates** whenever a member logs progress toward their goal.
-- Each time a user updates their pages learned, a **live activity feed** shows:
+- There will be a live page display for real-time updates whenever a member logs progress toward their goal.
+- Each time a user updates their pages learned, a live activity feed shows:
   - Who updated
   - What tractate they made progress on
   - How many pages they learned
-- This promotes **transparency**, **motivation**, and a sense of **shared achievement** within the community.
+- This promotes transparency, motivation, and a sense of shared achievement within the community.
 - Members and visiters can stay engaged with the overall progress toward completing the Talmud.
 
 
@@ -62,7 +62,7 @@ This app provides the structure and tools needed to facilitate this collaboratio
 
 ## Purpose & Impact
 
-This project was commissioned with the goal of blending tradition and technology—making it easier for communities around the world to come together in Torah learning. It’s more than just an app; it’s a platform for **spiritual growth**, **accountability**, and **unity**.
+This project was commissioned with the goal of blending tradition and technology—making it easier for communities around the world to come together in Torah learning. It’s more than just an app; it’s a platform for spiritual growth, accountability, and unity.
 
 ---
 
@@ -71,11 +71,9 @@ This project was commissioned with the goal of blending tradition and technology
 - [Live App](Coming Soon)
 - [Demo walk through](https://youtube.com/shorts/yZrK8Y80hu0?feature=share)
 - UI/UX Concept Video: 
-<br/>
 
 https://github.com/user-attachments/assets/4108152e-374d-45c2-9f7b-5bfb359b54e4
 
-<br/>
 - Screenshots: 
 <br/><img width="382" alt="Screen Shot 2025-05-14 at 7 19 31 PM" src="https://github.com/user-attachments/assets/d11aa8ff-ed43-4ade-b255-c8574a401008" />
 <br/><img width="383" alt="Screen Shot 2025-05-14 at 7 20 13 PM" src="https://github.com/user-attachments/assets/8b55a4e7-3267-4a38-8935-89225a097f45" />
