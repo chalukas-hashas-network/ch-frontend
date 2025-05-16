@@ -478,7 +478,7 @@ function Goal() {
             setGoalEditOption("create-goal");
           }}
         >
-          Select {user?.goal?.goal_tractates?.length > 1 ? "another" : "a"}{" "}
+          Select {user?.goal?.goal_tractates?.length > 0 ? "another" : "a"}{" "}
           Mesechta
           <KeyboardArrowDownRoundedIcon
             sx={{ fontSize: "2rem", marginLeft: ".2em" }}
