@@ -33,7 +33,7 @@ This app provides the structure and tools needed to facilitate this collaboratio
 - Users can browse and **connect with others studying the same tractate**.
 - Encourages **chevrusa-style learning** and community building.
 
-### Community Events
+### Community Events _(In Development)_
 - Members can post **learning events** and gatherings.
 - Users can **browse upcoming events**, RSVP, and participate.
 
