@@ -40,7 +40,7 @@ export const findUserById = async (userId) => {
   }
   try {
     const response = await fetch(
-      API_URL + `/user/${userId}/?include_goal=true`,
+      API_URL + `/user/${userId}/?include_goal=true&include_community=true`,
       {
         method: "GET",
         headers: headers,
