@@ -56,14 +56,13 @@ function LiveUpdates() {
                 alignItems="flex-start"
                 key={index}
                 sx={{
-                 backgroundColor: "var(--light-grey)",
-                  borderRadius: "55px",
-                  marginBottom: "5px",
-                  maxWidth: "95%",
-                  height: "60px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
+                  backgroundColor: "var(--light-grey)",
+                    borderRadius: "20px",
+                    maxWidth: "95%",
+                    height: "3.5rem",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
                 }}
               >
                 <ListItemText
@@ -73,19 +72,17 @@ function LiveUpdates() {
                         fontSize: ".9rem",
                         },
                     },
-                    secondary: {
-                        sx: {
-                        fontSize: "0.875rem",
-                        color: "text.secondary",
-                        },
-                    },
                     }}
                   primary={`${capitalizeWord(
                     member.first_name
                   )} ${capitalizeWord(member.last_name)}`}
                   secondary={
                     <Fragment>
-                      <Typography variant="caption">
+                      <Typography sx={{fontSize: ".45rem", color: "var(--light-blue)"}}>
+                      //TODO: set up logic for time
+                          26 Minutes ago
+                        </Typography>
+                        <Typography sx={{fontSize: ".55rem", color: "var(--black)"}}>
                         With {capitalizeWord(member.community)}
                       </Typography>
                     </Fragment>
@@ -98,10 +95,9 @@ function LiveUpdates() {
           alignItems="flex-start"
           sx={{
             backgroundColor: "var(--light-grey)",
-            borderRadius: "55px",
-            marginBottom: "5px",
-            maxWidth: "85%",
-            height: "60px",
+            borderRadius: "20px",
+            maxWidth: "95%",
+            height: "3.5rem",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
