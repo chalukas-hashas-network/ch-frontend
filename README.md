@@ -70,7 +70,12 @@ This project was commissioned with the goal of blending tradition and technology
 
 - [Live App](Coming Soon)
 - [Demo walk through](https://youtube.com/shorts/yZrK8Y80hu0?feature=share)
-- [UI/UX Concept Video](https://github.com/user-attachments/assets/c5a81ff2-11c5-4330-bff7-3a0696f1de58)
+- UI/UX Concept Video: 
+<br/>
+
+https://github.com/user-attachments/assets/4108152e-374d-45c2-9f7b-5bfb359b54e4
+
+<br/>
 - Screenshots: 
 <br/><img width="382" alt="Screen Shot 2025-05-14 at 7 19 31 PM" src="https://github.com/user-attachments/assets/d11aa8ff-ed43-4ade-b255-c8574a401008" />
 <br/><img width="383" alt="Screen Shot 2025-05-14 at 7 20 13 PM" src="https://github.com/user-attachments/assets/8b55a4e7-3267-4a38-8935-89225a097f45" />
