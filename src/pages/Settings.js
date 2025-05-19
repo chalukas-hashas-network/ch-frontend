@@ -69,13 +69,17 @@ function Settings() {
         ) {
           errors[key] = `Please fill out your ${key.replace("_", " ")}`;
         }
+        const cleanedNumber = userData.phone_number.replace(/\D/g, "");
+        // remove all non-numeric characters
+  
         if (
-          userData.phone_number !== "" &&
-          userData.phone_number.length !== 10 &&
-          !/^\d{10}$/.test(userData.phone_number)
+          cleanedNumber !== "" &&
+          cleanedNumber.length !== 10 &&
+          !/^\d{10}$/.test(cleanedNumber)
         ) {
           errors.phone_number = "Please enter a valid phone number";
         }
+        
         updatedFields[key] = userData[key];
       }
     }
