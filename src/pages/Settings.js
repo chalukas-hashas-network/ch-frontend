@@ -21,6 +21,13 @@ function Settings() {
      username, email, 
      */
 
+  const [errorMessage, setErrorMessage] = useState({
+    email: "",
+    // username: "",
+    phone_number: "",
+    first_name: "",
+    last_name: "",
+  });
   const [userData, setUserData] = useState({
     // username: username,
     email: email,
@@ -31,6 +38,10 @@ function Settings() {
   });
 
   const handleDataChange = (e) => {
+    setErrorMessage((prev) => ({
+      ...prev,
+      [e.target.name]: "",
+    }));
     setUserData({
       ...userData,
       [e.target.name]: e.target.value,
@@ -47,6 +58,8 @@ function Settings() {
   const submitUpdatedProfile = async (e) => {
     e.preventDefault();
     const updatedFields = {};
+    const errors = {};
+
     for (let key in userData) {
       if (userData[key] !== user[key]) {
         if (
@@ -54,23 +67,30 @@ function Settings() {
           key !== "location" &&
           key !== "phone_number"
         ) {
-          alert(`${key} cannot be empty`);
-          return;
+          errors[key] = `Please fill out your ${key.replace("_", " ")}`;
         }
         if (
           userData.phone_number !== "" &&
           userData.phone_number.length !== 10 &&
           !/^\d{10}$/.test(userData.phone_number)
         ) {
-          alert("Please enter a valid phone number");
-          return;
+          errors.phone_number = "Please enter a valid phone number";
         }
         updatedFields[key] = userData[key];
       }
     }
+    setErrorMessage((prev) => ({
+      ...prev,
+      ...errors,
+    }));
+
+    // If any fields are missing, exit the function early
+    if (Object.keys(errors).length > 0) {
+      return;
+    }
+
     try {
       await updateUser(updatedFields);
-      // TODO: return errors from fetch for API validations
 
       // update state
       for (let key in updatedFields) {
@@ -99,8 +119,7 @@ function Settings() {
           color: "var(--black)",
           position: "absolute",
           top: "1em",
-          left: {xs: "2em", md: "15em"},
-
+          left: { xs: "2em", md: "15em" },
         }}
         onClick={() => navigate(-1)}
       >
@@ -132,9 +151,10 @@ function Settings() {
             }}
           /> */}
         <TextField
-          required
+          error={errorMessage.first_name !== ""}
+          helperText={errorMessage.first_name}
           id="first-name"
-          label="First Name"
+          label="*First Name"
           variant="outlined"
           type="text"
           name="first_name"
@@ -142,9 +162,10 @@ function Settings() {
           onChange={handleDataChange}
         />
         <TextField
-          required
+          error={errorMessage.last_name !== ""}
+          helperText={errorMessage.last_name}
           id="last-name"
-          label="Last Name"
+          label="*Last Name"
           variant="outlined"
           type="text"
           name="last_name"
@@ -152,9 +173,10 @@ function Settings() {
           onChange={handleDataChange}
         />
         <TextField
-          required
+          error={errorMessage.email !== ""}
+          helperText={errorMessage.email}
           id="email"
-          label="Email"
+          label="*Email"
           variant="outlined"
           type="text"
           name="email"
@@ -162,6 +184,8 @@ function Settings() {
           onChange={handleDataChange}
         />
         <TextField
+          error={errorMessage.phone_number !== ""}
+          helperText={errorMessage.phone_number}
           id="phone-number"
           label="Phone Number"
           variant="outlined"
@@ -204,10 +228,10 @@ function Settings() {
             backgroundColor: "var(--brown)",
             textTransform: "none",
             borderRadius: "10px",
-            height:"3rem",
-            fontSize:".8em",
-            width:"9rem",
-            marginTop:"3em"
+            height: "3rem",
+            fontSize: ".8em",
+            width: "9rem",
+            marginTop: "3em",
           }}
         >
           Update Profile
