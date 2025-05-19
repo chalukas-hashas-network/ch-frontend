@@ -11,13 +11,15 @@ export const getAccessToken = async (username, password) => {
       },
       body: JSON.stringify({ username: username, password: password }),
     });
-    if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
-    }
+
     const data = await response.json();
-    localStorage.setItem(ACCESS_TOKEN, data.access);
-    localStorage.setItem(REFRESH_TOKEN, data.refresh);
-    return data;
+    
+    if (response.status === 200) {
+      localStorage.setItem(ACCESS_TOKEN, data.access);
+      localStorage.setItem(REFRESH_TOKEN, data.refresh);
+    }
+
+    return response.status;
   } catch (error) {
     console.log("userLogin error: " + error);
   }

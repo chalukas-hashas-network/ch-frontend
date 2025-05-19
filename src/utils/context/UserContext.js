@@ -50,10 +50,10 @@ export const UserProvider = ({ children }) => {
 
   const login = async (username, password) => {
     const res = await getAccessToken(username, password);
-
     if (res != null) {
       fetchUser();
     }
+    return res;
   };
 
   const signup = async (userData) => {
