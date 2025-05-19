@@ -34,6 +34,7 @@ function createData(id, name, location, members = 0, community_goal) {
 export default function SuperAdminDash() {
   const [rows, setRows] = useState([]);
   const [popup, setPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [communityData, setCommunityData] = useState({
     name: "",
     location: "",
@@ -81,7 +82,7 @@ export default function SuperAdminDash() {
     e.preventDefault();
 
     if (communityData.name === "" || communityData.location === "") {
-      alert("Please fill out all fields");
+      setErrorMessage({ error: "Please fill in all required fields." });
       return;
     }
     try {
@@ -103,6 +104,7 @@ export default function SuperAdminDash() {
   };
 
   const reset = () => {
+    setErrorMessage(null);
     setPopup(false);
     setCommunityData({
       name: "",
@@ -176,8 +178,10 @@ export default function SuperAdminDash() {
             </Typography>
             <form onSubmit={handleSubmit}>
               <TextField
+              error={errorMessage}
+                helperText={errorMessage?.error}
                 id="name"
-                label="Community Name"
+                label="*Community Name"
                 variant="outlined"
                 type="text"
                 name="name"
@@ -191,9 +195,11 @@ export default function SuperAdminDash() {
                 sx={{ marginTop: "2em" }}
               />
               <TextField
+                error={errorMessage}
+                helperText={errorMessage?.error}
                 id="outlined-select-state"
                 select
-                label="State"
+                label="*State"
                 name="location"
                 value={capitalizeWord(communityData.location)}
                 onChange={(e) =>
