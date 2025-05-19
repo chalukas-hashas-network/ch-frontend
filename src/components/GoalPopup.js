@@ -33,12 +33,14 @@ function GoalPopup({
   const { goal } = user;
 
   const [selectedPage, setSelectedPage] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
   const [selectedTractate, setSelectedTractate] = useState({
     id: "",
     tractate: "",
   });
 
   const resetData = () => {
+    setErrorMessage("");
     setSelectedTractate({ id: "", tractate: "" });
     setSelectedPage(0);
     setOpenGoal(false);
@@ -49,6 +51,7 @@ function GoalPopup({
 
   // Handle change for selecting tractate
   const handleTractateChange = (e) => {
+    setErrorMessage("");
     const selectedGoal = goal.goal_tractates.find(
       (tractate) => tractate.id === e.target.value
     );
@@ -58,7 +61,6 @@ function GoalPopup({
 
   // Handle change for selecting page number
   const handlePageChange = (e) => {
-    console.log("page change", e.target.value);
     setSelectedPage(e.target.value);
   };
 
@@ -69,8 +71,6 @@ function GoalPopup({
         goal?.goal_tractates?.length === 1 &&
         goalEditOption === "update-goal"
       ) {
-        // console.log("goal: ", goal);
-        // * is a number
         setSelectedTractate(goal.goal_tractates[0]);
         setSelectedPage(goal.goal_tractates[0].tractate_pages_completed || 0); // Default to completed pages
       }
@@ -79,19 +79,20 @@ function GoalPopup({
   );
 
   const handleTractateCreateChange = (e) => {
+    setErrorMessage("");
     const selectedTractate = tractates.find(
       (tractate) => tractate.id === e.target.value
     );
-    // * is a number
     setSelectedTractate(selectedTractate || { id: "", tractate: "" });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // setErrorMessage("");
     switch (goalEditOption) {
       case "create-goal":
-        if (selectedTractate === "") {
-          alert("Please select a tractate");
+        if (selectedTractate.id === "") {
+          setErrorMessage("Please select a tractate");
           return;
         }
         try {
@@ -108,17 +109,14 @@ function GoalPopup({
           }
 
           // ! wont work if user is creating goal for first time
-          await createTractateGoal(
-            goal.id,
-            selectedTractate.id
-          );
+          await createTractateGoal(goal.id, selectedTractate.id);
 
-          
           const totalSelected =
-          goal?.user_total_selected_pages + selectedTractate.number_of_pages;
-          
-          const percentageCompleted =
-            parseFloat((goal.user_total_completed_pages / totalSelected) * 100).toFixed(2);
+            goal?.user_total_selected_pages + selectedTractate.number_of_pages;
+
+          const percentageCompleted = parseFloat(
+            (goal.user_total_completed_pages / totalSelected) * 100
+          ).toFixed(2);
           const newGoal = {
             tractate: selectedTractate.name,
             tractate_pages_completed: 0,
@@ -139,12 +137,13 @@ function GoalPopup({
         } catch (error) {
           console.error("Error updating user goal:", error);
         }
-        console.log("Selected tractate:", selectedTractate);
-        // setSelectedTractate("Select tractate");
-        // setOpenGoal(false);
         resetData();
         break;
       case "update-goal":
+        if (selectedTractate.id === "") {
+          setErrorMessage("Please select a tractate");
+          return;
+        }
         const pageAsFloat = parseFloat(selectedPage);
         try {
           // ! cant make the page 0
@@ -248,6 +247,8 @@ function GoalPopup({
           {goalEditOption === "create-goal" && (
             <div>
               <TextField
+                error={errorMessage !== ""}
+                helperText={errorMessage}
                 select
                 label="Select Tractate"
                 value={selectedTractate.id || ""}
@@ -272,6 +273,8 @@ function GoalPopup({
                 // If there are multiple tractates, show a dropdown for selecting tractate and page
                 <div className="selectTractateDropdown">
                   <TextField
+                    error={errorMessage !== ""}
+                    helperText={errorMessage}
                     select
                     label="Select Tractate"
                     value={selectedTractate.id || ""}
