@@ -20,27 +20,20 @@ function Login() {
   const { allCommunities, getAllCommunityData } = useCommunity();
   const navigate = useNavigate();
 
+  const emptyData = {
+    email: "",
+    username: "",
+    password: "",
+    password_confirmation: "",
+    phone_number: "",
+    first_name: "",
+    last_name: "",
+    location: "",
+  };
+
   const [onboardingStatus, setOnboardingStatus] = useState("Register");
-  const [userData, setUserData] = useState({
-    email: "",
-    // username: "",
-    password: "",
-    password_confirmation: "",
-    phone_number: "",
-    first_name: "",
-    last_name: "",
-    location: "",
-  });
-  const [userDataErrors, setUserDataErrors] = useState({
-    email: "",
-    // username: "",
-    password: "",
-    password_confirmation: "",
-    phone_number: "",
-    first_name: "",
-    last_name: "",
-    location: "",
-  });
+  const [userData, setUserData] = useState(emptyData);
+  const [userDataErrors, setUserDataErrors] = useState(emptyData);
   const [optionalUserData, setOptionalUserData] = useState({
     community: { name: "", id: "" },
     tractate: { name: "", id: "" },
@@ -118,10 +111,13 @@ function Login() {
         }
       }
 
+      const cleanedNumber = userData.phone_number.replace(/\D/g, "");
+      // remove all non-numeric characters
+
       if (
-        userData.phone_number !== "" &&
-        userData.phone_number.length !== 10 &&
-        !/^\d{10}$/.test(userData.phone_number)
+        cleanedNumber !== "" &&
+        cleanedNumber.length !== 10 &&
+        !/^\d{10}$/.test(cleanedNumber)
       ) {
         errors.phone_number = "Please enter a valid phone number";
       }
@@ -149,10 +145,18 @@ function Login() {
       if (userData.username === "" || userData.password === "") {
         setUserDataErrors({
           username: "Please enter the correct username or password",
+          password: "Please enter the correct username or password",
         });
       } else {
         try {
-          await login(userData.username, userData.password);
+          const successful = await login(userData.username, userData.password);
+          if (successful !== 200) {
+            setUserDataErrors({
+              username: "Please enter the correct username or password",
+              password: "Please enter the correct username or password",
+            });
+            return;
+          }
           triggerLoading();
           navigate(-1);
         } catch (err) {
@@ -195,16 +199,8 @@ function Login() {
       community: { name: "", id: "" },
       tractate: { name: "", id: "" },
     });
-    setUserData({
-      email: "",
-      // username: "",
-      password: "",
-      password_confirmation: "",
-      phone_number: "",
-      first_name: "",
-      last_name: "",
-      location: "",
-    });
+    setUserData(emptyData);
+    setUserDataErrors(emptyData);
   };
 
   return (
