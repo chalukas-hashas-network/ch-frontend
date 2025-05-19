@@ -89,9 +89,9 @@ function LoginPopup({
               }}
             />
             <TextField
-              error={userDataErrors.username !== ""}
+              error={userDataErrors.password !== ""}
               helperText={
-                userDataErrors.username !== "" && userDataErrors.username
+                userDataErrors.password !== "" && userDataErrors.password
               }
               id="password"
               label="*Password"
@@ -533,13 +533,13 @@ function LoginPopup({
                     Choose your Tractate
                   </Typography>
                   <TextField
-                    id="outlined-select-community"
+                    id="outlined-select-tractate"
                     select
                     label="Tractate"
                     name="tractate"
                     value={optionalUserData.tractate.id || ""}
                     onChange={handleChange}
-                    defaultValue="Select Community"
+                    defaultValue="Select Mesechta"
                     sx={{ marginTop: "2em" }}
                   >
                     <MenuItem key="default" value="">
