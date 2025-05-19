@@ -18,6 +18,7 @@ import {
 } from "../utils/dataExports/muiExports";
 import { useCommunity } from "../utils/context/CommunityContext";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 // TODO: add ability to remove admin
 
@@ -32,42 +33,67 @@ function AdminDashPopup({
   capitalizeWord,
   setCommunityAdmins,
   communityAdmins,
+  isSuperAdmin,
 }) {
-  const { username, first_name, last_name, email, phone_number, goal, community_id } =
-    userData;
+  const {
+    username,
+    first_name,
+    last_name,
+    email,
+    phone_number,
+    goal,
+    community_id,
+  } = userData;
 
   const { allCommunities, setAllCommunities } = useCommunity();
   const navigate = useNavigate();
 
+  const [errorMessage, setErrorMessage] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone_number: "",
+  });
+  const [updatedCommunityData, setUpdatedCommunityData] = useState({
+    id: communityData.id,
+    name: communityData.name,
+    location: communityData.location,
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const errors = {};
 
     switch (popupStatus) {
       case "editCommunity":
-        if (communityData.name === "" || communityData.location === "") {
-          alert("Please fill out all fields");
+        if (updatedCommunityData.name === "") {
+          setErrorMessage({
+            ...errorMessage,
+            first_name: "Please fill out the community name field",
+          });
           return;
         }
+        debugger;
         try {
-          await updateCommunity(communityData);
+          await updateCommunity(updatedCommunityData);
           setAllCommunities(
             allCommunities.map((community) =>
-              community.id === communityData.id
+              community.id === updatedCommunityData.id
                 ? {
                     ...community,
-                    name: communityData.name,
-                    location: communityData.location,
+                    name: updatedCommunityData.name,
+                    location: updatedCommunityData.location,
                   }
                 : community
             )
           );
 
           setCommunityData((prev) =>
-            prev?.id === communityData.id
+            prev?.id === updatedCommunityData.id
               ? {
                   ...prev,
-                  name: communityData.name,
-                  location: communityData.location,
+                  name: updatedCommunityData.name,
+                  location: updatedCommunityData.location,
                 }
               : prev
           );
@@ -110,6 +136,38 @@ function AdminDashPopup({
         break;
       case "editMember":
         // check each field to see if empty if yes alert
+        for (let key in userData) {
+          if (
+            userData[key] === "" &&
+            key !== "username" &&
+            key !== "phone_number" &&
+            key !== "id" &&
+            key !== "goal"
+          ) {
+            errors[key] = `Please fill out the ${key.replace("_", " ")} field`;
+          }
+        }
+
+        const cleanedNumber = userData.phone_number.replace(/\D/g, "");
+        // remove all non-numeric characters
+
+        if (
+          cleanedNumber !== "" &&
+          cleanedNumber.length !== 10 &&
+          !/^\d{10}$/.test(cleanedNumber)
+        ) {
+          errors.phone_number = "Please enter a valid phone number";
+        }
+
+        setErrorMessage((prev) => ({
+          ...prev,
+          ...errors,
+        }));
+
+        // If any fields are missing, exit the function early
+        if (Object.keys(errors).length > 0) {
+          return;
+        }
         try {
           // ! route to is update me, not any user
           // await updateUser({
@@ -155,10 +213,15 @@ function AdminDashPopup({
   };
 
   const handleUserDataChange = (e) => {
+    setErrorMessage((prev) => ({
+      ...prev,
+      [e.target.name]: "",
+    }));
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
   const resetData = () => {
+    setErrorMessage(null);
     setPopup(false);
     setPopupStatus("");
     setUserData({
@@ -170,6 +233,11 @@ function AdminDashPopup({
       community_id: "",
       phone_number: "",
       goal: 0,
+    });
+    setUpdatedCommunityData({
+      name: "",
+      location: "",
+      id: "",
     });
   };
 
@@ -185,6 +253,7 @@ function AdminDashPopup({
         style={{
           display: "flex",
           justifyContent: "center",
+          height: `${isSuperAdmin && popupStatus === "editMember" && "30em"}`,
         }}
       >
         <Button
@@ -207,18 +276,24 @@ function AdminDashPopup({
                 Edit Community
               </Typography>
               <TextField
+                error={errorMessage.first_name !== ""}
+                helperText={errorMessage.first_name}
                 id="name"
                 label="Community Name"
                 variant="outlined"
                 type="text"
                 name="name"
-                value={communityData.name}
-                onChange={(e) =>
-                  setCommunityData({
-                    ...communityData,
+                value={updatedCommunityData.name}
+                onChange={(e) => {
+                  setErrorMessage({
+                    ...errorMessage,
+                    first_name: "",
+                  });
+                  setUpdatedCommunityData({
+                    ...updatedCommunityData,
                     name: e.target.value,
-                  })
-                }
+                  });
+                }}
                 sx={{ marginTop: "2em" }}
               />
               <TextField
@@ -226,13 +301,13 @@ function AdminDashPopup({
                 select
                 label="State"
                 name="location"
-                value={capitalizeWord(communityData.location)}
-                onChange={(e) =>
-                  setCommunityData({
-                    ...communityData,
+                value={capitalizeWord(updatedCommunityData.location)}
+                onChange={(e) => {
+                  setUpdatedCommunityData({
+                    ...updatedCommunityData,
                     location: e.target.value,
-                  })
-                }
+                  });
+                }}
                 defaultValue="Select state"
               >
                 {states.map((state, index) => (
@@ -323,7 +398,6 @@ function AdminDashPopup({
           </Box>
         )}
         {popupStatus === "editMember" && (
-          //? what info should admin/super be allowed to edit
           <form onSubmit={handleSubmit}>
             <Typography
               variant="h5"
@@ -336,8 +410,10 @@ function AdminDashPopup({
               Edit User
             </Typography>
             <TextField
+              error={errorMessage?.first_name !== ""}
+              helperText={errorMessage?.first_name}
               id="first-name"
-              label="First Name"
+              label="*First Name"
               variant="outlined"
               type="text"
               name="first_name"
@@ -346,27 +422,81 @@ function AdminDashPopup({
               style={{ marginTop: "2em" }}
             />
             <TextField
+              error={errorMessage?.last_name !== ""}
+              helperText={errorMessage?.last_name}
               id="last-name"
-              label="Last Name"
+              label="*Last Name"
               variant="outlined"
               type="text"
               name="last_name"
               value={last_name}
               onChange={handleUserDataChange}
             />
-            <Button
-              type="submit"
-              variant="contained"
-              style={{
-                backgroundColor: "var(--orange)",
-                width: "90%",
-                marginTop: "1em",
-                textTransform: "none",
-                boxShadow: "none",
+            {isSuperAdmin && (
+              <>
+                <TextField
+                  error={errorMessage?.email !== ""}
+                  helperText={errorMessage?.email}
+                  id="email"
+                  label="*Email"
+                  variant="outlined"
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={handleUserDataChange}
+                />
+                <TextField
+                  error={errorMessage?.phone_number !== ""}
+                  helperText={errorMessage?.phone_number}
+                  id="phone-number"
+                  label="Phone Number"
+                  variant="outlined"
+                  type="tel"
+                  name="phone_number"
+                  value={phone_number}
+                  onChange={handleUserDataChange}
+                />
+              </>
+            )}
+            <Box
+              sx={{
+                position: "absolute",
+                left: "50%",
+                transform: "translateX(-50%)",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                bottom: "1em",
+                gap: 1,
+                width: "100%",
               }}
             >
-              Update User
-            </Button>
+              <Button
+                onClick={() => setPopupStatus("viewMember")}
+                variant="contained"
+                style={{
+                  backgroundColor: "var(--dark-grey)",
+                  color: "var(--black)",
+                  marginTop: "1em",
+                  textTransform: "none",
+                  boxShadow: "none",
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                style={{
+                  backgroundColor: "var(--orange)",
+                  marginTop: "1em",
+                  textTransform: "none",
+                  boxShadow: "none",
+                }}
+              >
+                Update User
+              </Button>
+            </Box>
           </form>
         )}
         {popupStatus === "viewMember" && (
@@ -534,7 +664,8 @@ function AdminDashPopup({
               </MenuItem>
               {communityData.members.map((member, index) => (
                 <MenuItem key={index} value={member.id}>
-                  {capitalizeWord(member.first_name)} {capitalizeWord(member.last_name)}
+                  {capitalizeWord(member.first_name)}{" "}
+                  {capitalizeWord(member.last_name)}
                 </MenuItem>
               ))}
             </TextField>
@@ -608,7 +739,9 @@ function AdminDashPopup({
               </MenuItem>
               {communityAdmins.map((admin, index) => (
                 <MenuItem key={index} value={admin.id}>
-                  {capitalizeWord(admin.first_name) + " " + capitalizeWord(admin.last_name)}
+                  {capitalizeWord(admin.first_name) +
+                    " " +
+                    capitalizeWord(admin.last_name)}
                 </MenuItem>
               ))}
             </TextField>
