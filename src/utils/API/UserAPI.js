@@ -23,11 +23,11 @@ export const getUser = async () => {
       }
     );
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error getting user: ${response.statusText}`);
     }
     return await response.json();
   } catch (err) {
-    console.log("Error getting user: ", err);
+    console.log(err);
   }
 };
 
@@ -47,11 +47,11 @@ export const findUserById = async (userId) => {
       }
     );
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error finding user: ${response.statusText}`);
     }
     return await response.json();
   } catch (err) {
-    console.log("Error finding user: ", err);
+    console.log(err);
   }
 };
 
@@ -81,12 +81,12 @@ export const queryUsers = async (filters = {}) => {
       headers: headers,
     });
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error querying users: ${response.statusText}`);
     }
 
     return await response.json();
   } catch (err) {
-    console.log("Error querying users: ", err);
+    console.log(err);
   }
 };
 
@@ -105,13 +105,14 @@ export const createUser = async (body) => {
       },
       body: JSON.stringify(body),
     });
+    debugger;
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error creating user: ${response.statusText}`);
     }
-
-    return await response.json();
+    // return await response.json();
+    return response.status;
   } catch (err) {
-    console.log("Error creating user: ", err);
+    console.log(err);
     // TODO: error messages if arent unique
     //   {
     //     "username": [
@@ -141,7 +142,7 @@ export const updateUser = async (body) => {
       body: JSON.stringify(body),
     });
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error updating user: ${response.statusText}`);
     }
 
     return await response.json();
@@ -150,6 +151,6 @@ export const updateUser = async (body) => {
     // {"email":["Email is already taken."]}
     // {"email":["Enter a valid email address."]}
   } catch (err) {
-    console.log("Error updating user: ", err);
+    console.log(err);
   }
 };

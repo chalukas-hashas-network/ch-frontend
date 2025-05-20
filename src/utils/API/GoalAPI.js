@@ -24,12 +24,12 @@ export const createAnnualGoal = async (id, year) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error while creating annual goal: ${response.statusText}`);
     }
 
     return await response.json();
   } catch (err) {
-    console.log("Error while creating annual goal: ", err);
+    console.log(err);
   }
 };
 
@@ -51,12 +51,12 @@ export const createTractateGoal = async (goal_id, tractate_id) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error creating goal: ${response.statusText}`);
     }
 
     return await response.json();
   } catch (err) {
-    console.log("Error while creating goal: ", err);
+    console.log(err);
   }
 };
 
@@ -87,12 +87,12 @@ export const updateTractateProgress = async (goalId, page) => {
       body: JSON.stringify({ tractate_pages_completed: page }),
     });
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error updating tractate: ${response.statusText}`);
     }
 
     return await response.json();
   } catch (err) {
-    console.log("Error while trying to update tractate progress: ", err);
+    console.log(err);
   }
 };
 
@@ -110,9 +110,9 @@ export const deleteTractateGoal = async (goalId) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error deleting goal: ${response.statusText}`);
     }
   } catch (err) {
-    console.log("Error while trying to delete goal: ", err);
+    console.log(err);
   }
 };

@@ -28,12 +28,12 @@ export const getCommunities = async (filterField = {}, includeFields = []) => {
     const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error getting community: ${response.statusText}`);
     }
 
     return await response.json();
   } catch (err) {
-    console.log("Error getting community: ", err);
+    console.log(err);
   }
 };
 
@@ -71,12 +71,12 @@ export const queryCommunities = async (
     });
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error getting community: ${response.statusText}`);
     }
 
     return await response.json();
   } catch (err) {
-    console.log("Error getting community: ", err);
+    console.log(err);
   }
 };
 
@@ -113,12 +113,12 @@ export const createCommunity = async (body) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error creating community: ${response.statusText}`);
     }
 
     return await response.json();
   } catch (err) {
-    console.log("Error creating community", err);
+    console.log(err);
   }
 };
 
@@ -136,12 +136,12 @@ export const updateCommunity = async (body) => {
       }
     );
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error updating community: ${response.statusText}`);
     }
 
     return await response.json();
   } catch (err) {
-    console.log("Error updating community: ", err);
+    console.log(err);
   }
 };
 
@@ -152,12 +152,12 @@ export const deleteCommunity = async (id) => {
       headers: headers,
     });
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error deleting community: ${response.statusText}`);
     }
 
     return await response.json();
   } catch (err) {
-    console.log("Error deleting community: ", err);
+    console.log(err);
   }
 };
 
@@ -179,11 +179,11 @@ export const createAdmin = async (user_id, community_id) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      throw new Error(`Error creating admin: ${response.statusText}`);
     }
 
     return await response.json();
   } catch (err) {
-    console.log("Error creating admin: ", err);
+    console.log(err);
   }
 };
