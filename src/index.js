@@ -9,6 +9,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "./utils/context/ThemeContext.js";
 import React from "react";
 import { TractateProvider } from "./utils/context/TractateContext.js";
+import { EventProvider } from "./utils/context/EventContext.js";
 
 const root = createRoot(document.getElementById("root"));
 root.render(
@@ -18,9 +19,11 @@ root.render(
         <BrowserRouter>
           <CommunityProvider>
             <TractateProvider>
-              <LoginProvider>
-                <App />
-              </LoginProvider>
+              <EventProvider>
+                <LoginProvider>
+                  <App />
+                </LoginProvider>
+              </EventProvider>
             </TractateProvider>
           </CommunityProvider>
         </BrowserRouter>
