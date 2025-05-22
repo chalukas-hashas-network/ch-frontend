@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   TextField,
@@ -9,11 +9,13 @@ import {
   Card,
   CardContent,
   Typography,
+  CloseRoundedIcon,
 } from "../utils/dataExports/muiExports";
 import states from "../utils/dataExports/StatesExports";
 import LiveUpdates from "../components/LiveUpdates";
+import { useEvent } from "../utils/context/EventContext";
 
-import { CardHeader, CardMedia } from "@mui/material";
+import { CardHeader, CardMedia, Dialog, Divider } from "@mui/material";
 import AddEventPopup from "../components/AddEventPopup";
 
 // ? if events are a separate fetch from communities, set up event context
@@ -26,12 +28,23 @@ on view- popup of card
 */
 
 function Events() {
+  const [events, setEvents] = useState([]);
+  const [addEventPopup, setAddEventPopup] = useState(false);
+  const [viewEvent, setViewEvent] = useState({ popup: false, event: {} });
   const [selectedDropDown, setSelectedDropdown] = useState({
     name: "",
     firstLetter: "",
   });
-  const [events, setEvents] = useState([]);
-  const [addEventPopup, setAddEventPopup] = useState(false);
+
+  const { allEvents, setAllEvents, getAllEventData } = useEvent();
+
+  useEffect(
+    function getAllEvents() {
+      getAllEventData();
+      setEvents(allEvents);
+    },
+    [allEvents, getAllEventData]
+  );
 
   const dropdownOptions = states?.map((state) => {
     const firstLetter = state[0].toUpperCase();
@@ -40,6 +53,10 @@ function Events() {
       name: state,
     };
   });
+
+  const reset = () => {
+    setViewEvent({ popup: false, event: {} });
+  };
 
   return (
     <Box
@@ -183,24 +200,51 @@ function Events() {
                     position: "relative",
                   }}
                 >
-                  {/* <CardHeader> */}
-                  <CardMedia
-                    component="img"
-                    height="194"
-                    image="/static/images/cards/paella.jpg"
-                    alt="Paella dish"
-                  />
-                  {/* </CardHeader> */}
+                  <CardHeader>
+                    <CardMedia
+                      component="img"
+                      height="194"
+                      image="../assets/images/Chalukas Hashas Logo TS no bottoms text .png"
+                      alt="Paella dish"
+                    />
+                  </CardHeader>
                   <CardContent
                     sx={{
                       position: "relative",
-                      top: "2em",
+                      // top: "3em",
+                      marginTop: "2em",
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
                       textAlign: "center",
                     }}
-                  ></CardContent>
+                  >
+                    <Typography sx={{ color: "black", fontSize: ".9em" }}>
+                      {event.title}
+                    </Typography>
+                    <Typography sx={{ color: "black", fontSize: ".7em" }}>
+                      {event.time}
+                    </Typography>
+                    <Typography sx={{ color: "black", fontSize: ".7em" }}>
+                      Run by {event.host}
+                    </Typography>
+                    <Button
+                      // variant="contained"
+                      onClick={() =>
+                        setViewEvent({ popup: true, event: event })
+                      }
+                      sx={{
+                        boxShadow: "none",
+                        color: "var(--light-blue)",
+                        textDecoration: "underline",
+                        fontSize: ".7em",
+                        padding: "1em",
+                        textTransform: "none",
+                      }}
+                    >
+                      View More
+                    </Button>
+                  </CardContent>
                 </Card>
               ))}
             </>
@@ -232,9 +276,88 @@ function Events() {
         </Grid>
       </Box>
       <LiveUpdates />
-      {addEventPopup && (
-        <AddEventPopup setAddEventPopup={setAddEventPopup}/>
-      )}
+      {addEventPopup && <AddEventPopup setAddEventPopup={setAddEventPopup} />}
+      {/* // ! depending on how events are set up in the backend, either have it in a popup (but a lengthy description will be problomatic with card height) 
+      // ! or have it in a nested page
+      */}
+      <Dialog
+        open={viewEvent.popup}
+        onClose={() => reset()}
+        PaperComponent={Card}
+        sx={{ backdropFilter: "blur(5px)" }}
+      >
+        <div
+          className="popup-card"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Button
+            onClick={() => reset()}
+            style={{ position: "absolute", top: "10px", right: "10px" }}
+          >
+            <CloseRoundedIcon style={{ color: "var(--orange)" }} />
+          </Button>
+          <div
+            style={{
+              marginTop: "7em",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <Typography sx={{ color: "var(--orange)", fontSize: "1.5em" }}>
+              {viewEvent.event.title}
+            </Typography>
+            <Divider flexItem />
+            <Typography sx={{ color: "var(--black)", fontSize: "1.2em" }}>
+              Address:
+              <Typography sx={{ color: "var(--light-blue)" }}>
+                {viewEvent.event.address}
+              </Typography>
+            </Typography>
+            <Typography
+              sx={{
+                // backgroundColor: "var(--brown)",
+                fontSize: ".9em",
+                // paddingLeft: "15px",
+                // paddingRight: "15px",
+                // borderRadius: "25px",
+                // color: "white",
+              }}
+            >
+              {viewEvent.event.date} {viewEvent.event.time}
+            </Typography>
+            <Typography sx={{ color: "var(--brown)", fontSize: "1.2em" }}>
+              Run by {viewEvent.event.host}
+            </Typography>
+            {viewEvent.event.rsvp && (
+              <Button
+                onClick={() => {
+                  console.log("RSVP clicked");
+                }}
+                href={viewEvent.event.rsvp} // Full external URL (e.g., https://example.com/rsvp)
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="contained"
+                sx={{
+                  backgroundColor: "var(--orange)",
+                  borderRadius: "13px",
+                  boxShadow: "none",
+                  textTransform: "none",
+                  height: "2rem",
+                  width: "5rem",
+                  fontSize: ".7em",
+                }}
+              >
+                RSVP
+              </Button>
+            )}
+          </div>
+        </div>
+      </Dialog>
     </Box>
   );
 }
