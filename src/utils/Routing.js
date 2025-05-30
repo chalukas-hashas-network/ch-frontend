@@ -10,6 +10,7 @@ import CommunityMembers from "../pages/CommunityMembers.js";
 import Login from "../pages/Login.js";
 import Events from "../pages/Events.js";
 import SuperAdminDash from "../pages/SuperAdminDash.js";
+import Chavrusa from "../pages/Chavrusa.js";
 
 export default function Routing() {
   const { isAdmin, isAuth, isSuperAdmin } = useUser();
@@ -21,6 +22,7 @@ export default function Routing() {
       <Route path="/home/*" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/events" element={<Events />} />
+      <Route path="/chavrusas" element={<Chavrusa />} />
       {isAuth && (
         <>
           <Route exact path="/goal" element={<Goal />} />
