@@ -93,6 +93,7 @@ function AdminDash() {
           ? Number(community_id)
           : user?.community?.id;
 
+        // ! doesnt work if community was just created, it doesnt have an id yet in state
         const selected_community = allCommunities.find(
           (c) => c.id === communityId
         );
@@ -158,8 +159,7 @@ function AdminDash() {
 
   const handleOpenRow = async (row) => {
     try {
-      const userData = await findUserById(row?.id);
-      console.log("userData: ", userData);
+      const userData = await findUserById(row?.id, ["community", "goal"]);
       setUserData({
         username: userData?.username,
         first_name: userData?.first_name,
@@ -450,6 +450,7 @@ function AdminDash() {
           capitalizeWord={capitalizeWord}
           setCommunityAdmins={setCommunityAdmins}
           communityAdmins={communityAdmins}
+          isSuperAdmin={isSuperAdmin}
         />
       )}
     </div>
