@@ -31,21 +31,29 @@ export const getUser = async () => {
   }
 };
 
-export const findUserById = async (userId) => {
+export const findUserById = async (userId, includeFields = []) => {
   const token = localStorage.getItem(ACCESS_TOKEN);
-  // ! add path in route to include data
 
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
+
+  let url = `${API_URL}/user/${userId}/`;
+  const queryParams = [];
+
+  includeFields?.forEach((field) => {
+    queryParams.push(`include_${field}=true`);
+  });
+
+  if (queryParams.length > 0) {
+    url += `?${queryParams.join("&")}`;
+  }
+
   try {
-    const response = await fetch(
-      API_URL + `/user/${userId}/?include_goal=true&include_community=true`,
-      {
-        method: "GET",
-        headers: headers,
-      }
-    );
+    const response = await fetch(url, {
+      method: "GET",
+      headers: headers,
+    });
     if (!response.ok) {
       throw new Error(`Error finding user: ${response.statusText}`);
     }
