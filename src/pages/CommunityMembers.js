@@ -15,8 +15,13 @@ import JoinCommunityPopup from "../components/JoinCommunityPopup";
 import { useParams, useNavigate } from "react-router-dom";
 import DataBoxesDisplay from "../components/DataBoxesDisplay";
 import { useUser } from "../utils/context/UserContext";
+import ViewCommunityChart from "../components/ViewCommunityChart";
 
 function CommunityMembers() {
+  const [viewCommunityChartPopup, setViewCommunityChartPopup] = useState({
+    isOpen: false,
+    community: null,
+  });
   const [joinPopup, setJoinPopup] = useState({
     isOpen: false,
     community: null,
@@ -129,10 +134,18 @@ function CommunityMembers() {
           <Button
             sx={{
               color: "var(--light-blue)",
-              textDecoration: "underline",
+              textDecoration: members.length > 0 && "underline",
               textTransform: "none",
               fontSize: ".7em",
               paddingTop: "0px",
+            }}
+            onClick={() => {
+              if (members.length > 0) {
+                setViewCommunityChartPopup({
+                  community: Number(community_id),
+                  isOpen: true,
+                });
+              }
             }}
           >
             {members.length > 0
@@ -213,8 +226,10 @@ function CommunityMembers() {
               fontSize: ".85em",
             }}
             onClick={() =>
-              // TODO: set up logic
-              alert("This feature isn't set up yet")
+              setViewCommunityChartPopup({
+                community: Number(community_id),
+                isOpen: true,
+              })
             }
           >
             View Community Chart
@@ -253,14 +268,22 @@ function CommunityMembers() {
             <Button
               sx={{
                 color: "var(--light-blue)",
-                textDecoration: "underline",
+                textDecoration: members.length > 0 && "underline",
                 textTransform: "none",
                 fontSize: ".7em",
                 paddingTop: "0px",
               }}
+              onClick={() => {
+                if (members?.length > 0) {
+                  setViewCommunityChartPopup({
+                    community: Number(community_id),
+                    isOpen: true,
+                  });
+                }
+              }}
             >
-              {members.length > 0
-                ? `${members.length} Community Members`
+              {members?.length > 0
+                ? `${members?.length} Community Members`
                 : "No Members Yet"}{" "}
             </Button>
             {members?.length > 0 ? (
@@ -362,11 +385,13 @@ function CommunityMembers() {
             View events
           </Button>
           <Button
-            onClick={() =>
-              // TODO: set up logic
-              // ? only for users logged in? trigger login?
-              navigate("/chavrusas")
-            }
+            onClick={() => {
+              if (!user.id) {
+                navigate("/login");
+                return;
+              }
+              navigate("/chavrusas");
+            }}
             variant="contained"
             sx={{
               backgroundColor: "var(--brown)",
@@ -389,6 +414,12 @@ function CommunityMembers() {
           <JoinCommunityPopup
             setJoinPopup={setJoinPopup}
             joinPopup={joinPopup}
+          />
+        )}
+        {viewCommunityChartPopup.isOpen && (
+          <ViewCommunityChart
+            popup={viewCommunityChartPopup}
+            setPopup={setViewCommunityChartPopup}
           />
         )}
       </Box>

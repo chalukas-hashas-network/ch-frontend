@@ -16,11 +16,17 @@ import states from "../utils/dataExports/StatesExports";
 import JoinCommunityPopup from "../components/JoinCommunityPopup";
 import { useCommunity } from "../utils/context/CommunityContext";
 import { useUser } from "../utils/context/UserContext";
+import ViewCommunityChart from "../components/ViewCommunityChart";
 
 // TODO: make Join button logic
 
 function Community() {
   const [toggleDropdown, setToggleDropdown] = useState("name");
+  const [communityData, setCommunityData] = useState([]);
+  const [viewCommunityChart, setViewCommunityChart] = useState({
+    isOpen: false,
+    community: null,
+  });
   const [joinPopup, setJoinPopup] = useState({
     isOpen: false,
     community: null,
@@ -29,7 +35,6 @@ function Community() {
     name: "",
     firstLetter: "",
   });
-  const [communityData, setCommunityData] = useState([]);
 
   const { allCommunities, getAllCommunityData } = useCommunity();
 
@@ -41,7 +46,7 @@ function Community() {
       getAllCommunityData();
       setCommunityData(allCommunities);
     },
-    [allCommunities]
+    [allCommunities, getAllCommunityData]
   );
 
   const dropdownOptions =
@@ -70,21 +75,23 @@ function Community() {
 
   useEffect(
     function fillCommunityDataOnDropdownChange() {
-      if (selectedDropdown.name !== "") {
+      if (selectedDropdown.name !== "" && selectedDropdown.name) {
+        debugger
         if (toggleDropdown === "name") {
           setCommunityData(
             allCommunities.filter(
-              (community) =>
-                community.name.toLowerCase() ===
-                selectedDropdown.name.toLowerCase()
+              (community) => 
+                // console.log(community.name[0])
+              community.name[0].toLowerCase() ===
+              selectedDropdown.name?.toLowerCase()
             )
           );
         } else {
           setCommunityData(
             allCommunities.filter(
               (community) =>
-                community.location.toLowerCase() ===
-                selectedDropdown.name.toLowerCase()
+                community.location?.toLowerCase() ===
+                selectedDropdown.name?.toLowerCase()
             )
           );
         }
@@ -303,7 +310,16 @@ function Community() {
                       fontSize: ".7em",
                       color: "var(--light-blue)",
                       // TODO: set up button logic?
-                      // textDecoration: "underline",
+                      textDecoration:
+                        community.members.length > 0 && "underline",
+                    }}
+                    onClick={() => {
+                      if (community.members.length > 0) {
+                        setViewCommunityChart({
+                          community: community.id,
+                          isOpen: true,
+                        });
+                      }
                     }}
                   >
                     {community.members.length} Members
@@ -425,6 +441,12 @@ function Community() {
       </Box>
       {joinPopup.isOpen && (
         <JoinCommunityPopup setJoinPopup={setJoinPopup} joinPopup={joinPopup} />
+      )}
+      {viewCommunityChart.isOpen && (
+        <ViewCommunityChart
+          popup={viewCommunityChart}
+          setPopup={setViewCommunityChart}
+        />
       )}
     </Box>
   );
