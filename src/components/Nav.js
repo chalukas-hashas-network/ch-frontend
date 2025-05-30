@@ -6,7 +6,6 @@ import {
   tabsClasses,
 } from "../utils/dataExports/muiExports";
 import { useUser } from "../utils/context/UserContext";
-import { useLogin } from "../utils/context/LoginContext";
 
 function Nav() {
   const { logout, isAuth, isAdmin, triggerLoading, isSuperAdmin, user } =
@@ -23,6 +22,7 @@ function Nav() {
   ];
 
   if (isAuth) {
+    tabRoutes.push({ label: "Chavrusas", path: "/chavrusas" });
     tabRoutes.push({ label: "My Progress", path: "/goal" });
   }
 
