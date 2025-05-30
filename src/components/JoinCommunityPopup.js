@@ -38,6 +38,13 @@ function JoinCommunityPopup({ setJoinPopup, joinPopup }) {
           open={true}
           onClose={() => setJoinPopup({ isOpen: false, community: null })}
           PaperComponent={Card}
+          slotProps={{
+            paper: {
+              sx: {
+                borderRadius: "15px",
+              },
+            },
+          }}
           sx={{ backdropFilter: "blur(5px)" }}
         >
           <div className="popup-card">

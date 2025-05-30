@@ -150,6 +150,13 @@ export default function SuperAdminDash() {
         open={popup}
         onClose={() => reset()}
         PaperComponent={Card}
+        slotProps={{
+          paper: {
+            sx: {
+              borderRadius: "15px",
+            },
+          },
+        }}
         sx={{ backdropFilter: "blur(5px)" }}
       >
         <div

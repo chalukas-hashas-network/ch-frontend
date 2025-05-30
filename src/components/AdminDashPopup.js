@@ -20,7 +20,7 @@ import { useCommunity } from "../utils/context/CommunityContext";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-// TODO: add ability to remove admin
+// TODO: add fetch ability to remove admin
 
 function AdminDashPopup({
   setUserData,
@@ -246,6 +246,13 @@ function AdminDashPopup({
       open={true}
       onClose={() => resetData()}
       PaperComponent={Card}
+      slotProps={{
+        paper: {
+          sx: {
+            borderRadius: "15px",
+          },
+        },
+      }}
       sx={{ backdropFilter: "blur(5px)" }}
     >
       <div

@@ -17,7 +17,6 @@ import {
 } from "../utils/dataExports/muiExports";
 
 // TODO: update users state when goal is created
-// TODO: make sure data type for page number, if string then convert to int where necessary, if int, make sure its reflective everywhere
 // ? why cant user update page to be 0?
 
 function GoalPopup({
@@ -96,6 +95,7 @@ function GoalPopup({
           return;
         }
         try {
+          debugger
           // TODO: response should return updated goal, not just new goal.goal_tractate
 
           if (!goal?.year?.includes(currentYear)) {
@@ -226,6 +226,13 @@ function GoalPopup({
       open={true}
       onClose={() => resetData()}
       PaperComponent={Card}
+      slotProps={{
+        paper: {
+          sx: {
+            borderRadius: "15px",
+          },
+        },
+      }}
       sx={{ backdropFilter: "blur(5px)" }}
     >
       <div className="popup-card">
