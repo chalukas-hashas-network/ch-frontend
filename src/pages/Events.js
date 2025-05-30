@@ -10,13 +10,13 @@ import {
   CardContent,
   Typography,
   CloseRoundedIcon,
+  Dialog,
 } from "../utils/dataExports/muiExports";
 import states from "../utils/dataExports/StatesExports";
 import LiveUpdates from "../components/LiveUpdates";
 import { useEvent } from "../utils/context/EventContext";
-
-import { CardHeader, CardMedia, Dialog, Divider } from "@mui/material";
 import AddEventPopup from "../components/AddEventPopup";
+import defaultImage from "../assets/images/default image.jpeg";
 
 // ? if events are a separate fetch from communities, set up event context
 /* 
@@ -31,7 +31,7 @@ function Events() {
   const [events, setEvents] = useState([]);
   const [addEventPopup, setAddEventPopup] = useState(false);
   const [viewEvent, setViewEvent] = useState({ popup: false, event: {} });
-  const [selectedDropDown, setSelectedDropdown] = useState({
+  const [selectedDropdown, setSelectedDropdown] = useState({
     name: "",
     firstLetter: "",
   });
@@ -41,7 +41,17 @@ function Events() {
   useEffect(
     function getAllEvents() {
       getAllEventData();
-      setEvents(allEvents);
+      if (selectedDropdown.name !== "") {
+        setEvents(
+          allEvents.filter(
+            (event) =>
+              event.location.toLowerCase() ===
+              selectedDropdown.name.toLowerCase()
+          )
+        );
+      } else {
+        setEvents(allEvents);
+      }
     },
     [allEvents, getAllEventData]
   );
@@ -189,10 +199,10 @@ function Events() {
         >
           {events.length > 0 ? (
             <>
-              {events.map((event) => (
+              {events.map((event, index) => (
                 <Card
                   elevation={0}
-                  key={event.id}
+                  key={index}
                   sx={{
                     borderRadius: "16px",
                     width: "11rem",
@@ -200,23 +210,25 @@ function Events() {
                     position: "relative",
                   }}
                 >
-                  <CardHeader>
-                    <CardMedia
-                      component="img"
-                      height="194"
-                      image="../assets/images/Chalukas Hashas Logo TS no bottoms text .png"
-                      alt="Paella dish"
-                    />
-                  </CardHeader>
+                  <img
+                    src={event.image || defaultImage}
+                    alt="Event"
+                    style={{
+                      height: "auto",
+                      width: "100%",
+                      maxHeight: "6em",
+                      objectFit: "cover",
+                    }}
+                  />
                   <CardContent
                     sx={{
                       position: "relative",
-                      // top: "3em",
-                      marginTop: "2em",
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
                       textAlign: "center",
+                      padding: 0,
+                      paddingTop: ".3em",
                     }}
                   >
                     <Typography sx={{ color: "black", fontSize: ".9em" }}>
@@ -229,7 +241,6 @@ function Events() {
                       Run by {event.host}
                     </Typography>
                     <Button
-                      // variant="contained"
                       onClick={() =>
                         setViewEvent({ popup: true, event: event })
                       }
@@ -255,7 +266,7 @@ function Events() {
               sx={{
                 borderRadius: "16px",
                 width: "11rem",
-                height: "13rem",
+                height: "11.5rem",
                 position: "relative",
               }}
             >
@@ -284,6 +295,13 @@ function Events() {
         open={viewEvent.popup}
         onClose={() => reset()}
         PaperComponent={Card}
+        slotProps={{
+          paper: {
+            sx: {
+              borderRadius: "15px",
+            },
+          },
+        }}
         sx={{ backdropFilter: "blur(5px)" }}
       >
         <div
@@ -291,6 +309,9 @@ function Events() {
           style={{
             display: "flex",
             justifyContent: "center",
+            padding: 0,
+            height: "auto",
+            minHeight: "35em",
           }}
         >
           <Button
@@ -301,44 +322,98 @@ function Events() {
           </Button>
           <div
             style={{
-              marginTop: "7em",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              textAlign: "center",
+              width: "100%",
             }}
           >
-            <Typography sx={{ color: "var(--orange)", fontSize: "1.5em" }}>
-              {viewEvent.event.title}
-            </Typography>
-            <Divider flexItem />
-            <Typography sx={{ color: "var(--black)", fontSize: "1.2em" }}>
-              Address:
-              <Typography sx={{ color: "var(--light-blue)" }}>
-                {viewEvent.event.address}
-              </Typography>
-            </Typography>
-            <Typography
+            <img
+              src={viewEvent.event.image || defaultImage}
+              alt="Event"
+              style={{
+                height: "auto",
+                width: "100%",
+                maxHeight: "10em",
+                objectFit: "cover",
+              }}
+            />
+            <Box
               sx={{
-                // backgroundColor: "var(--brown)",
-                fontSize: ".9em",
-                // paddingLeft: "15px",
-                // paddingRight: "15px",
-                // borderRadius: "25px",
-                // color: "white",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                padding: ".5em",
+                width: "80%",
               }}
             >
-              {viewEvent.event.date} {viewEvent.event.time}
-            </Typography>
-            <Typography sx={{ color: "var(--brown)", fontSize: "1.2em" }}>
-              Run by {viewEvent.event.host}
-            </Typography>
+              <Typography sx={{ color: "var(--orange)", fontSize: "1.6em" }}>
+                {viewEvent.event.title}
+              </Typography>
+              <Typography
+                sx={{
+                  color: "var(--black)",
+                  fontSize: "1em",
+                  textAlign: "start",
+                }}
+              >
+                {viewEvent.event.description}
+              </Typography>
+              <Box>
+                <Typography
+                  sx={{
+                    color: "var(--brown)",
+                    fontSize: ".8em",
+                    textAlign: "start",
+                  }}
+                >
+                  Location:
+                </Typography>
+                <Typography
+                  sx={{ color: "var(--light-blue)", fontSize: "1em" }}
+                >
+                  {viewEvent.event.address}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography
+                  sx={{
+                    color: "var(--brown)",
+                    fontSize: ".8em",
+                    textAlign: "start",
+                  }}
+                >
+                  {" "}
+                  Date & Time
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "1em",
+                    color: "var(--light-blue)",
+                  }}
+                >
+                  {viewEvent.event.date} {viewEvent.event.time}
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  padding: "5px",
+                  width: "100%",
+                  backgroundColor: "var(--light-grey)",
+                  borderRadius: "20px",
+                }}
+              >
+                <Typography sx={{ color: "var(--brown)", fontSize: "1em" }}>
+                  Hosted by {viewEvent.event.host}
+                </Typography>
+              </Box>
+            </Box>
             {viewEvent.event.rsvp && (
               <Button
                 onClick={() => {
                   console.log("RSVP clicked");
                 }}
-                href={viewEvent.event.rsvp} // Full external URL (e.g., https://example.com/rsvp)
+                href={viewEvent.event.rsvp} // URL needs to contain http or https
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="contained"
@@ -350,6 +425,7 @@ function Events() {
                   height: "2rem",
                   width: "5rem",
                   fontSize: ".7em",
+                  marginBottom: "1em",
                 }}
               >
                 RSVP
