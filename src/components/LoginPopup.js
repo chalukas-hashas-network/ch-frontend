@@ -335,6 +335,23 @@ function LoginPopup({
                     }}
                   />
                   <TextField
+                    error={userDataErrors.username !== ""}
+                    helperText={
+                      userDataErrors.username !== "" && userDataErrors.username
+                    }
+                    id="username"
+                    label="*Contact Username"
+                    variant="outlined"
+                    type="text"
+                    name="username"
+                    value={userData.username}
+                    onChange={handleChange}
+                    sx={{
+                      marginTop: "1em",
+                      marginBottom: ".7em",
+                    }}
+                  />
+                  <TextField
                     error={userDataErrors.password !== ""}
                     helperText={
                       userDataErrors.password !== "" && userDataErrors.password
